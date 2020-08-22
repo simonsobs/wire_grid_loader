@@ -1,0 +1,6 @@
+# exclude files
+.*
+!.gitignore
+!.git
+*~
+*.obj
