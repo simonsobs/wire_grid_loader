@@ -4,9 +4,10 @@ Github help web page: https://docs.github.com/en/github
 
 ## Overview of git
 There are three stages to keep youre codes.
-A Local codes (in your computer)
-B Local branch (in your computer)
-C Remote branch (in the github web page: https://github.com/simonsobs/wire\_grid\_loader)
+A Local codes (in your PC)
+B Local branch in the local repository (in your PC)
+    - The local repository also keeps all the history of the code changes occurred in your PC.
+C Remote branch in the remote repository (in the github web page: https://github.com/simonsobs/wire\_grid\_loader)
 
 If you want to save your change of the codes in the remote, 
 you need to do 3 steps.
@@ -23,7 +24,7 @@ However, usually you just need to use
 ## Common git commands
 Ref.: https://docs.github.com/en/github/using-git/using-common-git-commands
 
-### To upload your local change in A to the remote branch(C)
+### Upload your local change in A to the remote branch(C)
 1. Add your files to be updated to the local branch (B)  
    (to add all the files in the current directory)   
 
@@ -48,10 +49,12 @@ Ref.: https://docs.github.com/en/github/using-git/using-common-git-commands
 
     or
 
-        git push <REMOTENAME> <LOCAL BRNCH NAME>
+        git push <REMOTE NAME> <LOCAL BRNCH NAME>
 
     Usually,
      - ``<REMOTE NAME>`` (C) is ``origin``, and
      - ``<LOCAL BRANCH NAME>`` (B) is ``master``.
   
+## Get changes in remote repository
+1. 
     
