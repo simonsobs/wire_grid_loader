@@ -21,9 +21,9 @@ Ref.: https://docs.github.com/en/github/using-git/using-common-git-commands
 ### To upload your local change in A to the remote branch(C)
 1. Add your files to be updated to the local branch (B)  
    (to add all the files in the current directory)   
-        git add .
+          git add .
     or (to add a spefic file)  
-        git add <file name>
+          git add <file name>
 2. Update the changes to the local branch (B) with a comment  
         git commit -m "<comment>"
     or  
