@@ -3,7 +3,7 @@
 Github help web page: https://docs.github.com/en/github
 
 ## Overview of git
-There are three stages.
+There are three stages to keep youre codes.
 A Local codes (in your computer)
 B Local branch (in your computer)
 C Remote branch (in the github web page: https://github.com/simonsobs/wire\_grid\_loader)
@@ -16,3 +16,10 @@ you need to do 3 steps.
 3. Push your change in the local branch to the remote branch(C).
 
 ## Common git commands
+Ref. https://docs.github.com/en/github/using-git/using-common-git-commands
+
+### To upload your local change in A to remote branch(C)
+1. Add your files to be updated to the local branch (B).
+    git add <file name> 
+    or 
+    git add . (add all files in the current directory)
