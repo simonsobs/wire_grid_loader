@@ -41,12 +41,15 @@ Ref.: https://docs.github.com/en/github/using-git/using-common-git-commands
 
         git ci -m "<COMMENT>"
 
-    ('ci' is an alias of 'commit')
+    (``ci`` is an alias of ``commit``)
 3. Update the changes from the local branch (B) to the remote branch (C)
   
         git push
+
     or
+
         git push <REMOTENAME> <LOCAL BRNCH NAME>
+
     Usually,
      - <REMOTENAME> (C) is ``origin``, and
      - <REMOTE BRANCH NAME> (B) is ``master``.
