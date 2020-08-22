@@ -1,6 +1,7 @@
 # Git Instruction
 
 Github help web page: https://docs.github.com/en/github
+Git help web page: https://git-scm.com/book/en/v2
 
 ## Overview of git
 There are three stages to keep youre codes.
@@ -44,6 +45,7 @@ Ref.: https://docs.github.com/en/github/using-git/using-common-git-commands
 
     (``ci`` is an alias of ``commit``)
 3. Update the changes from the local branch (**B**) to the remote branch (**C**)
+   Ref.: https://docs.github.com/en/github/using-git/pushing-commits-to-a-remote-repository  
   
         git push
 
@@ -56,5 +58,14 @@ Ref.: https://docs.github.com/en/github/using-git/using-common-git-commands
      - ``<LOCAL BRANCH NAME>`` (**B**) is ``master``.
   
 ## Get changes in remote repository
-1. 
+Ref.: https://docs.github.com/en/github/using-git/getting-changes-from-a-remote-repository  
+1. Get the remote changes in your local repository (**B**)  
+
+        git fetch 
+        
+    or
+        
+        git fetch <REMOTE BRANCH NAME>
+
+    Usually, ``<REMOTE BRANCH NAME>`` is origin
     
