@@ -148,7 +148,7 @@ Here, the situation is that you want to create a new git repository and uploaded
 
     ``<GIT REPOSITORY ADDRESS>`` is git@github.com:simonsobs/wire_grid_loader.git for the wire_grid_loader repository.
 
-## customization
+## Customization
 ### ssh setting
 Ref. : https://docs.github.com/en/github/authenticating-to-github/connecting-to-github-with-ssh
         
