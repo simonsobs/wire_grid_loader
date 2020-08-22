@@ -59,13 +59,33 @@ Ref.: https://docs.github.com/en/github/using-git/using-common-git-commands
   
 ## Get changes in remote repository
 Ref.: https://docs.github.com/en/github/using-git/getting-changes-from-a-remote-repository  
-1. Get the remote changes in your local repository (**B**)  
+
+Shortcut command:
+1. Get the changes in the remote repository (**A**) and merge it into your local master branch (**A**)  
+    
+        git pull
+
+    or
+
+        git pull <REMOTE NAME>/<REMOTE BRANCH NAME>
+
+    Usually,
+     - ``<REMOTE NAME>`` is ``origin``, and 
+     - ``<REMOTE BRANCH NAME>`` is ``master``.
+
+
+The ``push`` command does the following 2 steps;
+1. Get the remote changes  
 
         git fetch 
         
     or
         
-        git fetch <REMOTE BRANCH NAME>
+        git fetch <REMOTE NAME>
 
-    Usually, ``<REMOTE BRANCH NAME>`` is ``origin``.
+    Usually, ``<REMOTE NAME>`` is ``origin``.
+
+
+
+in your local repository (**B**)  
     
