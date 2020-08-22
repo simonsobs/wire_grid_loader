@@ -24,8 +24,8 @@ However, usually you just need to use
 ## Common git commands
 Ref.: https://docs.github.com/en/github/using-git/using-common-git-commands
 
-### Upload your local change in A to the remote branch(C)
-1. Add your files to be updated to the local branch (B)  
+### Upload your local change in **A** to the remote branch(**C**)
+1. Add your files to be updated to the local branch (**B**)  
    (to add all the files in the current directory)   
 
           git add .
@@ -34,7 +34,7 @@ Ref.: https://docs.github.com/en/github/using-git/using-common-git-commands
 
           git add <FILE NAME>
 
-2. Update the changes to the local branch (B) with a comment  
+2. Update the changes to the local branch (**B**) with a comment  
 
         git commit -m "<COMMENT>"
 
@@ -43,7 +43,7 @@ Ref.: https://docs.github.com/en/github/using-git/using-common-git-commands
         git ci -m "<COMMENT>"
 
     (``ci`` is an alias of ``commit``)
-3. Update the changes from the local branch (B) to the remote branch (C)
+3. Update the changes from the local branch (**B**) to the remote branch (**C**)
   
         git push
 
@@ -52,8 +52,8 @@ Ref.: https://docs.github.com/en/github/using-git/using-common-git-commands
         git push <REMOTE NAME> <LOCAL BRNCH NAME>
 
     Usually,
-     - ``<REMOTE NAME>`` (C) is ``origin``, and
-     - ``<LOCAL BRANCH NAME>`` (B) is ``master``.
+     - ``<REMOTE NAME>`` (**C**) is ``origin``, and
+     - ``<LOCAL BRANCH NAME>`` (**B**) is ``master``.
   
 ## Get changes in remote repository
 1. 
