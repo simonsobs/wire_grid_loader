@@ -67,5 +67,5 @@ Ref.: https://docs.github.com/en/github/using-git/getting-changes-from-a-remote-
         
         git fetch <REMOTE BRANCH NAME>
 
-    Usually, ``<REMOTE BRANCH NAME>`` is origin
+    Usually, ``<REMOTE BRANCH NAME>`` is ``origin``.
     
