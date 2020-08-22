@@ -143,8 +143,10 @@ Here, the situation is that you want to create a new git repository and uploaded
         git init
         git add . (including your exsited scripts)
         git commit -m "<COMMENT>"
-        git remote add origin git@github.com:sadachi5/aho.git
+        git remote add origin <GIT REPOSITORY ADDRESS>
         git push -u origin master
+
+    ``<GIT REPOSITORY ADDRESS>`` is git@github.com:simonsobs/wire_grid_loader.git for the wire_grid_loader repository.
 
 ## customization
 ### ssh setting
