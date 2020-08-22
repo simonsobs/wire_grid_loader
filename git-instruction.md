@@ -19,7 +19,10 @@ you need to do 3 steps.
 Ref.: https://docs.github.com/en/github/using-git/using-common-git-commands
 
 ### To upload your local change in A to the remote branch(C)
-1. Add your files to be updated to the local branch (B). <br>
-    ``git add <file name>`` <br>
-    or  <br>
-    ``git add . ``(add all files in the current directory)
+1. Add your files to be updated to the local branch (B) <br>
+   (to add all the files in the current directory) <br>
+        git add .
+    or (to add a spefic file)
+        git add <file name>
+2. Update the changes to the local branch (B) with a comment <br>
+    
