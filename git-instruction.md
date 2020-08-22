@@ -18,9 +18,7 @@ you need to do 3 steps.
 3. Push your change in the local branch to the remote branch(**C**).
 
 You can create multiple branches in **B** and **C**.  
-However, usually you just need to use
- - **B**: ``master``
- - **C**: ``origin``
+However, usually you just need to use ``master`` branch.
 
 ## Common git commands
 Ref.: https://docs.github.com/en/github/using-git/using-common-git-commands
@@ -56,6 +54,7 @@ Ref.: https://docs.github.com/en/github/using-git/using-common-git-commands
     Usually,
      - ``<REMOTE NAME>`` (**C**) is ``origin``, and
      - ``<LOCAL BRANCH NAME>`` (**B**) is ``master``.
+     In this case, the master branch in **B** is uploaded to the master branch in **C**.
   
 ## Get changes in remote repository
 Ref.: https://docs.github.com/en/github/using-git/getting-changes-from-a-remote-repository  
