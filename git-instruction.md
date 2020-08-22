@@ -56,7 +56,7 @@ Ref.: https://docs.github.com/en/github/using-git/using-common-git-commands
      - ``<LOCAL BRANCH NAME>`` (**B**) is ``master``.
      In this case, the master branch in **B** is uploaded to the master branch in **C**.
   
-## Get changes in remote repository
+### Get changes in remote repository
 Ref.: https://docs.github.com/en/github/using-git/getting-changes-from-a-remote-repository  
 
 Shortcut command:
