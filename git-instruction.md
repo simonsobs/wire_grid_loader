@@ -84,7 +84,28 @@ The ``push`` command does the following 2 steps;
 
     Usually, ``<REMOTE NAME>`` is ``origin``.
 
+2. Merge the changes in remote repository (C) into the local branch (B) (current local branch)   
+
+        git merge <REMOTE NAME>/<REMOTE BRANCH NAME>
+
+    * The data of the remote repository is kept also in your PC when you fetch it. The remote repository in your PC is not edited.
 
 
-in your local repository (**B**)  
+
+### Check the branch information
+- Check only the local branch (**B**)  
+
+        git branch
+
+- Check the remote branch information (**C**)  
+
+        git remote -v
+
+- Check the local and remote branches (**B** & **C**)  
+
+        git branch -a
+
+  * This command shows the information of the remote branches fetched into your PC.
+
+
     
