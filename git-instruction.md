@@ -51,7 +51,7 @@ Ref.: https://docs.github.com/en/github/using-git/using-common-git-commands
         git push <REMOTENAME> <LOCAL BRNCH NAME>
 
     Usually,
-     - <REMOTENAME> (C) is ``origin``, and
-     - <REMOTE BRANCH NAME> (B) is ``master``.
+     - ``<REMOTE NAME>`` (C) is ``origin``, and
+     - ``<LOCAL BRANCH NAME>`` (B) is ``master``.
   
     
