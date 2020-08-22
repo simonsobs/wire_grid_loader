@@ -10,7 +10,7 @@ There are three stages to keep youre codes.
 - **A**: Local codes (in your PC)
 - **B**: Local branch in the local repository (in your PC)
     - The local repository also keeps all the history of the code changes occurred in your PC.
-- **C**: Remote branch in the remote repository (in the github web page: https://github.com/simonsobs/wire\_grid\_loader)
+- **C**: Remote branch in the remote repository (in the github web page: https://github.com/simonsobs/wire_grid_loader)
 
 If you want to save your change of the codes in the remote, 
 you need to do 3 steps.
