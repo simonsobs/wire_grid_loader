@@ -1,6 +1,6 @@
 # Git Instruction
 **Current git account is set to sadachi5 (Shunsuke Adachi).
-So all the commits are registered to be done by sadachi5.**
+So all the commits are recorded to be done by sadachi5.**
 
 Github help web page: https://docs.github.com/en/github
 Git help web page: https://git-scm.com/book/en/v2
