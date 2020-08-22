@@ -132,13 +132,13 @@ Here, the situation is that you want to create a new git repository and uploaded
     
     
 
-2. In your PC, move to the top directory of the scripts to be uploaded to git   
+3. In your PC, move to the top directory of the scripts to be uploaded to git   
 
-3. Make ``README.md``
+4. Make ``README.md``
 
         echo "# <REPOSITORY NAME>" >> README.md
 
-3. Initilize your git repository in your PC  
+5. Initilize your git repository in your PC  
 
         git init
         git add . (including your exsited scripts)
