@@ -177,4 +177,7 @@ Set git commands alias;
 
 
 
+### Ignore specific files to be uploaded
+To ignore some specific files to be uploaded, you need to make ``.gitignore`` file in the top directory of the repository.  
+Ref.: https://git-scm.com/docs/gitignore
 
