@@ -88,3 +88,24 @@ def powerOn(voltagelim=0., currentlim=0., timeperiod=0., PMX=None) :
 
     return PMX
 
+
+
+
+if __name__ == '__main__':
+
+  voltagelim = 0.
+  currentlim = 0.
+  timeperiod = 0.
+  if len(sys.argv) > 1 :
+    voltagelim = (float)(sys.argv[1])
+    pass
+  if len(sys.argv) > 2 :
+    currentlim = (float)(sys.argv[2])
+    pass
+  if len(sys.argv) > 3 :
+    timeperiod = (float)(sys.argv[3])
+    pass
+
+  powerOn(voltagelim, currentlim, timeperiod)
+  
+ 
