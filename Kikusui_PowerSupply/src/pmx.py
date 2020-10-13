@@ -19,6 +19,8 @@ class PMX:
     tcp_ip (str): TCP IP address
     tcp_port (int): TCP port
     """
+    waittime = 0.05; # sec
+
     def __init__(self, rtu_port=None, tcp_ip=None, tcp_port=None, timeout=None):
         # Connect to device
         msg = self.__conn(rtu_port, tcp_ip, tcp_port, timeout)
@@ -191,7 +193,7 @@ class PMX:
 
     def wait(self):
         """ Sleep """
-        tm.sleep(0.05)
+        tm.sleep(waittime)
         return True
 
     def clean_serial(self):
