@@ -11,8 +11,7 @@ if sy.version_info.major == 2:
         "Usage: sudo python3 command_supply.py")
     sy.exit()
 
-# Import CHWP control modules
-sy.path.append('src')
+# Import control modules
 import pmx_config as cg  # noqa: E402
 import src.pmx as pm  # noqa: E402
 import src.command as cm  # noqa: E402
