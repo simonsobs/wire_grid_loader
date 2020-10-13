@@ -13,14 +13,16 @@ Library for serial communication
 This library is used to send command and receive data 
 from devices via USC540 serial converter.
 
-## KIKUSUI (rotation motor) [*Under construction]
+## Kikusui\_PowerSupply (rotation motor)
 Scriopts to control KIKUSUI power supply (PMX)
 
+Requirements: MOXA 
 Communication: RS232 serial communication via the serial converter
 
 ## GravitySensor
 Scriopts to control KIKUSUI power supply (PMX)
 
+Requirements: MOXA 
 Communication: RS422 serial communication via the serial converter
 
 ## Blackbox (linear actuator) [*Under construction]
