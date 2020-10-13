@@ -11,4 +11,4 @@ if not use_moxa:
     pass
 
 # Logger directory
-log_dir = 'log/';
+log_dir = 'log';

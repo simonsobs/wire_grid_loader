@@ -1,10 +1,12 @@
 #!/usr/bin/python3
 
 # Built-in python functions
+import os
 import sys as sy
 import readline
 import time
 import datetime
+from pytz import timezone
 
 # Check the python version
 if sy.version_info.major == 2:
@@ -17,10 +19,14 @@ if sy.version_info.major == 2:
 import pmx_config as cg  # noqa: E402
 import src.pmx as pm  # noqa: E402
 
-def writelog(logfile, onoff, voltagelim, currentlim, vol, cur) :
+def writelog(logfile, onoff, voltagelim, currentlim, vol, cur, timeperiod=0.) :
     now = datetime.datetime.now(timezone('UTC'))
     nowStr  = now.strftime('%Y-%m-%d %H:%M:%S-%Z')
-    log = ('{:25s} {:3s} {:10.3f} {:10.3f} {:10.3f} {:10.3f}\n'.format(nowStr, onoff, voltagelim, currentlim, vol, cur))
+    if timeperiod>0. :
+      log = ('{:25s} {:3s} {:8.3f} {:8.3f} {:8.3f} {:8.3f} {:8.3f}\n'.format(nowStr, onoff, voltagelim, currentlim, vol, cur, timeperiod))
+    else :
+      log = ('{:25s} {:3s} {:8.3f} {:8.3f} {:8.3f} {:8.3f} {:8s}\n'.format(nowStr, onoff, voltagelim, currentlim, vol, cur, '-----'))
+      pass;
     logfile.write(log)
     return log
 
@@ -38,12 +44,13 @@ def powerOn(voltagelim=0., currentlim=0., timeperiod=0., PMX=None) :
     now = datetime.datetime.now(timezone('UTC'))
     nowStr  = now.strftime('%Y-%m-%d %H:%M:%S-%Z')
     dateStr = now.strftime('%Y-%m-%d')
-    logfilename = '{}/PMX_{}.dat'.format(log_dir, dateStr);
+    logfilename = '{}/PMX_{}.dat'.format(cg.log_dir, dateStr);
+    if not os.path.isdir(cg.log_dir) : os.mkdir(cg.log_dir);
     if os.path.exists(logfilename) :
-      logfile = open(outfile, 'a+')
+      logfile = open(logfilename, 'a+')
     else :
-      logfile = open(outfile, 'w' )
-      log = '# Date Time-Timezone ON/OFF VoltageLimit[V] CurrentLimit[A] Voltage[V] Current[A]\n'
+      logfile = open(logfilename, 'w' )
+      log = '# Date Time-Timezone ON/OFF VoltageLimit[V] CurrentLimit[A] Voltage[V] Current[A] powerOn-timeperiod[sec]\n'
       logfile.write(log)
       pass
     
@@ -56,7 +63,7 @@ def powerOn(voltagelim=0., currentlim=0., timeperiod=0., PMX=None) :
     msg, vol = PMX.check_voltage()
     msg, cur = PMX.check_current()
     wait_turn_on = PMX.waittime * 4.
-    writelog(logfile, nowStr, 'ON', voltagelim, currentlim, vol, cur))
+    writelog(logfile, 'ON', voltagelim, currentlim, vol, cur, timeperiod)
 
     # Turn OFF after timeperiod
     # If timeperiod <= 0., the power is ON permanently.
@@ -65,7 +72,7 @@ def powerOn(voltagelim=0., currentlim=0., timeperiod=0., PMX=None) :
         if timeperiod > wait_turn_on :
             time.sleep(timeperiod-wait_turn_on)
         else :
-            msg = ("WARNING! The wait-time period is too short.\n
+            msg = ("WARNING! The wait-time period is too short.\n\
             The period should be larger than wait-time for turning on({:.3f} sec)."
             .format(wait_turn_on))
             print(msg)
@@ -76,7 +83,7 @@ def powerOn(voltagelim=0., currentlim=0., timeperiod=0., PMX=None) :
         nowStr  = now.strftime('%Y-%m-%d %H:%M:%S-%Z')
         msg, vol = PMX.check_voltage()
         msg, cur = PMX.check_current()
-        writelog(logfile, nowStr, 'OFF', voltagelim, currentlim, vol, cur))
+        writelog(logfile, 'OFF', 0., 0., vol, cur)
         pass
 
     return PMX

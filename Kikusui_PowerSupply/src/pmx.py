@@ -193,7 +193,7 @@ class PMX:
 
     def wait(self):
         """ Sleep """
-        tm.sleep(waittime)
+        tm.sleep(self.waittime)
         return True
 
     def clean_serial(self):
