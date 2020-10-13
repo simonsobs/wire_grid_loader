@@ -5,11 +5,10 @@ import sys as sy
 import os
 
 # Control modules
-#this_dir = os.path.dirname(__file__)
-#sy.path.append(os.path.join(
-#    this_dir, "..", "..","..", "MOXA"))
-#import moxaSerial as mx  # noqa: E402
-from ...MOXA import moxaSerial as mx  # noqa: E402
+this_dir = os.path.dirname(__file__)
+sy.path.append(os.path.join(
+    this_dir, "..", "..", "MOXA"))
+import moxaSerial as mx  # noqa: E402
 
 class PMX:
     """
@@ -41,6 +40,16 @@ class PMX:
                 % (self._tcp_ip, self._tcp_port))
             pass
         return
+
+    def check_model(self):
+        """ Check the model """
+        self.clean_serial()
+        bts = self.ser.write(str.encode("*IDN?\n\r"))
+        self.wait()
+        val = str(self.ser.readline())
+        msg = "Model = %s" % (val)
+        print(msg)
+        return msg, val
 
     def check_voltage(self):
         """ Check the voltage """

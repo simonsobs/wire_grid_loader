@@ -23,6 +23,7 @@ class Command:
         # Dict of commands
         self._cmds = {
             "set_port": "P",
+            "check_model": "M?",
             "check_v": "V?",
             "check_c": "C?",
             "check_vc": "VC?",
@@ -38,6 +39,7 @@ class Command:
         """ Print possible commands """
         wrstr = (
             "\nChange ttyUSB port = '%s'\n"
+            "Check model = '%s'\n"
             "Check output voltage = '%s'\n"
             "Check output current = '%s'\n"
             "Check output voltage and current = '%s'\n"
@@ -49,6 +51,7 @@ class Command:
             "Print possible commands = '%s'\n"
             "Quit program = '%s'\n"
             % (self._cmds["set_port"],
+               self._cmds["check_model"],
                self._cmds["check_v"],
                self._cmds["check_c"],
                self._cmds["check_vc"],
@@ -72,6 +75,9 @@ class Command:
             # No command
             if cmd == '':
                 return
+            # Check model
+            elif cmd == self._cmds["check_model"]:
+                return self._PMX.check_model()
             # Check voltage
             elif cmd == self._cmds["check_v"]:
                 return self._PMX.check_voltage()
