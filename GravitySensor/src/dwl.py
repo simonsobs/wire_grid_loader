@@ -57,7 +57,7 @@ class DWL:
         SIZE = 16;
         while True :
             print('aho');
-            read0 = self.ser.readline();
+            read0 = self.ser.readline(decopt='ignore');
             size0 = len(read0);
             print(read0);
             if size0>0 : 
