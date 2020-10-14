@@ -20,7 +20,7 @@ import src.pmx as pm  # noqa: E402
 from common import * # writelog(), openlog()
 
 ### main function ###
-def powerOn(voltagelim=0., currentlim=0., timeperiod=0., PMX=None) :
+def powerOff(PMX=None) :
 
     # Connect to PMX power supply
     if PMX==None :
@@ -34,17 +34,6 @@ def powerOn(voltagelim=0., currentlim=0., timeperiod=0., PMX=None) :
     # Open log file
     logfile = openlogfile(cg.log_dir)
     
-    # Set voltage & current 
-    msg = PMX.set_voltage(voltagelim)
-    msg = PMX.set_current(currentlim)
-
-    # Turn On
-    PMX.turn_on() # include wait() x 4 (200 msec)
-    msg, vol = PMX.check_voltage()
-    msg, cur = PMX.check_current()
-    wait_turn_on = PMX.waittime * 4.
-    writelog(logfile, 'ON', voltagelim, currentlim, vol, cur, timeperiod)
-
     # Turn OFF after timeperiod
     # If timeperiod <= 0., the power is ON permanently.
     if timeperiod > 0. :
