@@ -17,7 +17,7 @@ if sy.version_info.major == 2:
 import pmx_config as cg  # noqa: E402
 import src.pmx as pm  # noqa: E402
 
-from common import * # writelog(), openlog()
+from src.common import * # writelog(), openlog()
 
 ### main function ###
 def powerOff(PMX=None) :
