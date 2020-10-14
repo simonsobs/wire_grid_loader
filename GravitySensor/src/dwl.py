@@ -51,7 +51,6 @@ class DWL:
         print(command);
         bts = self.ser.write(command)
         self.wait()
-        ret = self.ser.readline()
 
         read = [];
         isSingle = True
