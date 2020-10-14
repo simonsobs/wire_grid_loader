@@ -6,3 +6,4 @@
 *.obj
 aho*
 test*
+*/log/*

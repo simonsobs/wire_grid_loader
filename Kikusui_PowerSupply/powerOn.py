@@ -2,15 +2,15 @@
 
 # Built-in python functions
 import os
-import sys as sy
+import sys
 import readline
 import time
 
 # Check the python version
-if sy.version_info.major == 2:
+if sys.version_info.major == 2:
     print("\nKikusui PMX control only works with Python 3\n"
           "Usage: sudo python3 command_supply.py")
-    sy.exit()
+    sys.exit()
     pass
 
 # Import control modules
@@ -30,9 +30,10 @@ def powerOn(voltagelim=0., currentlim=0., timeperiod=0., PMX=None) :
             PMX = pm.PMX(rtu_port=cg.rtu_port)
             pass
         pass
+    PMX.clean_serial()
 
     # Open log file
-    logfile = openlogfile(cg.log_dir)
+    logfile = openlog(cg.log_dir)
     
     # Set voltage & current 
     msg = PMX.set_voltage(voltagelim)
@@ -59,9 +60,9 @@ def powerOn(voltagelim=0., currentlim=0., timeperiod=0., PMX=None) :
             pass
        
         PMX.turn_off()
-        msg, vol = PMX.check_voltage()
-        msg, cur = PMX.check_current()
-        writelog(logfile, 'OFF', 0., 0., vol, cur)
+        vol   , cur    = PMX.check_voltage_current()
+        vollim, curlim = PMX.check_voltage_current_limit()
+        writelog(logfile, 'OFF', vollim, curlim, vol, cur)
         pass
 
     return PMX
@@ -78,7 +79,6 @@ def parseCmdLine(args):
   parser.add_option('-t', '--time'   , dest='timeperiod', help='Powering-on time [sec]: If the time=<0, KIKUSUI power supply continues to power on until you run the powerOff script.', type = float, default=0.);
   #parser.add_option('-v', '--verbose', dest='verbose', help='verbosity (0:Normal, -1:output all)', type = int, default=0);
   (config, args) = parser.parse_args(args);
-  Out("",True,config);
   return config;
 
 

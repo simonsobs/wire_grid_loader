@@ -2,15 +2,15 @@
 
 # Built-in python functions
 import os
-import sys as sy
+import sys
 import readline
 import time
 
 # Check the python version
-if sy.version_info.major == 2:
+if sys.version_info.major == 2:
     print("\nKikusui PMX control only works with Python 3\n"
           "Usage: sudo python3 command_supply.py")
-    sy.exit()
+    sys.exit()
     pass
 
 # Import control modules
@@ -30,28 +30,16 @@ def powerOff(PMX=None) :
             PMX = pm.PMX(rtu_port=cg.rtu_port)
             pass
         pass
+    PMX.clean_serial()
 
     # Open log file
-    logfile = openlogfile(cg.log_dir)
+    logfile = openlog(cg.log_dir)
     
-    # Turn OFF after timeperiod
-    # If timeperiod <= 0., the power is ON permanently.
-    if timeperiod > 0. :
-        # Sleep for the specified time period
-        if timeperiod > wait_turn_on :
-            time.sleep(timeperiod-wait_turn_on)
-        else :
-            msg = ("WARNING! The wait-time period is too short.\n\
-            The period should be larger than wait-time for turning on({:.3f} sec)."
-            .format(wait_turn_on))
-            print(msg)
-            pass
-       
-        PMX.turn_off()
-        msg, vol = PMX.check_voltage()
-        msg, cur = PMX.check_current()
-        writelog(logfile, 'OFF', 0., 0., vol, cur)
-        pass
+    # Turn OFF
+    PMX.turn_off()
+    vol   , cur    = PMX.check_voltage_current()
+    vollim, curlim = PMX.check_voltage_current_limit()
+    writelog(logfile, 'OFF', vollim, curlim, vol, cur)
 
     return PMX
 
@@ -62,12 +50,8 @@ def powerOff(PMX=None) :
 def parseCmdLine(args):
   from optparse import OptionParser;
   parser = OptionParser();
-  parser.add_option('-v', '--voltage', dest='voltagelim', help='Voltage limit [V]', type = float, default=0.);
-  parser.add_option('-c', '--current', dest='currentlim', help='Current limit [A]', type = float, default=0.);
-  parser.add_option('-t', '--time'   , dest='timeperiod', help='Powering-on time [sec]: If the time=<0, KIKUSUI power supply continues to power on until you run the powerOff script.', type = float, default=0.);
   #parser.add_option('-v', '--verbose', dest='verbose', help='verbosity (0:Normal, -1:output all)', type = int, default=0);
   (config, args) = parser.parse_args(args);
-  Out("",True,config);
   return config;
 
 
@@ -77,11 +61,8 @@ def parseCmdLine(args):
 if __name__ == '__main__':
 
   config = parseCmdLine(sys.argv)
-  voltagelim = config.voltagelim
-  currentlim = config.currentlim
-  timeperiod = config.timeperiod
 
-  powerOn(voltagelim, currentlim, timeperiod)
+  powerOff()
   pass
   
  
