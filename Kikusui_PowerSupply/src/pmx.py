@@ -82,7 +82,39 @@ class PMX:
             "Measured voltage = %.3f V\n"
             "Measured current = %.3f A\n"
             % (voltage, current))
-#        print(msg)
+        print(msg)
+        return voltage, current
+
+    def check_voltagelimit(self):
+        """ Check the voltage limit """
+        self.clean_serial()
+        bts = self.ser.write(str.encode("VOLT?\n\r"))
+        self.wait()
+        val = float(self.ser.readline())
+        msg = "Voltage limit = %.3f V" % (val)
+        print(msg)
+        return msg, val
+
+    def check_currentlimit(self):
+        """ Check the current """
+        self.clean_serial()
+        self.ser.write(str.encode("MEAS:CURR?\n\r"))
+        self.wait()
+        val = float(self.ser.readline())
+        msg = "Current limit = %.3f A" % (val)
+        print(msg)
+        return msg, val
+
+    def check_voltage_current_limit(self):
+        """ Check both the voltage limit and current limit """
+        self.clean_serial()
+        voltage = self.check_voltagelimit()[1]
+        current = self.check_currentlimit()[1]
+        msg = (
+            "Voltage limit = %.3f V\n"
+            "Current limit = %.3f A\n"
+            % (voltage, current))
+        print(msg)
         return voltage, current
 
     def check_output(self):
@@ -99,6 +131,7 @@ class PMX:
             msg = "Failed to measure output..."
         print(msg)
         return msg, val
+
 
     def set_voltage(self, val, silent=False):
         """ Set the PMX voltage """
