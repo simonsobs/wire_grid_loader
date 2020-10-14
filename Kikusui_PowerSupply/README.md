@@ -24,7 +24,7 @@
     - tcp\_ip   : IP address of the USC540 serial converter
     - tcp\_port : Port to specify the channel of the serial converter (CH1 = port 23)
 
-## library
+## Library
 This scripts uses the scripts in ``src/``.
 The main control script for KIKUSUI is ``src/pmx.py``.
 

@@ -156,6 +156,8 @@ Ref. : https://docs.github.com/en/github/authenticating-to-github/connecting-to-
 
         ssh-keygen -t rsa -b 4096 -C "your_email@example.com"
 
+   * The public key file should be ``id_rsa.pub``
+
 2. Add the public key to your git account  
     Ref.: https://docs.github.com/en/github/authenticating-to-github/adding-a-new-ssh-key-to-your-github-account
     
