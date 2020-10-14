@@ -132,13 +132,14 @@ class Serial_TCPServer(object):
 		if n2 > 0: msg += self.readbuf(n2)
 		return msg
 
-	def readline(self,term='\n'):
+	def readline(self,term='\n',decopt=''):
 		msg = ''
 		while True:
 			c = self.readexactly(1)
 			if c == term or c == '':
 				return msg
-			msg += c.decode()
+                        if not ignore: msg += c.decode('utf-8')
+                        else         : msg += c.decode('utf-8',decopt)
 
 	def readall(self):
 		msg = ""
