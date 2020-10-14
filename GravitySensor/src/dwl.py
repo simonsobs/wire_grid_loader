@@ -46,8 +46,8 @@ class DWL:
     def get_single_angle(self):
         """ Measure the single-axis angle """
         self.clean_serial()
-        #command=b"\x06\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00";
-        command="\x06\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00";
+        command=b"\x06\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00";
+        #command="\x06\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00";
         print(command);
         bts = self.ser.write(command)
         self.wait()
