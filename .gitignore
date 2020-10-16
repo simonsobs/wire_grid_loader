@@ -8,3 +8,4 @@ aho*
 test*
 log/*
 */log/*
+*.pyc
