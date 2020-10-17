@@ -44,16 +44,16 @@ def TimeControl(voltagelim=0., currentlim=0., timeperiod=0., PMX=None) :
     if timeperiod > wait_turn_on:
         # Run and Sleep for the specified time period
         PMX.turn_on() # include wait() x 4 (200 msec)
-        writelog(logfile, 'ON', voltagelim, currentlim, vol, cur, timeperiod)
         msg, vol = PMX.check_voltage()
         msg, cur = PMX.check_current()
+        writelog(logfile, 'ON', voltagelim, currentlim, vol, cur, timeperiod)
 
         time.sleep(timeperiod)
 
         PMX.turn_off()
-        writelog(logfile, 'OFF', vollim, curlim, vol, cur)
         vol   , cur    = PMX.check_voltage_current()
         vollim, curlim = PMX.check_voltage_current_limit()
+        writelog(logfile, 'OFF', vollim, curlim, vol, cur)
         pass
     else :
         msg = ("WARNING! The wait-time period is too short.\n\
