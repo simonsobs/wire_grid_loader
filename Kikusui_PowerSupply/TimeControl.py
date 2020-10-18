@@ -55,6 +55,8 @@ def TimeControl(voltagelim=0., currentlim=0., timeperiod=0., PMX=None) :
             vol   , cur    = PMX.check_voltage_current()
             vollim, curlim = PMX.check_voltage_current_limit()
             writelog(logfile, 'OFF', vollim, curlim, vol, cur)
+
+            time.sleep(1.5)
             pass
         pass
     else :
