@@ -59,7 +59,7 @@ class PMX:
         bts = self.ser.write(str.encode("MEAS:VOLT?\n\r"))
         self.wait()
         val = float(self.ser.readline())
-        msg = "Measured voltage = %.3f V" % (val)
+        msg = "Measured voltage = %.3f V\n" % (val)
         print(msg)
         return msg, val
 
@@ -69,7 +69,7 @@ class PMX:
         self.ser.write(str.encode("MEAS:CURR?\n\r"))
         self.wait()
         val = float(self.ser.readline())
-        msg = "Measured current = %.3f A" % (val)
+        msg = "Measured current = %.3f A\n" % (val)
         print(msg)
         return msg, val
 
@@ -82,7 +82,7 @@ class PMX:
             "Measured voltage = %.3f V\n"
             "Measured current = %.3f A\n"
             % (voltage, current))
-        print(msg)
+        #print(msg)
         return voltage, current
 
     def check_voltagelimit(self):
@@ -91,7 +91,7 @@ class PMX:
         bts = self.ser.write(str.encode("VOLT?\n\r"))
         self.wait()
         val = float(self.ser.readline())
-        msg = "Voltage limit = %.3f V" % (val)
+        msg = "Voltage limit = %.3f V\n" % (val)
         print(msg)
         return msg, val
 
@@ -101,7 +101,7 @@ class PMX:
         self.ser.write(str.encode("MEAS:CURR?\n\r"))
         self.wait()
         val = float(self.ser.readline())
-        msg = "Current limit = %.3f A" % (val)
+        msg = "Current limit = %.3f A\n" % (val)
         print(msg)
         return msg, val
 
@@ -114,7 +114,7 @@ class PMX:
             "Voltage limit = %.3f V\n"
             "Current limit = %.3f A\n"
             % (voltage, current))
-        print(msg)
+        #print(msg)
         return voltage, current
 
     def check_output(self):
@@ -141,7 +141,7 @@ class PMX:
         self.ser.write(str.encode("VOLT?\n\r"))
         self.wait()
         val = self.ser.readline()
-        msg = "Voltage set = %.3f V" % (float(val))
+        msg = "Voltage set = %.3f V\n" % (float(val))
         if (silent != True):
             print(msg)
 
