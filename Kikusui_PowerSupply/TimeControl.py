@@ -47,7 +47,7 @@ def TimeControl(voltagelim=0., currentlim=0., timeperiod=0., PMX=None) :
         for i in range(1):
             for j in range(1):
                 time0 = time.time()
-                PMX.turn_on() # include wait() x 4 (200 msec)
+                PMX.turn_on(do_check=True) # include wait() x 4 (200 msec)
                 time1 = time.time()
                 msg, vol = PMX.check_voltage()
                 time2 = time.time()
@@ -58,7 +58,7 @@ def TimeControl(voltagelim=0., currentlim=0., timeperiod=0., PMX=None) :
 
                 #time.sleep(timeperiod*(i+1))
 
-                PMX.turn_off()
+                PMX.turn_off(do_check=True)
                 time5 = time.time()
                 vol   , cur    = PMX.check_voltage_current()
                 time6 = time.time()
@@ -73,8 +73,8 @@ def TimeControl(voltagelim=0., currentlim=0., timeperiod=0., PMX=None) :
                     print(f'Start-up time On-PMX.check_current: {time3 - time2}',file=ofile)
                     print(f'Start-up time On-writelog: {time4 - time3}',file=ofile)
                     print(f'Start-up time PMX.turn_off: {time5 - time4}',file=ofile)
-                    print(f'Start-up time Off-PMX.check_vlotage: {time6 - time5}',file=ofile)
-                    print(f'Start-up time Off-PMX.check_current: {time7 - time6}',file=ofile)
+                    print(f'Start-up time Off-PMX.check_VolCur: {time6 - time5}',file=ofile)
+                    print(f'Start-up time Off-PMX.check_VolCurLimit: {time7 - time6}',file=ofile)
                     print(f'Start-up time Off-writelog: {time8 - time7}',file=ofile)
                     pass
 
