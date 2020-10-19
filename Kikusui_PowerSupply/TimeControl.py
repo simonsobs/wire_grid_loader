@@ -43,33 +43,29 @@ def TimeControl(voltagelim=0., currentlim=0., timeperiod=0., PMX=None) :
 
     if timeperiod > 0.:
         # Run and Sleep for the specified time period
-        for i in range(10):
-            for j in range(100):
-                time0 = time.time()
-                PMX.turn_on(do_check=False) # include wait() x 4 (200 msec)
-                time1 = time.time()
+        for j in range(100):
+            time0 = time.time()
+            PMX.turn_on(do_check=False) # include wait() x 4 (200 msec)
+            time1 = time.time()
 
-                #msg, vol = PMX.check_voltage()
-                #msg, cur = PMX.check_current()
-                #writelog(logfile, 'ON', voltagelim, currentlim, vol, cur, timeperiod)
+            #msg, vol = PMX.check_voltage()
+            #msg, cur = PMX.check_current()
+            #writelog(logfile, 'ON', voltagelim, currentlim, vol, cur, timeperiod)
 
-                time.sleep(timeperiod*(i+1))
+            time.sleep(timeperiod)
 
-                PMX.turn_off(do_check=False)
-                time2 = time.time()
+            PMX.turn_off(do_check=False)
+            time2 = time.time()
 
-                #vol   , cur    = PMX.check_voltage_current()
-                #vollim, curlim = PMX.check_voltage_current_limit()
-                #writelog(logfile, 'OFF', vollim, curlim, vol, cur)
+            #vol   , cur    = PMX.check_voltage_current()
+            #vollim, curlim = PMX.check_voltage_current_limit()
+            #writelog(logfile, 'OFF', vollim, curlim, vol, cur)
 
-                with open('intervals.dat','a+') as ofile:
-                    print(f'{time2 - time1}',file=ofile)
-                    pass
-
-                time.sleep(0.5)
+            with open('intervals.dat','a+') as ofile:
+                print(f'{time2 - time1}  {time1 - time0}',file=ofile)
                 pass
-            time.sleep(1)
-            pass
+
+            time.sleep(0.5)
         pass
     else :
         msg = ("WARNING! The wait-time period is too short.\n\
