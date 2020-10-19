@@ -59,7 +59,7 @@ class PMX:
         bts = self.ser.write(str.encode("MEAS:VOLT?\n\r"))
         self.wait()
         val = float(self.ser.readline())
-        msg = "Measured voltage = %.3f V\n" % (val)
+        msg = "Measured voltage = %.3f V" % (val)
         print(msg)
         return msg, val
 
@@ -69,7 +69,7 @@ class PMX:
         self.ser.write(str.encode("MEAS:CURR?\n\r"))
         self.wait()
         val = float(self.ser.readline())
-        msg = "Measured current = %.3f A\n" % (val)
+        msg = "Measured current = %.3f A" % (val)
         print(msg)
         return msg, val
 
@@ -91,7 +91,7 @@ class PMX:
         bts = self.ser.write(str.encode("VOLT?\n\r"))
         self.wait()
         val = float(self.ser.readline())
-        msg = "Voltage limit = %.3f V\n" % (val)
+        msg = "Voltage limit = %.3f V" % (val)
         print(msg)
         return msg, val
 
@@ -101,7 +101,7 @@ class PMX:
         self.ser.write(str.encode("MEAS:CURR?\n\r"))
         self.wait()
         val = float(self.ser.readline())
-        msg = "Current limit = %.3f A\n" % (val)
+        msg = "Current limit = %.3f A" % (val)
         print(msg)
         return msg, val
 

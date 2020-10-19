@@ -45,7 +45,7 @@ def TimeControl(voltagelim=0., currentlim=0., timeperiod=0., PMX=None) :
         # Run and Sleep for the specified time period
         print(time.time())
         for i in range(15):
-            for j in range(100):
+            for j in range(2):
                 PMX.turn_on() # include wait() x 4 (200 msec)
                 time1 = time.time()
                 msg, vol = PMX.check_voltage()
@@ -66,6 +66,7 @@ def TimeControl(voltagelim=0., currentlim=0., timeperiod=0., PMX=None) :
 
                 time.sleep(1)
                 pass
+            print(time.time())
             time.sleep(5)
             pass
         print(time.time())
