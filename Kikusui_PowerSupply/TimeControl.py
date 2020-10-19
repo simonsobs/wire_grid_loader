@@ -62,10 +62,8 @@ def TimeControl(voltagelim=0., currentlim=0., timeperiod=0., PMX=None) :
                 #vollim, curlim = PMX.check_voltage_current_limit()
                 #writelog(logfile, 'OFF', vollim, curlim, vol, cur)
 
-                with open('interval_temp1.txt','a+') as ofile:
-                    print('\n',file=ofile)
-                    print(time1 - time0,file=ofile)
-                    print(time2 - time1,file=ofile)
+                with open('intervals.dat,'a+') as ofile:
+                    print(f'{time2 - time1}\n',file=ofile)
                     pass
 
                 time.sleep(0.2)
