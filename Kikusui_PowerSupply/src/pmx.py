@@ -163,7 +163,7 @@ class PMX:
 
     def turn_on(self,do_check=True):
         """ Turn the PMX on """
-        if do_check = False:
+        if do_check == False:
             self.clean_serial()
             self.ser.write(str.encode("OUTP ON\n\r"))
             pass
@@ -180,7 +180,7 @@ class PMX:
 
     def turn_off(self,do_check=True):
         """ Turn the PMX off """
-        if do_check = False:
+        if do_check == False:
             self.clean_serial()
             self.ser.write(str.encode("OUTP OFF\n\r"))
             pass
