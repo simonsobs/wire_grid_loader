@@ -44,24 +44,38 @@ def TimeControl(voltagelim=0., currentlim=0., timeperiod=0., PMX=None) :
     if timeperiod > 0.:
         # Run and Sleep for the specified time period
         print(time.time())
-        for i in range(5):
-            for j in range(20):
+        for i in range(1):
+            for j in range(1):
+                time0 = time.time()
                 PMX.turn_on() # include wait() x 4 (200 msec)
                 time1 = time.time()
                 msg, vol = PMX.check_voltage()
+                time2 = time.time()
                 msg, cur = PMX.check_current()
+                time3 = time.time()
                 writelog(logfile, 'ON', voltagelim, currentlim, vol, cur, timeperiod)
+                time4 = time.time()
 
-                time.sleep(timeperiod*(i+1))
+                #time.sleep(timeperiod*(i+1))
 
                 PMX.turn_off()
-                time2 = time.time()
+                time5 = time.time()
                 vol   , cur    = PMX.check_voltage_current()
+                time6 = time.time()
                 vollim, curlim = PMX.check_voltage_current_limit()
+                time7 = time.time()
                 writelog(logfile, 'OFF', vollim, curlim, vol, cur)
+                time8 = time.time()
 
-                with open('interval_temp.dat','a+') as itemp:
-                    print(time2-time1,file=itemp)
+                with open('interval_temp.dat','a+') as ofile:
+                    print(f'Start-up time PMX.turn_on: {time1 - time0}',file=ofile)
+                    print(f'Start-up time On-PMX.check_vlotage: {time2 - time1}',file=ofile)
+                    print(f'Start-up time On-PMX.check_current: {time3 - time2}',file=ofile)
+                    print(f'Start-up time On-writelog: {time4 - time3}',file=ofile)
+                    print(f'Start-up time PMX.turn_off: {time5 - time4}',file=ofile)
+                    print(f'Start-up time Off-PMX.check_vlotage: {time6 - time5}',file=ofile)
+                    print(f'Start-up time Off-PMX.check_current: {time7 - time6}',file=ofile)
+                    print(f'Start-up time Off-writelog: {time8 - time7}',file=ofile)
                     pass
 
                 time.sleep(0.2)
