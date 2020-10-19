@@ -65,7 +65,7 @@ def TimeControl(voltagelim=0., currentlim=0., timeperiod=0., PMX=None) :
                 print(f'{time2 - time1}  {time1 - time0}',file=ofile)
                 pass
 
-            time.sleep(0.5)
+            time.sleep(1.5)
         pass
     else :
         msg = ("WARNING! The wait-time period is too short.\n\
