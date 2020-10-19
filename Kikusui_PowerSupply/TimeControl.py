@@ -44,7 +44,7 @@ def TimeControl(voltagelim=0., currentlim=0., timeperiod=0., PMX=None) :
     if timeperiod > wait_turn_on:
         # Run and Sleep for the specified time period
         print(time.time())
-        for i in range(15):
+        for i in range(5):
             for j in range(2):
                 PMX.turn_on() # include wait() x 4 (200 msec)
                 time1 = time.time()
@@ -64,10 +64,10 @@ def TimeControl(voltagelim=0., currentlim=0., timeperiod=0., PMX=None) :
                     print(time2-time1,file=itemp)
                     pass
 
-                time.sleep(1)
+                time.sleep(0.5)
                 pass
             print(time.time())
-            time.sleep(5)
+            time.sleep(2)
             pass
         print(time.time())
         pass

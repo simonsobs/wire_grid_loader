@@ -171,7 +171,6 @@ class PMX:
         val = self.ser.readline()
         msg = "Output state = %s" % (val)
         print(msg)
-
         return msg
 
     def turn_off(self):
@@ -184,7 +183,6 @@ class PMX:
         val = self.ser.readline()
         msg = "Output state = %s" % (val)
         print(msg)
-
         return msg
 
     # ***** Helper Methods *****
