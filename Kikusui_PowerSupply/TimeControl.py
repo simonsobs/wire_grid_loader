@@ -47,7 +47,6 @@ def TimeControl(voltagelim=0., currentlim=0., timeperiod=0., PMX=None) :
             for j in range(100):
                 time0 = time.time()
                 PMX.turn_on(do_check=False) # include wait() x 4 (200 msec)
-
                 time1 = time.time()
 
                 #msg, vol = PMX.check_voltage()
@@ -57,7 +56,6 @@ def TimeControl(voltagelim=0., currentlim=0., timeperiod=0., PMX=None) :
                 time.sleep(timeperiod*(i+1))
 
                 PMX.turn_off(do_check=False)
-
                 time2 = time.time()
 
                 #vol   , cur    = PMX.check_voltage_current()
@@ -65,9 +63,9 @@ def TimeControl(voltagelim=0., currentlim=0., timeperiod=0., PMX=None) :
                 #writelog(logfile, 'OFF', vollim, curlim, vol, cur)
 
                 with open('interval_temp1.txt','a+') as ofile:
-                    print('\n')
-                    print(time1 - time0)
-                    print(time2 - time1)
+                    print('\n',file=ofile)
+                    print(time1 - time0,file=ofile)
+                    print(time2 - time1,file=ofile)
                     pass
 
                 time.sleep(0.2)
