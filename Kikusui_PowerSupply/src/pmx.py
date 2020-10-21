@@ -82,7 +82,7 @@ class PMX:
             "Measured voltage = %.3f V\n"
             "Measured current = %.3f A\n"
             % (voltage, current))
-        print(msg)
+        #print(msg)
         return voltage, current
 
     def check_voltagelimit(self):
@@ -114,7 +114,7 @@ class PMX:
             "Voltage limit = %.3f V\n"
             "Current limit = %.3f A\n"
             % (voltage, current))
-        print(msg)
+        #print(msg)
         return voltage, current
 
     def check_output(self):
@@ -141,7 +141,7 @@ class PMX:
         self.ser.write(str.encode("VOLT?\n\r"))
         self.wait()
         val = self.ser.readline()
-        msg = "Voltage set = %.3f V" % (float(val))
+        msg = "Voltage set = %.3f V\n" % (float(val))
         if (silent != True):
             print(msg)
 
@@ -161,31 +161,44 @@ class PMX:
 
         return msg
 
-    def turn_on(self):
+    def turn_on(self,do_check=True):
         """ Turn the PMX on """
-        self.clean_serial()
-        self.ser.write(str.encode("OUTP ON\n\r"))
-        self.wait()
-        self.ser.write(str.encode("OUTP?\n\r"))
-        self.wait()
-        val = self.ser.readline()
-        msg = "Output state = %s" % (val)
-        print(msg)
+        if do_check == False:
+            self.clean_serial()
+            self.ser.write(str.encode("OUTP ON\n\r"))
+            msg = "PMX turned ON perhaps\n"
+            print(msg)
+            pass
+        else:
+            self.clean_serial()
+            self.ser.write(str.encode("OUTP ON\n\r"))
+            self.wait()
+            self.ser.write(str.encode("OUTP?\n\r"))
+            self.wait()
+            val = self.ser.readline()
+            msg = "Output state = %s" % (val)
+            print(msg)
+            return msg
+            pass
 
-        return msg
-
-    def turn_off(self):
+    def turn_off(self,do_check=True):
         """ Turn the PMX off """
-        self.clean_serial()
-        self.ser.write(str.encode("OUTP OFF\n\r"))
-        self.wait()
-        self.ser.write(str.encode("OUTP?\n\r"))
-        self.wait()
-        val = self.ser.readline()
-        msg = "Output state = %s" % (val)
-        print(msg)
-
-        return msg
+        if do_check == False:
+            self.clean_serial()
+            self.ser.write(str.encode("OUTP OFF\n\r"))
+            msg = "PMX turned OFF perhaps\n"
+            print(msg)
+            pass
+        else:
+            self.clean_serial()
+            self.ser.write(str.encode("OUTP OFF\n\r"))
+            self.wait()
+            self.ser.write(str.encode("OUTP?\n\r"))
+            self.wait()
+            val = self.ser.readline()
+            msg = "Output state = %s" % (val)
+            print(msg)
+            return msg
 
     # ***** Helper Methods *****
     def __conn(self, rtu_port=None, tcp_ip=None, tcp_port=None, timeout=None):

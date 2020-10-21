@@ -8,3 +8,6 @@ aho*
 test*
 log/*
 */log/*
+*.pyc
+__pycache__/
+*/__pycache__/
