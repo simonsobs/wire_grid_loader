@@ -46,8 +46,8 @@ class DWL:
     def get_single_angle(self):
         """ Measure the single-axis angle """
         self.clean_serial()
-        #command=b"\x06\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00";
-        command=b"\x06\x05\x01\x00\x00\x00\x00\x00";
+        command=b"\x06\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00";
+        #command=b"\x06\x05\x01\x00\x00\x00\x00\x00";
         print(command);
         bts = self.ser.write(command)
         self.wait()
@@ -116,6 +116,12 @@ class DWL:
             self._tcp_port = int(tcp_port)
             self.using_tcp = True
             msg = "Connected to TCP IP %s at port %d" % (tcp_ip, tcp_port)
+
+            command=b"\x06\x24\x00\x00\x00\x00\x00\x00";
+            print(command);
+            bts = self.ser.write(command)
+            self.wait()
+
         else:
             raise Exception(
                 "Aborted PMX._conn() due to unknown error")
