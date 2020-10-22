@@ -2,7 +2,7 @@
 use_moxa = True
 
 # MOXA IP address
-tcp_ip = '192.168.1.7' # USC540 serial converter
+tcp_ip = '192.168.0.7' # USC540 serial converter
 tcp_port =  23 # CH1
 
 # ttyUSB port
