@@ -39,7 +39,7 @@ def powerOff(PMX=None) :
     PMX.turn_off()
     vol   , cur    = PMX.check_voltage_current()
     vollim, curlim = PMX.check_voltage_current_limit()
-    writelog(logfile, 'OFF', vollim, curlim, vol, cur)
+    writelog(logfile, 'OFF', notmakesure=False, vollim, curlim, vol, cur)
 
     return PMX
 
