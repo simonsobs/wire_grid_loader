@@ -39,7 +39,7 @@ def powerOn(voltagelim=0., currentlim=0., timeperiod=0., checkvalues=True, PMX=N
     msg = PMX.set_voltage(voltagelim)
     msg = PMX.set_current(currentlim)
 
-    if checkvalues=True:
+    if checkvalues==True:
         # Turn On
         PMX.turn_on() # include wait() x 4 (200 msec)
         msg, vol = PMX.check_voltage()

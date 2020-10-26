@@ -16,7 +16,7 @@ if sys.version_info.major == 2:
 def TimeControl(voltagelim=0., currentlim=0., timeperiod=0., continuous=False):
     import powerOn
 
-    if continuous=True:
+    if continuous==True:
         powerOn(voltagelim, currentlim)
         pass
     else:
