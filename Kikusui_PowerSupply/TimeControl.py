@@ -3,7 +3,7 @@
 # Built-in python functions
 import sys
 import time
-from powerOn import parseCmdLine, powerOn
+from powerOn import powerOn, parseCmdLine
 
 # Check the python version
 if sys.version_info.major == 2:
@@ -13,13 +13,14 @@ if sys.version_info.major == 2:
     pass
 
 ### main function ###
-def TimeControl(voltagelim=0., currentlim=0., timeperiod=0., continuous=False):
-    if continuous==True:
-        powerOn(voltagelim, currentlim)
+def TimeControl(voltagelim=0., currentlim=0., timeperiod=0., notmakesure=True):
+    if timeperiod > 0.:
+        for i in range(1):
+            powerOn(voltagelim, currentlim, timeperiod, notmakesure=True)
+            pass
         pass
     else:
-        for i in range(1):
-            powerOn(voltagelim, currentlim, timeperiod, checkvalues=False)
+        print("This is a script to measure the relation between operation time of power supply and proceeded angle.")
 
 ### main command when this script is directly run ###
 if __name__ == '__main__':
@@ -28,7 +29,7 @@ if __name__ == '__main__':
     voltagelim = config.voltagelim
     currentlim = config.currentlim
     timeperiod = config.timeperiod
-    checkvalues = config.checkvalues
+    notmakesure = config.notmakesure
 
-    TimeControl(voltagelim, currentlim, timeperiod, continuous=False)
+    TimeControl(voltagelim, currentlim, timeperiod, notmakesure)
     pass

@@ -3,10 +3,10 @@ import datetime
 from pytz import timezone
 
 ### Log format ###
-def writelog(logfile, onoff, checkvalues, voltagelim, currentlim, vol, cur, timeperiod=0.) :
+def writelog(logfile, onoff, notmakesure, voltagelim, currentlim, vol, cur, timeperiod=0.) :
     now = datetime.datetime.now(timezone('UTC'))
     nowStr  = now.strftime('%Y-%m-%d %H:%M:%S-%Z')
-    if checkvalues==True:
+    if notmakesure==False:
       if timeperiod > 0. :
         log = ('{:25s} {:3s} {:3s} {:8.3f} {:8.3f} {:8.3f} {:8.3f} {:8.3f}\n'.format(nowStr, onoff, 'YES', voltagelim, currentlim, vol, cur, timeperiod))
       else :
