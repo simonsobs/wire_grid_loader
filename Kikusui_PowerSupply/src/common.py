@@ -3,14 +3,21 @@ import datetime
 from pytz import timezone
 
 ### Log format ###
-def writelog(logfile, onoff, voltagelim, currentlim, vol, cur, timeperiod=0.) :
+def writelog(logfile, onoff, checks, voltagelim, currentlim, vol=2725, cur=2725, timepreriod=0.) :
     now = datetime.datetime.now(timezone('UTC'))
     nowStr  = now.strftime('%Y-%m-%d %H:%M:%S-%Z')
-    if timeperiod>0. :
-      log = ('{:25s} {:3s} {:8.3f} {:8.3f} {:8.3f} {:8.3f} {:8.3f}\n'.format(nowStr, onoff, voltagelim, currentlim, vol, cur, timeperiod))
-    else :
-      log = ('{:25s} {:3s} {:8.3f} {:8.3f} {:8.3f} {:8.3f} {:8s}\n'.format(nowStr, onoff, voltagelim, currentlim, vol, cur, '--------'))
-      pass;
+    if checks=True:
+      if timeperiod>0. :
+        log = ('{:25s} {:3s} {:3s} {:8.3f} {:8.3f} {:8.3f} {:8.3f} {:8.3f}\n'.format(nowStr, onoff, 'YES', voltagelim, currentlim, vol, cur, timeperiod))
+      else :
+        log = ('{:25s} {:3s} {:3s} {:8.3f} {:8.3f} {:8.3f} {:8.3f} {:8s}\n'.format(nowStr, onoff, 'YES', voltagelim, currentlim, vol, cur, '--------',))
+        pass;
+    else:
+      if timeperiod>0. :
+        log = ('{:25s} {:3s} {:3s} {:8.3f} {:8.3f} {:8s} {:8s} {:8.3f}\n'.format(nowStr, onoff, 'NO', voltagelim, currentlim, '--------', '--------', timeperiod))
+      else :
+        log = ('{:25s} {:3s} {:3s} {:8.3f} {:8.3f} {:8s} {:8s} {:8s}\n'.format(nowStr, onoff, 'NO', voltagelim, currentlim, '--------', '--------', '--------',))
+        pass;
     logfile.write(log)
     return log
 
@@ -26,7 +33,7 @@ def openlog(log_dir) :
       logfile = open(logfilename, 'a+')
     else :
       logfile = open(logfilename, 'w' )
-      log = '# Date Time-Timezone ON/OFF VoltageLimit[V] CurrentLimit[A] Voltage[V] Current[A] powerOn-timeperiod[sec]\n'
+      log = '# Date Time-Timezone ON/OFF CheckValues[Y/N] VoltageLimit[V] CurrentLimit[A] Voltage[V] Current[A] powerOn-timeperiod[sec]\n'
       logfile.write(log)
       pass
     return logfile;

@@ -20,7 +20,7 @@ import src.pmx as pm  # noqa: E402
 from src.common import * # writelog(), openlog()
 
 ### main function ###
-def powerOn(voltagelim=0., currentlim=0., timeperiod=0., PMX=None) :
+def powerOn(voltagelim=0., currentlim=0., timeperiod=0., checkvalues=True, PMX=None) :
 
     # Connect to PMX power supply
     if PMX==None :
@@ -34,35 +34,50 @@ def powerOn(voltagelim=0., currentlim=0., timeperiod=0., PMX=None) :
 
     # Open log file
     logfile = openlog(cg.log_dir)
-    
+
     # Set voltage & current 
     msg = PMX.set_voltage(voltagelim)
     msg = PMX.set_current(currentlim)
 
-    # Turn On
-    PMX.turn_on() # include wait() x 4 (200 msec)
-    msg, vol = PMX.check_voltage()
-    msg, cur = PMX.check_current()
-    wait_turn_on = PMX.waittime * 4.
-    writelog(logfile, 'ON', voltagelim, currentlim, vol, cur, timeperiod)
+    if checkvalues=True:
+        # Turn On
+        PMX.turn_on() # include wait() x 4 (200 msec)
+        msg, vol = PMX.check_voltage()
+        msg, cur = PMX.check_current()
+        wait_turn_on = PMX.waittime * 4.
+        writelog(logfile, 'ON', checkvalues, voltagelim, currentlim, vol, cur, timeperiod)
 
-    # Turn OFF after timeperiod
-    # If timeperiod <= 0., the power is ON permanently.
-    if timeperiod > 0. :
-        # Sleep for the specified time period
-        if timeperiod > wait_turn_on :
-            time.sleep(timeperiod-wait_turn_on)
-        else :
-            msg = ("WARNING! The wait-time period is too short.\n\
-            The period should be larger than wait-time for turning on({:.3f} sec)."
-            .format(wait_turn_on))
-            print(msg)
+        # Turn OFF after timeperiod
+        # If timeperiod <= 0., the power is ON permanently.
+        if timeperiod > 0. :
+            # Sleep for the specified time period
+            if timeperiod > wait_turn_on :
+                time.sleep(timeperiod-wait_turn_on)
+            else :
+                msg = ("WARNING! The wait-time period is too short.\n\
+                The period should be larger than wait-time for turning on({:.3f} sec)."
+                .format(wait_turn_on))
+                print(msg)
+                pass
+
+            PMX.turn_off()
+            vol   , cur    = PMX.check_voltage_current()
+            vollim, curlim = PMX.check_voltage_current_limit()
+            writelog(logfile, 'OFF', checkvalues, vollim, curlim, vol, cur)
             pass
-       
-        PMX.turn_off()
-        vol   , cur    = PMX.check_voltage_current()
-        vollim, curlim = PMX.check_voltage_current_limit()
-        writelog(logfile, 'OFF', vollim, curlim, vol, cur)
+        pass
+    else:
+        # Turn On
+        PMX.turn_on()
+        writelog(logfile, 'ON', checkvalues, voltagelim, currentlim, 2725, 2725, timeperiod)
+
+        if timeperiod > 0. :
+            # Sleep for the specified time period
+            time.sleep(timeperiod)
+
+            PMX.turn_off()
+            writelog(logfile, 'OFF', checkvalues, voltagelim, currentlim)
+            pass
         pass
 
     return PMX
@@ -94,5 +109,3 @@ if __name__ == '__main__':
 
   powerOn(voltagelim, currentlim, timeperiod)
   pass
-  
- 
