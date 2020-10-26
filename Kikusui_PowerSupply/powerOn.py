@@ -76,7 +76,7 @@ def powerOn(voltagelim=0., currentlim=0., timeperiod=0., checkvalues=True, PMX=N
             time.sleep(timeperiod)
 
             PMX.turn_off()
-            writelog(logfile, 'OFF', checkvalues, voltagelim, currentlim)
+            writelog(logfile, 'OFF', checkvalues, voltagelim, 2725, 2725, currentlim)
             pass
         pass
 
@@ -87,14 +87,15 @@ def powerOn(voltagelim=0., currentlim=0., timeperiod=0., checkvalues=True, PMX=N
 
 ### parseCmdLine() ###
 def parseCmdLine(args):
-  from optparse import OptionParser;
-  parser = OptionParser();
-  parser.add_option('-v', '--voltage', dest='voltagelim', help='Voltage limit [V]', type = float, default=0.);
-  parser.add_option('-c', '--current', dest='currentlim', help='Current limit [A]', type = float, default=0.);
-  parser.add_option('-t', '--time'   , dest='timeperiod', help='Powering-on time [sec]: If the time=<0, KIKUSUI power supply continues to power on until you run the powerOff script.', type = float, default=0.);
-  #parser.add_option('-v', '--verbose', dest='verbose', help='verbosity (0:Normal, -1:output all)', type = int, default=0);
-  (config, args) = parser.parse_args(args);
-  return config;
+  from optparse import OptionParser
+  parser = OptionParser()
+  parser.add_option('-v', '--voltage', dest='voltagelim', help='Voltage limit [V]', type = float, default=0.)
+  parser.add_option('-c', '--current', dest='currentlim', help='Current limit [A]', type = float, default=0.)
+  parser.add_option('-t', '--time'   , dest='timeperiod', help='Powering-on time [sec]: If the time=<0, KIKUSUI power supply continues to power on until you run the powerOff script.', type = float, default=0.)
+  parser.add_option('-m', '--makesure', dest='checkvalues', help='Whether to check Voltage and Current', type = bool, default=True)
+  #parser.add_option('-v', '--verbose', dest='verbose', help='verbosity (0:Normal, -1:output all)', type = int, default=0)
+  (config, args) = parser.parse_args(args)
+  return config
 
 
 
@@ -106,6 +107,7 @@ if __name__ == '__main__':
   voltagelim = config.voltagelim
   currentlim = config.currentlim
   timeperiod = config.timeperiod
+  checkvalues = config.checkvalues
 
-  powerOn(voltagelim, currentlim, timeperiod)
+  powerOn(voltagelim, currentlim, timeperiod, checkvalues)
   pass

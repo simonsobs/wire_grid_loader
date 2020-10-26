@@ -28,6 +28,7 @@ if __name__ == '__main__':
     voltagelim = config.voltagelim
     currentlim = config.currentlim
     timeperiod = config.timeperiod
+    checkvalues = config.checkvalues
 
-    TimeControl(voltagelim, currentlim, timeperiod, continuous)
+    TimeControl(voltagelim, currentlim, timeperiod, continuous=False)
     pass
