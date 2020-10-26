@@ -4,10 +4,14 @@
 !.git
 *~
 *.obj
+*/*.obj
+*.dat
+*/*.dat
+*/*.pyc
+*.pyc
+__pycache__/
+*/__pycache__/
 aho*
 test*
 log/*
 */log/*
-*.pyc
-__pycache__/
-*/__pycache__/
