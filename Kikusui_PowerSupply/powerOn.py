@@ -76,7 +76,7 @@ def powerOn(voltagelim=0., currentlim=0., timeperiod=0., notmakesure=False, PMX=
             time.sleep(timeperiod)
 
             PMX.turn_off()
-            writelog(logfile, 'OFF', notmakesure, voltagelim, 2725, 2725, currentlim)
+            writelog(logfile, 'OFF', notmakesure, voltagelim, currentlim, 2725, 2725)
             pass
         pass
 
