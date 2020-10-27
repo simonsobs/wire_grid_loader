@@ -13,14 +13,18 @@ if sys.version_info.major == 2:
     pass
 
 ### main function ###
-def TimeControl(voltagelim=0., currentlim=0., timeperiod=0., notmakesure=True):
-    if timeperiod > 0.:
-        for i in range(1):
-            powerOn(voltagelim, currentlim, timeperiod, notmakesure=True)
-            pass
+def TimeControl(voltagelim=0., currentlim=0., timeperiod=0., notmakesure=False):
+    if notmakesure==False:
+        print("Sorry, this script still cannot meet the request. please add '-n' option")
         pass
     else:
-        print("This is a script to measure the relation between operation time of power supply and proceeded angle.")
+        if timeperiod > 0.:
+            for i in range(1):
+                powerOn(voltagelim, currentlim, timeperiod, notmakesure=True)
+                pass
+            pass
+        else:
+            print("This is a script to measure the relation between operation time of power supply and proceeded angle.")
 
 ### main command when this script is directly run ###
 if __name__ == '__main__':
