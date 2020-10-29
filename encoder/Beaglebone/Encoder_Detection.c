@@ -38,10 +38,9 @@ struct EncoderInfo {
   unsigned long int quad[ENCODER_COUNTER_SIZE];
   unsigned long int clock[ENCODER_COUNTER_SIZE];
   unsigned long int clock_overflow[ENCODER_COUNTER_SIZE];
-  unsigned long int count[ENCODER_COUNTER_SIZE];
+  //unsigned long int count[ENCODER_COUNTER_SIZE];
   unsigned long int refcount[ENCODER_COUNTER_SIZE];
   unsigned long int error_signal[ENCODER_COUNTER_SIZE];
-  //unsigned long int time_status[ENCODER_COUNTER_SIZE];
 };
 
 volatile unsigned long int *on = (volatile unsigned long int *) ON_ADDRESS;
@@ -49,7 +48,7 @@ volatile unsigned long int *clock_overflow = (volatile unsigned long int *) OVER
 volatile unsigned long int *encoder_ready = (volatile unsigned long int *) ENCODER_READY_ADDRESS;
 volatile struct EncoderInfo *encoder_packets = (volatile struct EncoderInfo *) ENCODER_ADDRESS;
 
-unsigned long int input_capture_count = 0;
+//unsigned long int input_capture_count = 0;
 unsigned long int input_reference_count = 0;
 unsigned long int i;
 unsigned long int j;
@@ -89,19 +88,17 @@ int main(void){
 	  *IEP_TMR_GLB_STS = 1;
 	  packing_status_flag = 1;
 	}
-	
+
 	ECAP.ts = *IEP_TMR_CNT;
 
 	if(packing_status_flag){
 	  if(PACK_INTERVAL <= (unsigned long long int)ECAP.ts + CLOCK_MAX - (unsigned long long int)previous_time){
 	    tstts = overflow_time;
-	    //encoder_packets[i].time_status[j] = 1;
 	    packing_status_flag = 0;
 	  }
 	}else{
 	  if((unsigned long long int)previous_time + PACK_INTERVAL <= (unsigned long long int)ECAP.ts){
 	    tstts = regular_time;
-	    //encoder_packets[i].time_status[j] = 0;
 	  }
 	}
 
@@ -111,11 +108,11 @@ int main(void){
 
 	  encoder_packets[i].clock[j] = ECAP.ts;
 	  encoder_packets[i].clock_overflow[j] = (*clock_overflow);
-	  encoder_packets[i].count[j] = input_capture_count;
+	  //encoder_packets[i].count[j] = input_capture_count;
 	  encoder_packets[i].refcount[j] = input_reference_count;
 	  encoder_packets[i].quad[j] = direction_status_flag;
 	  encoder_packets[i].error_signal[j] = error_flag;
-	  
+
 	  previous_time = ECAP.ts;
 	  tstts = counting;
 	  j += 1;
@@ -132,7 +129,7 @@ int main(void){
 	if( (((__R31 & (1 << 9)) >> 9) & 0x1) == 1){
 	  input_reference_count = 0;
 	}
-	
+
 	if(count_condition){
 	  /*if(input_capture_count == MAX_COUNTER_VALUE){
 	    input_capture_count = 0;
@@ -141,27 +138,27 @@ int main(void){
 	  if(edge_sample == 1){
 	    if( ((__R31 & (1 << 8)) >> 8) == 0 ){
 	      direction_status_flag = 0;
-	      input_capture_count += 1;
+	      //input_capture_count += 1;
 	      input_reference_count += 1;
 	    }else{
 	      direction_status_flag = 1;
-	      input_capture_count -= 1;
+	      //input_capture_count -= 1;
 	      input_reference_count -= 1;
 	    }
 	  }else{
 	    if( ((__R31 & (1 << 8)) >> 8) == 0){
 		direction_status_flag = 1;
-		input_capture_count -= 1;
+		//input_capture_count -= 1;
 		input_reference_count -= 1;
 	      }else{
 		direction_status_flag = 0;
-		input_capture_count += 1;
+		//input_capture_count += 1;
 		input_reference_count += 1;
 	      }
 	  }
 	  ECAP.p_sample = edge_sample;
 	}
-	
+
       }
       *encoder_ready = (i + 1);
       i += 1;

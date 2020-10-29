@@ -118,7 +118,7 @@ int tos_read_len = sizeof(tos_read);
 char ifilename0[] = "Encoder1.bin";
 char ifilename1[] = "Encoder2.bin";
 char ifilename2[] = "IRIG1.bin";
-char ifilename3[] = "IRIG.bin";
+char ifilename3[] = "IRIG2.bin";
 
 // *********************************
 // ************* MAIN **************
