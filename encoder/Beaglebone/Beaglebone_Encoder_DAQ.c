@@ -255,7 +255,7 @@ IRIG1.bin IRIG2.bin\n", argv[0]);
     }
   }else{
     outfile = fopen("test.txt", "w");
-    fprintf(outfile, "TIME ERROR DIRECTION TIMERCOUNT REFERENCE");
+    fprintf(outfile, "TIME ERROR DIRECTION TIMERCOUNT REFERENCE\n");
   }
 
   timeout_packet->header = 0x1234;
