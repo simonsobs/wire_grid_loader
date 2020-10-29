@@ -19,13 +19,14 @@ def TimeControl(voltagelim=0., currentlim=0., timeperiod=0., notmakesure=False):
         pass
     else:
         if timeperiod > 0.:
-            for i in range(4):
-                for j in range(10):
+            for i in range(1):
+                for j in range(6):
                     operation_current = currentlim * (i+1)
                     operation_time = timeperiod * (j+1)
-                    num_execution = 
+                    num_execution = 10
                     for k in range(int(num_execution)):
                         powerOn(voltagelim, operation_current, operation_time, notmakesure=True)
+                        time.sleep(1.5)
                 pass
             pass
         else:
