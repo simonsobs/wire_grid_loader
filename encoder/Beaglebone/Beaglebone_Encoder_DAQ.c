@@ -325,6 +325,7 @@ int main(int argc, char **argv)
       time(&measurement_stop); //test
       if(measurement_stop - measurement_start > 10){
         fprintf(measurement_time, "Stop at %ld\n", measurement_stop);
+        exit(0);
       }
 	  }
 	}else if( SAVETYPE == 2 ){
