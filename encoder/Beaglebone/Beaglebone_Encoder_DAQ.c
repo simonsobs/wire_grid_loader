@@ -126,14 +126,6 @@ int main(int argc, char **argv)
 {
   system("./pinconfig");
 
-  /*
-  if(argc != 5){
-    printf("Usage: %s Beaglebone_Encoder_DAQ Encoder1.bin Encoder2.bin \
-IRIG1.bin IRIG2.bin\n", argv[0]);
-    return 1;
-  }
-  */
-
   prussdrv_init();
 
   if(prussdrv_open(PRU_EVTOUT_1) == -1){
@@ -194,32 +186,6 @@ IRIG1.bin IRIG2.bin\n", argv[0]);
     exit(-1);
   }
 
-  /*
-  printf("Initializing PRU1\n");
-  if(argc > 2){
-    if(prussdrv_load_datafile(1, argv[2]) < 0){
-      fprintf(stderr, "Error loading %s\n", argv[2]);
-      exit(-1);
-    }
-  }
-  if(prussdrv_exec_program(1, argv[1]) < 0){
-    fprintf(stderr, "Error loading %s\n", argv[1]);
-    exit(-1);
-  }
-
-  printf("Initializing PRU0\n");
-  if(argc == 5){
-    if(prussdrv_load_datafile(0, argv[4]) < 0){
-      fprintf(stderr, "Error loading %s\n", argv[4]);
-      exit(-1);
-    }
-  }
-  if(prussdrv_exec_program(0, argv[3]) < 0){
-    fprintf(stderr, "Error loading %s\n", argv[3]);
-    exit(-1);
-  }
-  */
-
   const char *socket_type = (isTCP) ? "TCP" : "UDP";
   FILE *outfile;
   if(!SAVETOBB){
@@ -254,7 +220,7 @@ IRIG1.bin IRIG2.bin\n", argv[0]);
       }
     }
   }else{
-    outfile = fopen("test.txt", "w");
+    outfile = fopen(argv[1], "w");
     fprintf(outfile, "TIME ERROR DIRECTION TIMERCOUNT REFERENCE\n");
   }
 
