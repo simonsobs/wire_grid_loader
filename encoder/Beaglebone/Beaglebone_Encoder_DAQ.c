@@ -353,10 +353,10 @@ IRIG1.bin IRIG2.bin\n", argv[0]);
 	  }
 	}else if( SAVETYPE == 2 ){
 	  for( i = 0; i < ENCODER_PACKETS_TO_SEND ; i++ ){
-	    fprintf(outfile, "%lu\n", encoder_to_send[i].count[0]);
+	    //fprintf(outfile, "%lu\n", encoder_to_send[i].count[0]);
 	  }
 	}else if( SAVETYPE == 3 ){
-	  fprintf(outfile, "%lu\n", encoder_to_send[0].count[0]);
+	  //fprintf(outfile, "%lu\n", encoder_to_send[0].count[0]);
 	  if( i % 100 == 0 ){
 	    tmp1_time = clock();
 	    fflush( outfile );
