@@ -188,6 +188,8 @@ int main(int argc, char **argv)
 
   const char *socket_type = (isTCP) ? "TCP" : "UDP";
   FILE *outfile;
+  FILE *measurement_time; //test
+  time_t measurement_start, measurement_stop;
   if(!SAVETOBB){
 
     if(isTCP){
@@ -222,6 +224,9 @@ int main(int argc, char **argv)
   }else{
     outfile = fopen(argv[1], "w");
     fprintf(outfile, "TIME ERROR DIRECTION TIMERCOUNT REFERENCE\n");
+    time(&measurement_start) //test
+    measurement_time = fopen("timer.txt","w");
+    fprintf(measurement_time, "Start at %ld\n", measurement_start);
   }
 
   timeout_packet->header = 0x1234;
@@ -317,6 +322,10 @@ int main(int argc, char **argv)
 	      fprintf(outfile, "%ld %lu %lu %llu %lu\n", time(NULL), 1-encoder_to_send[i].error_signal[j], encoder_to_send[i].quad[j], timer_count, (encoder_to_send[i].refcount[j]+REFERENCE_COUNT_MAX)%REFERENCE_COUNT_MAX);
 	      //fprintf(outfile,"%llu %lu\n", time, encoder_to_send[i].count[j]);
 	    }
+      time(&measurement_stop); //test
+      if(measurement_stop - measurement_start > 10){
+        fprintf(measurement_time, "Stop at %ld\n", measurement_stop);
+      }
 	  }
 	}else if( SAVETYPE == 2 ){
 	  for( i = 0; i < ENCODER_PACKETS_TO_SEND ; i++ ){
