@@ -11,6 +11,8 @@
 #include<arpa/inet.h>
 #include<netinet/in.h>
 
+#define OPERATION_TIME 300
+
 #define isTCP 0 // 0:UDP, 1:TCP
 #define SAVETOBB 1 // 1:True(save file), 0:False(send data to PC)
 #define SAVETYPE 0 // 0:save all data, 1:save first signal in the encoder pasket, 2:save the first packet of the bufferd packet
@@ -323,7 +325,7 @@ int main(int argc, char **argv)
 	      //fprintf(outfile,"%llu %lu\n", time, encoder_to_send[i].count[j]);
 	    }
       time(&measurement_stop); //test
-      if(measurement_stop - measurement_start > 10){
+      if(measurement_stop - measurement_start > OPERATION_TIME){
         fprintf(measurement_time, "Stop at %ld\n", measurement_stop);
         exit(0);
       }
