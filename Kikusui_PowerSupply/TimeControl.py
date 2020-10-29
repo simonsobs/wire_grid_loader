@@ -18,7 +18,7 @@ def TimeControl(voltagelim=0., currentlim=0., timeperiod=0., notmakesure=False):
         print("Sorry, this script still cannot meet the request. please add '-n' option")
         pass
     else:
-        if voltagelim !== 12.:
+        if voltagelim != 12.:
             print("the rated Voltage of this motor DMN37KA is 12V")
             sys.exit(1)
         if timeperiod > 0.:
