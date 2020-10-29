@@ -115,6 +115,11 @@ int tos_read_len = sizeof(tos_read);
 #define PRU_CLOCKSPEED 200000000
 #define REFERENCE_COUNT_MAX 100000 // max num_counts of a grid cycle
 
+char ifilename0[] = "Encoder1.bin";
+char ifilename1[] = "Encoder2.bin";
+char ifilename2[] = "IRIG1.bin";
+char ifilename3[] = "IRIG.bin";
+
 // *********************************
 // ************* MAIN **************
 // *********************************
@@ -122,11 +127,13 @@ int main(int argc, char **argv)
 {
   system("./pinconfig");
 
+  /*
   if(argc != 5){
     printf("Usage: %s Beaglebone_Encoder_DAQ Encoder1.bin Encoder2.bin \
 IRIG1.bin IRIG2.bin\n", argv[0]);
     return 1;
   }
+  */
 
   prussdrv_init();
 
@@ -167,6 +174,29 @@ IRIG1.bin IRIG2.bin\n", argv[0]);
   encoder_read = 0;
 
   printf("Initializing PRU1\n");
+  if(prussdrv_load_datafile(1, ifilename1) < 0){
+      fprintf(stderr, "Error loading %s\n", ifilename1);
+      exit(-1);
+  }
+
+  if(prussdrv_exec_program(1, ifilename0) < 0){
+    fprintf(stderr, "Error loading %s\n", ifilename0);
+    exit(-1);
+  }
+
+  printf("Initializing PRU0\n");
+  if(prussdrv_load_datafile(0, ifilename3) < 0){
+      fprintf(stderr, "Error loading %s\n", ifilename3);
+      exit(-1);
+  }
+
+  if(prussdrv_exec_program(0, ifilename2) < 0){
+    fprintf(stderr, "Error loading %s\n", ifilename2);
+    exit(-1);
+  }
+
+  /*
+  printf("Initializing PRU1\n");
   if(argc > 2){
     if(prussdrv_load_datafile(1, argv[2]) < 0){
       fprintf(stderr, "Error loading %s\n", argv[2]);
@@ -189,6 +219,7 @@ IRIG1.bin IRIG2.bin\n", argv[0]);
     fprintf(stderr, "Error loading %s\n", argv[3]);
     exit(-1);
   }
+  */
 
   const char *socket_type = (isTCP) ? "TCP" : "UDP";
   FILE *outfile;
