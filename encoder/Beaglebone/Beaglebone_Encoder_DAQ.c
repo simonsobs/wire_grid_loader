@@ -255,7 +255,7 @@ IRIG1.bin IRIG2.bin\n", argv[0]);
     }
   }else{
     outfile = fopen("test.txt", "w");
-    fprintf(outfile, "ERROR DIRECTION TIMERCOUNT REFERENCE")
+    fprintf(outfile, "TIME ERROR DIRECTION TIMERCOUNT REFERENCE")
   }
 
   timeout_packet->header = 0x1234;
@@ -346,9 +346,9 @@ IRIG1.bin IRIG2.bin\n", argv[0]);
 	  //fprintf(outfile, "#colomn status message\n");
 	  for( i = 0; i < ENCODER_PACKETS_TO_SEND; i++ ){
 	    for( j = 0; j < ENCODER_COUNTER_SIZE; j++ ){
-	      time = (unsigned long long int)encoder_to_send[i].clock[j] + ( (unsigned long long int)(encoder_to_send[i].clock_overflow[j]) << (4*8) );
+	      timer_count = (unsigned long long int)encoder_to_send[i].clock[j] + ( (unsigned long long int)(encoder_to_send[i].clock_overflow[j]) << (4*8) );
 	      //fprintf(outfile,"%lu %lu %llu %11.6f %lu %lu\n", encoder_to_send[i].time_status[j], encoder_to_send[i].clock_overflow[j], time, (float)time/PRU_CLOCKSPEED, encoder_to_send[i].count[j], encoder_to_send[i].refcount[j]);
-	      fprintf(outfile, "%lu %lu %llu %lu\n", 1-encoder_to_send[i].error_signal[j], encoder_to_send[i].quad[j], time, (encoder_to_send[i].refcount[j]+REFERENCE_COUNT_MAX)%REFERENCE_COUNT_MAX);
+	      fprintf(outfile, "%d %lu %lu %llu %lu\n", time(NULL), 1-encoder_to_send[i].error_signal[j], encoder_to_send[i].quad[j], timer_count, (encoder_to_send[i].refcount[j]+REFERENCE_COUNT_MAX)%REFERENCE_COUNT_MAX);
 	      //fprintf(outfile,"%llu %lu\n", time, encoder_to_send[i].count[j]);
 	    }
 	  }
