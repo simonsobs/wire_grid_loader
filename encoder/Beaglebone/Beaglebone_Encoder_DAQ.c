@@ -225,7 +225,7 @@ int main(int argc, char **argv)
     }
   }else{
     outfile = fopen(argv[1], "w");
-    fprintf(outfile, "TIME ERROR DIRECTION TIMERCOUNT REFERENCE\n");
+    fprintf(outfile, "#TIME ERROR DIRECTION TIMERCOUNT REFERENCE\n");
     time(&measurement_start); //test
     measurement_time = fopen("timer.txt","w");
     fprintf(measurement_time, "Start at %ld\n", measurement_start);
