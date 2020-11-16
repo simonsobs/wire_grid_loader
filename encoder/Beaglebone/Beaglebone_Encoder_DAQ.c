@@ -11,7 +11,7 @@
 #include<arpa/inet.h>
 #include<netinet/in.h>
 
-#define OPERATION_TIME 300
+#define OPERATION_TIME 60
 
 #define isTCP 0 // 0:UDP, 1:TCP
 #define SAVETOBB 1 // 1:True(save file), 0:False(send data to PC)
