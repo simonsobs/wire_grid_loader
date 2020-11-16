@@ -4,7 +4,7 @@
 #include<stdlib.h>
 
 #define TEST_COUNT 0
-#define PACK_INTERVAL 10000
+#define PACK_INTERVAL 100000
 #define CLOCK_MAX 4294967295
 unsigned int count_condition = 0;
 unsigned long int previous_time;
