@@ -14,19 +14,24 @@ This library is used to send command and receive data
 from devices via USC540 serial converter.
 
 ## Kikusui\_PowerSupply (rotation motor)
-Scriopts to control KIKUSUI power supply (PMX)
+Scripts to control KIKUSUI power supply (PMX)
 
 Requirements: MOXA 
 Communication: RS232 serial communication via the serial converter
 
 ## GravitySensor
-Scriopts to control KIKUSUI power supply (PMX)
+Scripts to control KIKUSUI power supply (PMX)
 
 Requirements: MOXA 
 Communication: RS422 serial communication via the serial converter
 
-## Actuator Blackbox (linear actuator) [*Under construction]
+## Actuator (Blackbox)
+Scripts to control a linear actuator
 
+Requirements: No (need pyserial library in python)
+Communication: USB (Blackbox has a RS232 serial converter inside itself.)
+
+- testing : This directory is for test.
 
 
 # Tags
