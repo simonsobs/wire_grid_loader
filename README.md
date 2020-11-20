@@ -28,7 +28,7 @@ Communication: RS422 serial communication via the serial converter
 ## Actuator (Blackbox)
 Scripts to control a linear actuator
 
-Requirements: No (need pyserial library in python)
+Requirements: "pyserial" library in python
 
 Communication: USB (Blackbox has a RS232 serial converter inside itself.)
 
