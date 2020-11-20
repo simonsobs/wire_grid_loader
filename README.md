@@ -25,7 +25,7 @@ Scriopts to control KIKUSUI power supply (PMX)
 Requirements: MOXA 
 Communication: RS422 serial communication via the serial converter
 
-## Blackbox (linear actuator) [*Under construction]
+## Actuator Blackbox (linear actuator) [*Under construction]
 
 
 
