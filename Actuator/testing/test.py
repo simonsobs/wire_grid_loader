@@ -53,6 +53,7 @@ def getresponse(serial,command,verbose=1) :
     pass;
   return res;
 
+'''
 # Wait until receiving 'ok'
 def waitOK(serial, max_loop = 100000) :
   i = 0;
@@ -73,6 +74,7 @@ def waitOK(serial, max_loop = 100000) :
     mysleep();
     pass;
   return 0;
+'''
 
 
 # Wait for end of moving (Idle status)
@@ -138,7 +140,12 @@ time.sleep(2);
 ser.write(b'G91 G0 F100000 X10 \r\n')
 time.sleep(2);
 '''
-sendCommand(ser,'G91 G0 F100000 X-100Y100')
+
+getresponse(ser, '$21=0'); # hard limit switch
+getresponse(ser, '$X');
+
+#sendCommand(ser,'G91 G0 F100000 X300Y-300') # forward
+sendCommand(ser,'G91 G0 F100000 X-300Y300') # backward
 waitIdle(ser);
 
 
