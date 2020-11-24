@@ -111,6 +111,18 @@ The ``push`` command does the following 2 steps;
   * This command shows the information of the remote branches fetched into your PC.
 
 
+## Ignore changes in the working directories & pull remote repository
+- Get update in the remote repository
+
+        git fetch --all
+
+- Reset working directory/index(added materials)/HEAD(position of local repository) to the origin/master
+
+        git reset --hard Origin/master
+
+- Update the working directory/index/HEAD to the updated remote repository
+
+        git pull
     
 
 
@@ -147,6 +159,8 @@ Here, the situation is that you want to create a new git repository and uploaded
         git push -u origin master
 
     ``<GIT REPOSITORY ADDRESS>`` is git@github.com:simonsobs/wire_grid_loader.git for the wire_grid_loader repository.
+
+
 
 ## Customization
 ### ssh setting
