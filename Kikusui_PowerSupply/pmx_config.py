@@ -4,11 +4,6 @@ import os
 use_moxa = True
 
 # MOXA IP address
-<<<<<<< HEAD
-tcp_ip = '192.168.0.7' # USC540 serial converter
-#tcp_ip = '192.168.1.70' # USC540 serial converter at Kyoto
-=======
->>>>>>> a42ef1deeb664a3839fdab4858b1c8ec5c184ae6
 tcp_port =  23 # CH1
 hostname = os.environ['HOSTNAME'];
 print('hostname : {}'.format(hostname));
