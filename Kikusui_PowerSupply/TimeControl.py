@@ -26,7 +26,7 @@ def TimeControl(voltagelim=0., currentlim=0., timeperiod=0., notmakesure=False):
                 for j in range(6):
                     operation_current = currentlim + 0.3*i
                     operation_time = timeperiod*(j+1)
-                    num_execution = 3
+                    num_execution = 100
                     time.sleep(6)
                     if operation_current > 3.0:
                         print("operation current is over a range from 0. to 3.0")
