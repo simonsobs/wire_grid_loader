@@ -22,18 +22,21 @@ def TimeControl(voltagelim=0., currentlim=0., timeperiod=0., notmakesure=False):
             print("the rated Voltage of this motor DMN37KA is 12V")
             sys.exit(1)
         if timeperiod > 0.:
-            for i in range(100):
-                operation_current = currentlim
-                operation_time = timeperiod
-                num_execution = 7
-                if operation_current > 3.0:
-                    print("operation current is over a range from 0. to 3.0")
-                    sys.exit(1)
-                for k in range(int(num_execution)):
-                    powerOn(voltagelim, operation_current, operation_time, notmakesure=True)
-                    time.sleep(2)
+            for i in range(6):
+                for j in range(6)
+                    operation_current = currentlim + 0.3*i
+                    operation_time = timeperiod*(j+1)
+                    num_execution = 3
+                    time.sleep(6)
+                    if operation_current > 3.0:
+                        print("operation current is over a range from 0. to 3.0")
+                        sys.exit(1)
+                    for k in range(int(num_execution)):
+                        powerOn(voltagelim, operation_current, operation_time, notmakesure=True)
+                        time.sleep(3)
+                        pass
+                    time.sleep(4)
                     pass
-                time.sleep(10)
                 pass
             pass
         else:

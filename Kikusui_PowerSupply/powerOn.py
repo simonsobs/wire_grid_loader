@@ -35,7 +35,7 @@ def powerOn(voltagelim=0., currentlim=0., timeperiod=0., notmakesure=False, PMX=
     # Open log file
     logfile = openlog(cg.log_dir)
 
-    # Set voltage & current 
+    # Set voltage & current
     msg = PMX.set_voltage(voltagelim)
     msg = PMX.set_current(currentlim)
 
