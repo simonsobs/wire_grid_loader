@@ -5,10 +5,8 @@ use_moxa = True
 
 # MOXA IP address
 tcp_port =  23 # CH1
-
 hostname = os.environ['HOSTNAME'];
 print('hostname : {}'.format(hostname));
-
 if hostname.endswith('hepnet.scphys.kyoto-u.ac.jp'):
   tcp_ip = '192.168.1.70' # USC540 serial converter at Kyoto
 elif hostname == 'cmb-daq01' :
