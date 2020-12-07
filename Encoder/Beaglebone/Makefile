@@ -6,8 +6,8 @@ pru_hex_converter 	= /usr/bin/hexpru
 
 all: exports host
 
-host: Encoder_data.bin Encoder_code.bin IRIG_data.bin IRIG_code.bin Beaglebone_Encoder_DAQ_TCP.c 
-	gcc -std=gnu11 Beaglebone_Encoder_DAQ_TCP.c -o Beaglebone_Encoder_DAQ -lprussdrv -lrt
+host: Encoder_data.bin Encoder_code.bin IRIG_data.bin IRIG_code.bin Beaglebone_Encoder_DAQ.c
+	gcc -std=gnu11 Beaglebone_Encoder_DAQ.c -o Beaglebone_Encoder_DAQ -lprussdrv -lrt
 
 #
 # Here's the PRU code generation part
