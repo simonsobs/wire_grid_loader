@@ -105,7 +105,7 @@ volatile unsigned long int* clock_overflow =
 // *** IRIG-only pointers ***
 // Identifies when and which IRIG struct is ready
 // to be read from shared memory
-volatile unsigned long int* irig_ready = 
+volatile unsigned long int* irig_ready =
 (volatile unsigned long int *) IRIG_READY_ADDRESS;
 // Pointer to shared memory for IRIG structs
 volatile struct IrigInfo* irig_packets =

@@ -113,6 +113,8 @@ int tos_write = 0b10100100;
 int tos_read;
 int tos_read_len = sizeof(tos_read);
 
+int irig_secs, irig_mins, irig_hours, irig_day, irig_year;
+
 #define PRU_CLOCKSPEED 200000000
 #define REFERENCE_COUNT_MAX 100000 // max num_counts of a grid cycle
 
@@ -221,7 +223,7 @@ int main(int argc, char **argv)
     outfile = fopen(argv[1], "w");
     fprintf(outfile, "#TIME ERROR DIRECTION TIMERCOUNT REFERENCE\n");
     irigout = fopen("irig_output_tmp.dat", "w");
-    //fprintf(irigout, "#clock clock_overflow info synch synch_overflow\n");
+    fprintf(irigout, "#sec min hour day year\n");
     time(&measurement_start); //test
     measurement_time = fopen("timer.txt","w");
     fprintf(measurement_time, "Start at %ld\n", measurement_start);
@@ -352,6 +354,15 @@ int main(int argc, char **argv)
       }
 
       if( irig_ind == IRIG_PACKETS_TO_SEND ){
+        for(i = 0; i < IRIG_PACKETS_TO_SEND; i++){
+          irig_secs = de_irig(irig_to_send[i].info[0], 1);
+          irig_mins = de_irig(irig_to_send[i].info[1], 0);
+          irig_hours = de_irig(irig_to_send[i].info[2], 0);
+          irig_day = de_irig(irig_to_send[i].info[3], 0) \
+                     + de_irig(irig_to_send[i].info[4], 0) * 100;
+          irig_year = de_irig(irig_to_send[i].info[5], 0);
+          fprintf(irigout, "%d %d %d %d %d\n", irig_secs, irig_mins, irig_hours, irig_day, irig_year);
+        };
 	      irig_ind = 0;
       }
 
@@ -387,3 +398,14 @@ int main(int argc, char **argv)
   return 0;
 
 }
+
+int de_irig(unsigned long int irig_signal, int base_shift){
+  return (((irig_signal >> (0+base_shift)) & 1)
+            + ((irig_signal >> (1+base_shift)) & 1) * 2
+            + ((irig_signal >> (2+base_shift)) & 1) * 4
+            + ((irig_signal >> (3+base_shift)) & 1) * 8
+            + ((irig_signal >> (5+base_shift)) & 1) * 10
+            + ((irig_signal >> (6+base_shift)) & 1) * 20
+            + ((irig_signal >> (7+base_shift)) & 1) * 40
+            + ((irig_signal >> (8+base_shift)) & 1) * 80);
+};
