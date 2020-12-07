@@ -11,7 +11,7 @@
 #include<arpa/inet.h>
 #include<netinet/in.h>
 
-#define OPERATION_TIME 25000
+#define OPERATION_TIME 120
 
 #define isTCP 0 // 0:UDP, 1:TCP
 #define SAVETOBB 1 // 1:True(save file), 0:False(send data to PC)
@@ -190,6 +190,7 @@ int main(int argc, char **argv)
 
   const char *socket_type = (isTCP) ? "TCP" : "UDP";
   FILE *outfile;
+  FILE *irigout;
   FILE *measurement_time; //test
   time_t measurement_start, measurement_stop;
   if(!SAVETOBB){
@@ -226,6 +227,8 @@ int main(int argc, char **argv)
   }else{
     outfile = fopen(argv[1], "w");
     fprintf(outfile, "#TIME ERROR DIRECTION TIMERCOUNT REFERENCE\n");
+    irigout = fopen("irig_output_tmp.dat", "w");
+    //fprintf(irigout, "#clock clock_overflow info synch synch_overflow\n");
     time(&measurement_start); //test
     measurement_time = fopen("timer.txt","w");
     fprintf(measurement_time, "Start at %ld\n", measurement_start);
