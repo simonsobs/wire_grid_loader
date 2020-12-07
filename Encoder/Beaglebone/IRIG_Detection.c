@@ -105,7 +105,7 @@ volatile unsigned long int* clock_overflow =
 // *** IRIG-only pointers ***
 // Identifies when and which IRIG struct is ready
 // to be read from shared memory
-volatile unsigned long int* irig_ready = 
+volatile unsigned long int* irig_ready =
 (volatile unsigned long int *) IRIG_READY_ADDRESS;
 // Pointer to shared memory for IRIG structs
 volatile struct IrigInfo* irig_packets =
@@ -225,9 +225,9 @@ int main(void) {
                 if ((*IEP_TMR_GLB_STS & 1) == 1) {
                     *clock_overflow += 1;
                     *IEP_TMR_GLB_STS = 1;
-		}
+		        }
                 // Store this sample as the new previous sample
-		sample = (__R31 & (1 << 14));
+		        sample = (__R31 & (1 << 14));
                 ECAP.p_sample = sample;
                 // Total overflow time
                 overflow_time = (unsigned long  long int) *clock_overflow << 32;

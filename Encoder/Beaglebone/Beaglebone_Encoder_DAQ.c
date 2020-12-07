@@ -11,7 +11,7 @@
 #include<arpa/inet.h>
 #include<netinet/in.h>
 
-#define OPERATION_TIME 25000
+#define OPERATION_TIME 120
 
 #define isTCP 0 // 0:UDP, 1:TCP
 #define SAVETOBB 1 // 1:True(save file), 0:False(send data to PC)
@@ -113,6 +113,8 @@ int tos_write = 0b10100100;
 int tos_read;
 int tos_read_len = sizeof(tos_read);
 
+int irig_secs, irig_mins, irig_hours, irig_day, irig_year;
+
 #define PRU_CLOCKSPEED 200000000
 #define REFERENCE_COUNT_MAX 100000 // max num_counts of a grid cycle
 
@@ -120,6 +122,17 @@ char ifilename0[] = "Encoder1.bin";
 char ifilename1[] = "Encoder2.bin";
 char ifilename2[] = "IRIG1.bin";
 char ifilename3[] = "IRIG2.bin";
+
+int de_irig(unsigned long int irig_signal, int base_shift){
+  return (((irig_signal >> (0+base_shift)) & 1)
+            + ((irig_signal >> (1+base_shift)) & 1) * 2
+            + ((irig_signal >> (2+base_shift)) & 1) * 4
+            + ((irig_signal >> (3+base_shift)) & 1) * 8
+            + ((irig_signal >> (5+base_shift)) & 1) * 10
+            + ((irig_signal >> (6+base_shift)) & 1) * 20
+            + ((irig_signal >> (7+base_shift)) & 1) * 40
+            + ((irig_signal >> (8+base_shift)) & 1) * 80);
+};
 
 // *********************************
 // ************* MAIN **************
@@ -138,19 +151,12 @@ int main(int argc, char **argv)
   prussdrv_pruintc_init(&pruss_intc_initdata);
 
   on = (volatile unsigned long int *)(init_prumem() + (ON_OFFSET / READOUT_BYTES));
-
   clock_overflow = (volatile unsigned long int *)(init_prumem() + (OVERFLOW_OFFSET / READOUT_BYTES));
-
   encoder_ready = (volatile unsigned long int *)(init_prumem() + (ENCODER_READY_OFFSET / READOUT_BYTES));
-
   encoder_packets = (volatile struct EncoderInfo *)(init_prumem() + (ENCODER_OFFSET / READOUT_BYTES));
-
   irig_ready = (volatile unsigned long int *)(init_prumem() + (IRIG_READY_OFFSET / READOUT_BYTES));
-
   irig_packets = (volatile struct IrigInfo *)(init_prumem() + (IRIG_OFFSET / READOUT_BYTES));
-
   error_ready = (volatile unsigned long int *)(init_prumem() + (ERROR_READY_OFFSET / READOUT_BYTES));
-
   error_packets = (volatile struct ErrorInfo *)(init_prumem() + (ERROR_OFFSET / READOUT_BYTES));
 
   char n = 0;
@@ -190,19 +196,20 @@ int main(int argc, char **argv)
 
   const char *socket_type = (isTCP) ? "TCP" : "UDP";
   FILE *outfile;
+  FILE *irigout;
   FILE *measurement_time; //test
   time_t measurement_start, measurement_stop;
   if(!SAVETOBB){
 
     if(isTCP){
       if( (sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0){
-	perror("TCP socket creation failed");
-	exit(EXIT_FAILURE);
+	        perror("TCP socket creation failed");
+	        exit(EXIT_FAILURE);
       }
     }else{
       if( (sockfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0){
-	perror("UDP socket creation failed");
-	exit(EXIT_FAILURE);
+	        perror("UDP socket creation failed");
+	        exit(EXIT_FAILURE);
       }
     }
     memset(&servaddr, 0, sizeof(servaddr));
@@ -219,13 +226,15 @@ int main(int argc, char **argv)
     printf("   TOS = 0x%X\n", (tos_read >> 1) & 0xF);
     if(isTCP){
       if( (connect(sockfd, (struct sockaddr *) &servaddr, sizeof(servaddr))) < 0){
-	perror("socket TCP connection failed");
-	exit(EXIT_FAILURE);
+	        perror("socket TCP connection failed");
+	        exit(EXIT_FAILURE);
       }
     }
   }else{
     outfile = fopen(argv[1], "w");
     fprintf(outfile, "#TIME ERROR DIRECTION TIMERCOUNT REFERENCE\n");
+    irigout = fopen("irig_output_tmp.dat", "w");
+    fprintf(irigout, "#sec min hour day year\n");
     time(&measurement_start); //test
     measurement_time = fopen("timer.txt","w");
     fprintf(measurement_time, "Start at %ld\n", measurement_start);
@@ -268,110 +277,120 @@ int main(int argc, char **argv)
 
       if( encd_ind == ENCODER_PACKETS_TO_SEND ) {
 
-	if( encoder_to_send[0].clock[0] % 100 == 0 ){
-	  printf("    encoder data[0].clock[0] = %lu\n", encoder_to_send[0].clock[0]);
-	  printf("    encoder data[0].clock_overflow[0] = %lu\n", encoder_to_send[0].clock_overflow[0]);
-	}
-	if( sendto(sockfd, (struct EncoderInfo *) encoder_to_send, sizeof(encoder_to_send), MSG_CONFIRM, (const struct sockaddr *) &servaddr, sizeof(servaddr)) < 0){
-	  fprintf(stderr, "Error sending encoder data [errorno=%d: %s]\n", errno, strerror(errno));
-	  fprintf(stderr, "    Sending data size = %d (size of 0 = %d)\n", sizeof(encoder_to_send), sizeof(0));
-	}
-	encd_ind = 0;
+	      if( encoder_to_send[0].clock[0] % 100 == 0 ){
+	          printf("    encoder data[0].clock[0] = %lu\n", encoder_to_send[0].clock[0]);
+	          printf("    encoder data[0].clock_overflow[0] = %lu\n", encoder_to_send[0].clock_overflow[0]);
+	      }
+	      if( sendto(sockfd, (struct EncoderInfo *) encoder_to_send, sizeof(encoder_to_send), MSG_CONFIRM, (const struct sockaddr *) &servaddr, sizeof(servaddr)) < 0){
+	          fprintf(stderr, "Error sending encoder data [errorno=%d: %s]\n", errno, strerror(errno));
+	          fprintf(stderr, "    Sending data size = %d (size of 0 = %d)\n", sizeof(encoder_to_send), sizeof(0));
+	      }
+	      encd_ind = 0;
       }
 
       if( irig_ind == IRIG_PACKETS_TO_SEND ){
-	if( sendto(sockfd, (struct IRIGInfo *) irig_to_send, sizeof(irig_to_send), MSG_CONFIRM, (const struct sockaddr *) &servaddr, sizeof(servaddr)) < 0 ){
-	  fprintf(stderr, "Error sending IRIG data\n");
-	}
-	irig_ind = 0;
+	      if( sendto(sockfd, (struct IRIGInfo *) irig_to_send, sizeof(irig_to_send), MSG_CONFIRM, (const struct sockaddr *) &servaddr, sizeof(servaddr)) < 0 ){
+	        fprintf(stderr, "Error sending IRIG data\n");
+	      }
+	      irig_ind = 0;
       }
 
       if( err_ind == ERROR_PACKETS_TO_SEND ){
-	printf("%lu: sending error packets\n", curr_time);
-	if( sendto(sockfd, (struct ErrorInfo *) error_to_send, sizeof(error_to_send), MSG_CONFIRM, (const struct sockaddr *) &servaddr, sizeof(servaddr)) < 0 ){
-	  fprintf(stderr, "Error sending error data\n");
-	}
-	err_ind = 0;
+	      printf("%lu: sending error packets\n", curr_time);
+	      if( sendto(sockfd, (struct ErrorInfo *) error_to_send, sizeof(error_to_send), MSG_CONFIRM, (const struct sockaddr *) &servaddr, sizeof(servaddr)) < 0 ){
+	        fprintf(stderr, "Error sending error data\n");
+	      }
+	      err_ind = 0;
       }
 
       if(((double)(curr_time - encd_time))/CLOCKS_PER_SEC > ENCODER_TIMEOUT){
-	printf("%lu: sending encodet timeout packet\n", curr_time);
-	timeout_packet->type = ENCODER_TIMEOUT_FLAG;
-	if( sendto(sockfd, (struct TimeoutInfo *) &timeout_packet, sizeof(*timeout_packet), MSG_CONFIRM, (const struct sockaddr *) &servaddr, sizeof(servaddr)) < 0 ){
-	  fprintf(stderr, "Error sending encoder timeout packet\n");
-	}
-	encd_time = curr_time; // Reset the last time the encoder was monitored
+	      printf("%lu: sending encodet timeout packet\n", curr_time);
+	      timeout_packet->type = ENCODER_TIMEOUT_FLAG;
+	      if( sendto(sockfd, (struct TimeoutInfo *) &timeout_packet, sizeof(*timeout_packet), MSG_CONFIRM, (const struct sockaddr *) &servaddr, sizeof(servaddr)) < 0 ){
+	        fprintf(stderr, "Error sending encoder timeout packet\n");
+	      }
+	      encd_time = curr_time; // Reset the last time the encoder was monitored
       }
 
       if(((double)(curr_time - irig_time))/CLOCKS_PER_SEC > IRIG_TIMEOUT){
-	printf("%lu: sending IRIG timeout packet\n", curr_time);
-	timeout_packet->type = IRIG_TIMEOUT_FLAG;
-	if( sendto(sockfd, (struct TimeoutInfo *) &timeout_packet, sizeof(*timeout_packet), MSG_CONFIRM, (const struct sockaddr *) &servaddr, sizeof(servaddr)) < 0 ){
-	  fprintf(stderr, "Error sending IRIG timeout packet\n");
-	}
-	irig_time = curr_time; // Reset the last time the IRIG was monitored
+	      printf("%lu: sending IRIG timeout packet\n", curr_time);
+	      timeout_packet->type = IRIG_TIMEOUT_FLAG;
+	      if( sendto(sockfd, (struct TimeoutInfo *) &timeout_packet, sizeof(*timeout_packet), MSG_CONFIRM, (const struct sockaddr *) &servaddr, sizeof(servaddr)) < 0 ){
+	        fprintf(stderr, "Error sending IRIG timeout packet\n");
+	      }
+	      irig_time = curr_time; // Reset the last time the IRIG was monitored
       }
     }else{ // Save data to a output file in BB
 
       if( encd_ind == ENCODER_PACKETS_TO_SEND ){
-	if( SAVEVERBOSE == 1 ) tmp1_time = clock();
-	if( SAVETYPE == 0 ){
-	  //fprintf(outfile, "#colomn status message\n");
-	  for( i = 0; i < ENCODER_PACKETS_TO_SEND; i++ ){
-	    for( j = 0; j < ENCODER_COUNTER_SIZE; j++ ){
-	      timer_count = (unsigned long long int)encoder_to_send[i].clock[j] + ( (unsigned long long int)(encoder_to_send[i].clock_overflow[j]) << (4*8) );
-	      //fprintf(outfile,"%lu %lu %llu %11.6f %lu %lu\n", encoder_to_send[i].time_status[j], encoder_to_send[i].clock_overflow[j], time, (float)time/PRU_CLOCKSPEED, encoder_to_send[i].count[j], encoder_to_send[i].refcount[j]);
-	      fprintf(outfile, "%ld %lu %lu %llu %lu\n", time(NULL), 1-encoder_to_send[i].error_signal[j], encoder_to_send[i].quad[j], timer_count, (encoder_to_send[i].refcount[j]+REFERENCE_COUNT_MAX)%REFERENCE_COUNT_MAX);
-	      //fprintf(outfile,"%llu %lu\n", time, encoder_to_send[i].count[j]);
-	    }
-      time(&measurement_stop); //test
-      if(measurement_stop - measurement_start > OPERATION_TIME){
-        fprintf(measurement_time, "Stop at %ld\n", measurement_stop);
-        exit(0);
-      }
-	  }
-	}else if( SAVETYPE == 2 ){
-	  for( i = 0; i < ENCODER_PACKETS_TO_SEND ; i++ ){
-	    //fprintf(outfile, "%lu\n", encoder_to_send[i].count[0]);
-	  }
-	}else if( SAVETYPE == 3 ){
-	  //fprintf(outfile, "%lu\n", encoder_to_send[0].count[0]);
-	  if( i % 100 == 0 ){
-	    tmp1_time = clock();
-	    fflush( outfile );
-	    if( SAVEVERBOSE == 1 ){
-	      tmp2_time = clock();
-	      printf("fflush CPU time: %f usec (CLOCKS_PER_SEC = %d)\n", 1.e+6*(float)(tmp2_time - tmp1_time)/(float)CLOCKS_PER_SEC, CLOCKS_PER_SEC );
-	    }
-	  }
-	}
-	i += 1;
+	      if( SAVEVERBOSE == 1 ) tmp1_time = clock();
+	      if( SAVETYPE == 0 ){
+	        //fprintf(outfile, "#colomn status message\n");
+	        for( i = 0; i < ENCODER_PACKETS_TO_SEND; i++ ){
+	          for( j = 0; j < ENCODER_COUNTER_SIZE; j++ ){
+	            timer_count = (unsigned long long int)encoder_to_send[i].clock[j] + ( (unsigned long long int)(encoder_to_send[i].clock_overflow[j]) << (4*8) );
+	            //fprintf(outfile,"%lu %lu %llu %11.6f %lu %lu\n", encoder_to_send[i].time_status[j], encoder_to_send[i].clock_overflow[j], time, (float)time/PRU_CLOCKSPEED, encoder_to_send[i].count[j], encoder_to_send[i].refcount[j]);
+	            fprintf(outfile, "%ld %lu %lu %llu %lu\n", time(NULL), 1-encoder_to_send[i].error_signal[j], encoder_to_send[i].quad[j], timer_count, (encoder_to_send[i].refcount[j]+REFERENCE_COUNT_MAX)%REFERENCE_COUNT_MAX);
+	            //fprintf(outfile,"%llu %lu\n", time, encoder_to_send[i].count[j]);
+	          }
+            time(&measurement_stop); //test
+            if(measurement_stop - measurement_start > OPERATION_TIME){
+              fprintf(measurement_time, "Stop at %ld\n", measurement_stop);
+              exit(0);
+            }
+	        }
+	      }else if( SAVETYPE == 2 ){
+	        for( i = 0; i < ENCODER_PACKETS_TO_SEND ; i++ ){
+	          //fprintf(outfile, "%lu\n", encoder_to_send[i].count[0]);
+	        }
+	      }else if( SAVETYPE == 3 ){
+	        //fprintf(outfile, "%lu\n", encoder_to_send[0].count[0]);
+	        if( i % 100 == 0 ){
+	          tmp1_time = clock();
+	          fflush( outfile );
+	          if( SAVEVERBOSE == 1 ){
+	            tmp2_time = clock();
+	            printf("fflush CPU time: %f usec (CLOCKS_PER_SEC = %d)\n", 1.e+6*(float)(tmp2_time - tmp1_time)/(float)CLOCKS_PER_SEC, CLOCKS_PER_SEC );
+	          }
+	        }
+	      }
+	      i += 1;
 
-	encd_ind = 0;
-	if( SAVEVERBOSE == 1 ){
-	  tmp2_time = clock();
-	  printf("CPU time: %f usec (CLOCKS_PER_SEC = %d)\n", 1.e+6*(float)(tmp2_time - tmp1_time)/(float)CLOCKS_PER_SEC, CLOCKS_PER_SEC );
-	}
+	      encd_ind = 0;
+	      if( SAVEVERBOSE == 1 ){
+	        tmp2_time = clock();
+	        printf("CPU time: %f usec (CLOCKS_PER_SEC = %d)\n", 1.e+6*(float)(tmp2_time - tmp1_time)/(float)CLOCKS_PER_SEC, CLOCKS_PER_SEC );
+	      }
 
       }
 
       if( irig_ind == IRIG_PACKETS_TO_SEND ){
-	irig_ind = 0;
+        for(i = 0; i < IRIG_PACKETS_TO_SEND; i++){
+          irig_secs = de_irig(irig_to_send[i].info[0], 1);
+          irig_mins = de_irig(irig_to_send[i].info[1], 0);
+          irig_hours = de_irig(irig_to_send[i].info[2], 0);
+          irig_day = de_irig(irig_to_send[i].info[3], 0) \
+                     + de_irig(irig_to_send[i].info[4], 0) * 100;
+          irig_year = de_irig(irig_to_send[i].info[5], 0);
+          fprintf(irigout, "%d %d %d %d %d\n", irig_secs, irig_mins, irig_hours, irig_day, irig_year);
+        };
+	      irig_ind = 0;
       }
 
       if(err_ind == ERROR_PACKETS_TO_SEND ){
-	err_ind = 0;
+	      err_ind = 0;
       }
 
       if(((double)(curr_time - encd_time))/CLOCKS_PER_SEC > ENCODER_TIMEOUT){
-	printf("%lu: sending encoder timeout packet\n", curr_time);
-	timeout_packet->type = ENCODER_TIMEOUT_FLAG;
-	encd_time = curr_time; // Reset the last time the encoder was monitored
+	      printf("%lu: sending encoder timeout packet\n", curr_time);
+	      timeout_packet->type = ENCODER_TIMEOUT_FLAG;
+	      encd_time = curr_time; // Reset the last time the encoder was monitored
       }
+
       if(((double)(curr_time - irig_time))/CLOCKS_PER_SEC > IRIG_TIMEOUT){
-	printf("%lu: sending IRIG timeout packet\n", curr_time);
-	timeout_packet->type = IRIG_TIMEOUT_FLAG;
-	irig_time = curr_time; // Reset the last time the IRIG was monitored
+	      printf("%lu: sending IRIG timeout packet\n", curr_time);
+	      timeout_packet->type = IRIG_TIMEOUT_FLAG;
+	      irig_time = curr_time; // Reset the last time the IRIG was monitored
       }
     }
   } // end of while loop
