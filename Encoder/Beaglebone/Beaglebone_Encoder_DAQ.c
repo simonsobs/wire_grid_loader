@@ -123,7 +123,16 @@ char ifilename1[] = "Encoder2.bin";
 char ifilename2[] = "IRIG1.bin";
 char ifilename3[] = "IRIG2.bin";
 
-int de_irig(unsigned long int, int)；
+int de_irig(unsigned long int irig_signal, int base_shift){
+  return (((irig_signal >> (0+base_shift)) & 1)
+            + ((irig_signal >> (1+base_shift)) & 1) * 2
+            + ((irig_signal >> (2+base_shift)) & 1) * 4
+            + ((irig_signal >> (3+base_shift)) & 1) * 8
+            + ((irig_signal >> (5+base_shift)) & 1) * 10
+            + ((irig_signal >> (6+base_shift)) & 1) * 20
+            + ((irig_signal >> (7+base_shift)) & 1) * 40
+            + ((irig_signal >> (8+base_shift)) & 1) * 80);
+};
 
 // *********************************
 // ************* MAIN **************
@@ -400,14 +409,3 @@ int main(int argc, char **argv)
   return 0;
 
 }
-
-int de_irig(unsigned long int irig_signal, int base_shift){
-  return (((irig_signal >> (0+base_shift)) & 1)
-            + ((irig_signal >> (1+base_shift)) & 1) * 2
-            + ((irig_signal >> (2+base_shift)) & 1) * 4
-            + ((irig_signal >> (3+base_shift)) & 1) * 8
-            + ((irig_signal >> (5+base_shift)) & 1) * 10
-            + ((irig_signal >> (6+base_shift)) & 1) * 20
-            + ((irig_signal >> (7+base_shift)) & 1) * 40
-            + ((irig_signal >> (8+base_shift)) & 1) * 80);
-};
