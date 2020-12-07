@@ -123,6 +123,8 @@ char ifilename1[] = "Encoder2.bin";
 char ifilename2[] = "IRIG1.bin";
 char ifilename3[] = "IRIG2.bin";
 
+int de_irig(unsigned long int, int)；
+
 // *********************************
 // ************* MAIN **************
 // *********************************
