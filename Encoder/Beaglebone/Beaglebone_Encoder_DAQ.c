@@ -372,7 +372,7 @@ int main(int argc, char **argv)
           irig_day = de_irig(irig_to_send[i].info[3], 0) \
                      + de_irig(irig_to_send[i].info[4], 0) * 100;
           irig_year = de_irig(irig_to_send[i].info[5], 0);
-          fprintf(irigout, "%d %d %d %d %d\n", irig_secs, irig_mins, irig_hours, irig_day, irig_year);
+          fprintf(irigout, "%lu %d %d %d %d %d\n", irig_to_send[i].clock, irig_secs, irig_mins, irig_hours, irig_day, irig_year);
         };
 	      irig_ind = 0;
       }
