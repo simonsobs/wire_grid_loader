@@ -1,4 +1,4 @@
-import os
+import socket
 
 # Boolean flag for Ethernet to IP
 use_moxa = True
@@ -6,7 +6,7 @@ use_moxa = True
 
 # MOXA IP address
 tcp_port =  26 # CH2
-hostname = os.environ['HOSTNAME'];
+hostname = socket.gethostname();
 print('hostname : {}'.format(hostname));
 
 # MOXA IP address
