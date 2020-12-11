@@ -187,7 +187,7 @@ int main(void) {
     *error_ready = 0;
 
     // Start with no counter overflows
-    //*clock_overflow = 0;
+    *clock_overflow = 0;
 
     // initial irig bit position
     bit_position = 0;
