@@ -3,6 +3,7 @@
 So all the commits are recorded to be done by sadachi5.**
 
 Github help web page: https://docs.github.com/en/github
+
 Git help web page: https://git-scm.com/book/en/v2
 
 ## Overview of git
@@ -131,9 +132,9 @@ The ``push`` command does the following 2 steps;
 ## Creating new repository
 Here, the situation is that you want to create a new git repository and uploaded exsisting codes in your PC to the new repository.    
 
-1. Create a new repository in the simons observatory git hub account: https://github.com/simonsobs
+1. Create a new repository in the simons observatory git hub account in git hub web site: https://github.com/simonsobs
 
-2. Get your git repsository copy address: ``git@github.com:simonsobs/wire_grid_loader.git``   
+2. Get your git repsository copy address: ex) ``git@github.com:simonsobs/wire_grid_loader.git``   
     - This can be obtained in the Code bottom in the top page of the git repository web page. https://github.com/simonsobs/wire_grid_loader
     - There are two kinds of address;
       1. HTTPS address
@@ -160,6 +161,18 @@ Here, the situation is that you want to create a new git repository and uploaded
 
     ``<GIT REPOSITORY ADDRESS>`` is git@github.com:simonsobs/wire_grid_loader.git for the wire_grid_loader repository.
 
+## Clone this wire grid loader repository to the local machine
+0. If your machine does not have git nor ssh software, please install it. In a linux machine, 
+    
+        sudo apt install git ssh
+
+    or
+        sudo yum install git ssh
+
+
+1. In the directory where you want to put the repository,
+
+        git checkout  git@github.com:simonsobs/wire_grid_loader.git
 
 
 ## Customization
