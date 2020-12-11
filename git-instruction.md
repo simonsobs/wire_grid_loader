@@ -159,8 +159,8 @@ Here, the situation is that you want to create a new git repository and uploaded
 
     ``<GIT REPOSITORY ADDRESS>`` is git@github.com:simonsobs/wire_grid_loader.git for the wire_grid_loader repository.
 
-## Clone this *wire_grid_loader* repository to the local machine
-0. If your machine does not have git nor ssh, please install them. In a linux machine, 
+## Clone this *wire_grid_loader* repository into your local machine
+1. If your machine does not have git nor ssh, please install them. In a linux machine, 
     
         sudo apt install git ssh
 
@@ -169,14 +169,12 @@ Here, the situation is that you want to create a new git repository and uploaded
         sudo yum install git ssh
 
 
-1. In the directory where you want to put the repository, clone the repository
+2. In the directory where you want to put the repository, clone the repository
 
         git clone https://github.com/simonsobs/wire_grid_loader.git
 
   * This will not require access authorization or user account. But, if you use the git@github.com:simonsobs/wire_grid_loader.git, 
   you need to do account setting on your machine.
-
-2. 
 
 
 ## Customization
