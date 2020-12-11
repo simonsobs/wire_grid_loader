@@ -1,8 +1,7 @@
 # Git Instruction
-**Current git account is set to sadachi5 (Shunsuke Adachi).
-So all the commits are recorded to be done by sadachi5.**
 
 Github help web page: https://docs.github.com/en/github
+
 Git help web page: https://git-scm.com/book/en/v2
 
 ## Overview of git
@@ -131,9 +130,9 @@ The ``push`` command does the following 2 steps;
 ## Creating new repository
 Here, the situation is that you want to create a new git repository and uploaded exsisting codes in your PC to the new repository.    
 
-1. Create a new repository in the simons observatory git hub account: https://github.com/simonsobs
+1. Create a new repository in the simons observatory git hub account in git hub web site: https://github.com/simonsobs
 
-2. Get your git repsository copy address: ``git@github.com:simonsobs/wire_grid_loader.git``   
+2. Get your git repsository copy address: ex) ``git@github.com:simonsobs/wire_grid_loader.git``   
     - This can be obtained in the Code bottom in the top page of the git repository web page. https://github.com/simonsobs/wire_grid_loader
     - There are two kinds of address;
       1. HTTPS address
@@ -160,6 +159,22 @@ Here, the situation is that you want to create a new git repository and uploaded
 
     ``<GIT REPOSITORY ADDRESS>`` is git@github.com:simonsobs/wire_grid_loader.git for the wire_grid_loader repository.
 
+## Clone this *wire_grid_loader* repository into your local machine
+1. If your machine does not have git nor ssh, please install them. In a linux machine, 
+    
+        sudo apt install git ssh
+
+    or
+
+        sudo yum install git ssh
+
+
+2. In the directory where you want to put the repository, clone the repository
+
+        git clone https://github.com/simonsobs/wire_grid_loader.git
+
+  \* This will not require access authorization or user account. But, if you use the *git@github.com:simonsobs/wire_grid_loader.git*, 
+  you need to do account setting on your machine.
 
 
 ## Customization
