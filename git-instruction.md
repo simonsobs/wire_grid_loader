@@ -173,7 +173,7 @@ Here, the situation is that you want to create a new git repository and uploaded
 
         git clone https://github.com/simonsobs/wire_grid_loader.git
 
-  * This will not require access authorization or user account. But, if you use the git@github.com:simonsobs/wire_grid_loader.git, 
+  \* This will not require access authorization or user account. But, if you use the *git@github.com:simonsobs/wire_grid_loader.git*, 
   you need to do account setting on your machine.
 
 
