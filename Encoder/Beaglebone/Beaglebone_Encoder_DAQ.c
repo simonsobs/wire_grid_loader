@@ -197,6 +197,7 @@ int main(int argc, char **argv)
   const char *socket_type = (isTCP) ? "TCP" : "UDP";
   FILE *outfile;
   FILE *irigout;
+  FILE *encoder_position;
   FILE *measurement_time; //test
   time_t measurement_start, measurement_stop;
   if(!SAVETOBB){
@@ -246,6 +247,7 @@ int main(int argc, char **argv)
   curr_time = clock();
   int i, j = 0;
   unsigned long long int timer_count;
+  unsigned long long int time_checkpoint = 0;
 
   printf("Initializing DAQ\n");
   while( *on != 1 ){
@@ -332,6 +334,11 @@ int main(int argc, char **argv)
 	            //fprintf(outfile,"%lu %lu %llu %11.6f %lu %lu\n", encoder_to_send[i].time_status[j], encoder_to_send[i].clock_overflow[j], time, (float)time/PRU_CLOCKSPEED, encoder_to_send[i].count[j], encoder_to_send[i].refcount[j]);
 	            fprintf(outfile, "%ld %lu %lu %llu %lu\n", time(NULL), 1-encoder_to_send[i].error_signal[j], encoder_to_send[i].quad[j], timer_count, (encoder_to_send[i].refcount[j]+REFERENCE_COUNT_MAX)%REFERENCE_COUNT_MAX);
 	            //fprintf(outfile,"%llu %lu\n", time, encoder_to_send[i].count[j]);
+              if(time(NULL) >= time_checkpoint + 1){
+                encoder_position = fopen("iamhere.txt", "w");
+                fprintf(encoder_position, "#encoder_count\n %lu", (encoder_to_send[i].refcount[j]+REFERENCE_COUNT_MAX)%REFERENCE_COUNT_MAX));
+                time_checkpoint = time(NULL); //reset time but after writing process
+              }
 	          }
             time(&measurement_stop); //test
             if(measurement_stop - measurement_start > OPERATION_TIME){
