@@ -250,6 +250,8 @@ int main(int argc, char **argv)
   unsigned long long int time_checkpoint = 0;
 
   printf("Initializing DAQ\n");
+  printf("Ignoring IRIG timeout error");//please check comment out about irig below
+
   while( *on != 1 ){
 
     curr_time = clock();
@@ -397,7 +399,7 @@ int main(int argc, char **argv)
       }
 
       if(((double)(curr_time - irig_time))/CLOCKS_PER_SEC > IRIG_TIMEOUT){
-	      printf("%lu: sending IRIG timeout packet\n", curr_time);
+	      //printf("%lu: sending IRIG timeout packet\n", curr_time);
 	      timeout_packet->type = IRIG_TIMEOUT_FLAG;
 	      irig_time = curr_time; // Reset the last time the IRIG was monitored
       }
