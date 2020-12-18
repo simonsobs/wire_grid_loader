@@ -338,8 +338,9 @@ int main(int argc, char **argv)
 	            //fprintf(outfile,"%llu %lu\n", time, encoder_to_send[i].count[j]);
               if(time(NULL) >= time_checkpoint + 1){
                 encoder_position = fopen("iamhere.txt", "w");
-                fprintf(encoder_position, "#encoder_count\n %lu\n", (encoder_to_send[i].refcount[j]+REFERENCE_COUNT_MAX)%REFERENCE_COUNT_MAX);
-                printf("\r time: %10ld, encoder_place: %6lu", time(NULL), (encoder_to_send[i].refcount[j]+REFERENCE_COUNT_MAX)%REFERENCE_COUNT_MAX);
+                fprintf(encoder_position, "%lu\n", (encoder_to_send[i].refcount[j]+REFERENCE_COUNT_MAX)%REFERENCE_COUNT_MAX);
+                //fprintf(encoder_position, "#time encoder_count\n %ld %lu\n", time(NULL), (encoder_to_send[i].refcount[j]+REFERENCE_COUNT_MAX)%REFERENCE_COUNT_MAX);
+                //printf("\r time: %10ld, encoder_place: %6lu", time(NULL), (encoder_to_send[i].refcount[j]+REFERENCE_COUNT_MAX)%REFERENCE_COUNT_MAX);
                 time_checkpoint = time(NULL); //reset time but after writing process
                 fclose(encoder_position);
               }
