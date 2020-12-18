@@ -338,6 +338,7 @@ int main(int argc, char **argv)
                 encoder_position = fopen("iamhere.txt", "w");
                 fprintf(encoder_position, "#encoder_count\n %lu", (encoder_to_send[i].refcount[j]+REFERENCE_COUNT_MAX)%REFERENCE_COUNT_MAX);
                 time_checkpoint = time(NULL); //reset time but after writing process
+                fclose(encoder_position;
               }
 	          }
             time(&measurement_stop); //test
