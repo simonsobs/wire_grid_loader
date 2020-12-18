@@ -250,7 +250,7 @@ int main(int argc, char **argv)
   unsigned long long int time_checkpoint = 0;
 
   printf("Initializing DAQ\n");
-  printf("Ignoring IRIG timeout error");//please check comment out about irig below
+  printf("Ignoring IRIG timeout error\n");//please check comment out about irig below
 
   while( *on != 1 ){
 
