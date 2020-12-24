@@ -16,7 +16,7 @@ file_path = '/home/kyoto/nfs/scripts/wire_grid_loader/Encoder/Beaglebone/iamhere
 
 feedback_time = [0.18, 0.22, 0.25, 0.28, 0.30]
 wanted_angle = 22.5
-feedback_loop = 2
+feedback_loop = 3
 Deg = 360/52000
 
 ### main function ###
