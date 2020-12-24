@@ -85,7 +85,7 @@ def linearfunction(x,a0,a1,a2,a3,a4,a5,b0,b1,b2,b3,b4):
         + (a5*(x-b4)+a4*(b4-b3)+a3*(b3-b2)+a2*(b2-b1)+a1*(b1-b0)+a0*b0)*((b4 <= x)&(x < 360))
 
 def feedbackfunction(position_difference):
-    if position_difference >= 4.5
+    if position_difference >= 4.5:
         return feedback_time[4]
         pass
     if 4.5 > position_difference & position_difference >= 3.5:
