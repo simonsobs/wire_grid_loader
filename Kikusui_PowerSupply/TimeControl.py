@@ -74,7 +74,7 @@ def getPosition(filepath):
     f = open(filepath, 'r')
     data = f.readlines()
     f.close()
-    return data[0]
+    return float(data[0])
 
 def linearfunction(x,a0,a1,a2,a3,a4,a5,b0,b1,b2,b3,b4):
     return a0*x*((0 <= x)&(x < b0)) \
