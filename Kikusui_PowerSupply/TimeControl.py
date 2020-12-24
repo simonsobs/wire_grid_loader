@@ -76,14 +76,6 @@ def getPosition(filepath):
     f.close()
     return float(data[0])
 
-def linearfunction(x,a0,a1,a2,a3,a4,a5,b0,b1,b2,b3,b4):
-    return a0*x*((0 <= x)&(x < b0)) \
-        + (a1*(x-b0)+a0*b0)*((b0 <= x)&(x < b1)) \
-        + (a2*(x-b1)+a1*(b1-b0)+a0*b0)*((b1 <= x)&(x < b2)) \
-        + (a3*(x-b2)+a2*(b2-b1)+a1*(b1-b0)+a0*b0)*((b2 <= x)&(x < b3)) \
-        + (a4*(x-b3)+a3*(b3-b2)+a2*(b2-b1)+a1*(b1-b0)+a0*b0)*((b3 <= x)&(x < b4)) \
-        + (a5*(x-b4)+a4*(b4-b3)+a3*(b3-b2)+a2*(b2-b1)+a1*(b1-b0)+a0*b0)*((b4 <= x)&(x < 360))
-
 def feedbackfunction(position_difference):
     if position_difference >= 4.5:
         return feedback_time[4]
