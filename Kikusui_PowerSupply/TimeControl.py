@@ -80,16 +80,16 @@ def feedbackfunction(position_difference):
     if position_difference >= 4.5:
         return feedback_time[4]
         pass
-    if 4.5 > position_difference & position_difference >= 3.5:
+    if (4.5 > position_difference) & (position_difference >= 3.5):
         return feedback_time[3]
         pass
-    if 3.5 > position_difference & position_difference >= 2.5:
+    if (3.5 > position_difference) & (position_difference >= 2.5):
         return feedback_time[2]
         pass
-    if 2.5 > position_difference & position_difference >= 1.5:
+    if (2.5 > position_difference) & (position_difference >= 1.5):
         return feedback_time[1]
         pass
-    if 1.5 > position_difference & position_difference >= 0.5:
+    if (1.5 > position_difference) & (position_difference >= 0.5):
         return feedback_time[0]
         pass
     if 0.5 > position_difference:
