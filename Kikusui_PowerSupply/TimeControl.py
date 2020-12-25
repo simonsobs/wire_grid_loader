@@ -56,6 +56,8 @@ def TimeControl(voltagelim=0., currentlim=0., timeperiod=0., notmakesure=False):
                                 pass
                             else:
                                 operation_time = feedbackfunction(goal_position - mid_position)
+                                pass
+                            powerOn(voltagelim, operation_current, operation_time, notmakesure=True)
                             time.sleep(2)
                             pass
                         time.sleep(3)
