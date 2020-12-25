@@ -40,6 +40,7 @@ def TimeControl(voltagelim=0., currentlim=0., timeperiod=0., notmakesure=False):
                         sys.exit(1)
                     for k in range(num_execution):
                         start_position = getPosition(file_path)*Deg
+                        print(f'start at {start_position}')
                         if start_position + wanted_angle > 360:
                             goal_position = start_position + wanted_angle - 360
                             pass
@@ -52,9 +53,11 @@ def TimeControl(voltagelim=0., currentlim=0., timeperiod=0., notmakesure=False):
                         for l in range(feedback_loop):
                             mid_position = getPosition(file_path)*Deg
                             if goal_position < mid_position:
+                                print(goal_position - (mid_position - 360))
                                 operation_time = feedbackfunction(goal_position - (mid_position - 360))
                                 pass
                             else:
+                                print(goal_position - mid_position)
                                 operation_time = feedbackfunction(goal_position - mid_position)
                                 pass
                             powerOn(voltagelim, operation_current, operation_time, notmakesure=True)
