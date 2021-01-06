@@ -76,15 +76,17 @@ def TimeControl(voltagelim=0., currentlim=0., timeperiod=0., notmakesure=False):
             print("This is a script to measure the relation between operation time of power supply and proceeded angle.")
 
 def getPosition(filepath):
-    f = open(filepath, 'r')
-    data = f.readlines()
-    f.close()
-    if not data[0]:
-        f = open(filepath, 'r')
-        data = f.readlines()
-        f.close()
-        pass
-    return float(data[0])
+    for i in range(2):
+        try:
+            f = open(filepath,'r')
+            data = f.readlines()
+            f.close()
+            position = data[0]
+        except IndexError:
+            sleep(0.1)
+            continue
+        break
+    return float(position)
 
 def feedbackfunction(position_difference):
     if position_difference >= 4.5:
