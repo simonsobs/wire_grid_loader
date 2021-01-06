@@ -79,7 +79,7 @@ def getPosition(filepath):
     f = open(filepath, 'r')
     data = f.readlines()
     f.close()
-    if data[0]:
+    if not data[0]:
         f = open(filepath, 'r')
         data = f.readlines()
         f.close()
