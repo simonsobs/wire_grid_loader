@@ -53,7 +53,7 @@ def TimeControl(voltagelim=0., currentlim=0., timeperiod=0., notmakesure=False):
                         time.sleep(2)
                         for l in range(feedback_loop):
                             mid_position = getPosition(file_path)*Deg
-                            if goal_position < mid_position:
+                            if goal_position + wanted_angle < mid_position:
                                 operation_time = feedbackfunction(goal_position - (mid_position - 360))
                                 pass
                             else:
