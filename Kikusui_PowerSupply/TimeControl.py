@@ -30,6 +30,7 @@ def TimeControl(voltagelim=0., currentlim=0., timeperiod=0., notmakesure=False):
             sys.exit(1)
         if timeperiod > 0.:
             start_time = time.time()
+            cycle = 0
             for i in range(1):
                 for j in range(1):
                     operation_current = currentlim
@@ -40,6 +41,7 @@ def TimeControl(voltagelim=0., currentlim=0., timeperiod=0., notmakesure=False):
                         sys.exit(1)
                     for k in range(num_execution):
                         start_position = getPosition(file_path)*Deg
+                        print(f'cycle num_{cycle}')
                         if start_position + wanted_angle > 360:
                             goal_position = start_position + wanted_angle - 360
                             pass
@@ -61,6 +63,7 @@ def TimeControl(voltagelim=0., currentlim=0., timeperiod=0., notmakesure=False):
                             time.sleep(2)
                             pass
                         time.sleep(3)
+                        cycle += 1
                         pass
                     powerOn(12, 3.0, 1, notmakesure=True)
                     time.sleep(3)
@@ -76,6 +79,11 @@ def getPosition(filepath):
     f = open(filepath, 'r')
     data = f.readlines()
     f.close()
+    if data[0]:
+        f = open(filepath, 'r')
+        data = f.readlines()
+        f.close()
+        pass
     return float(data[0])
 
 def feedbackfunction(position_difference):
