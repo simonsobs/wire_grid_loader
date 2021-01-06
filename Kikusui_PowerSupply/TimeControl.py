@@ -16,7 +16,7 @@ file_path = '/home/kyoto/nfs/scripts/wire_grid_loader/Encoder/Beaglebone/iamhere
 
 feedback_time = [0.18, 0.22, 0.25, 0.28, 0.30]
 wanted_angle = 22.5
-feedback_loop = 3
+feedback_loop = 5
 Deg = 360/52000
 
 ### main function ###
@@ -50,7 +50,7 @@ def TimeControl(voltagelim=0., currentlim=0., timeperiod=0., notmakesure=False):
                             pass
                         operation_time = timeperiod
                         powerOn(voltagelim, operation_current, operation_time, notmakesure=True)
-                        time.sleep(2)
+                        time.sleep(1)
                         for l in range(feedback_loop):
                             mid_position = getPosition(file_path)*Deg
                             if goal_position + wanted_angle < mid_position:
@@ -60,13 +60,13 @@ def TimeControl(voltagelim=0., currentlim=0., timeperiod=0., notmakesure=False):
                                 operation_time = feedbackfunction(goal_position - mid_position)
                                 pass
                             powerOn(voltagelim, operation_current, operation_time, notmakesure=True)
-                            time.sleep(2)
+                            time.sleep(1)
                             pass
-                        time.sleep(3)
+                        time.sleep(2)
                         cycle += 1
                         pass
                     powerOn(12, 3.0, 1, notmakesure=True)
-                    time.sleep(3)
+                    time.sleep(2)
                     pass
                 pass
             stop_time = time.time()
@@ -83,7 +83,7 @@ def getPosition(filepath):
             f.close()
             position = data[0]
         except IndexError:
-            sleep(0.1)
+            time.sleep(0.1)
             continue
         break
     return float(position)
