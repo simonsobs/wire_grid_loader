@@ -5,6 +5,7 @@
 #include<prussdrv.h>
 #include<pruss_intc_mapping.h>
 #include<string.h>
+#include<sys/time.h> // test
 #include<sys/types.h>
 #include<sys/socket.h>
 #include<errno.h>
@@ -134,6 +135,12 @@ int de_irig(unsigned long int irig_signal, int base_shift){
             + ((irig_signal >> (8+base_shift)) & 1) * 80);
 };
 
+double usec_timestamp(){
+struct timeval tv;
+gettimeofday(&tv, NULL);
+return tv.tv_sec + tv.tv_usec * 1e-6;
+}
+
 // *********************************
 // ************* MAIN **************
 // *********************************
@@ -247,7 +254,7 @@ int main(int argc, char **argv)
   curr_time = clock();
   int i, j = 0;
   unsigned long long int timer_count;
-  unsigned long long int time_checkpoint = 0;
+  double usec_t1, usec_t2 = usec_timestamp();
 
   printf("Initializing DAQ\n");
   printf("Ignoring IRIG timeout error\n");//please check comment out about irig below
@@ -336,12 +343,13 @@ int main(int argc, char **argv)
 	            //fprintf(outfile,"%lu %lu %llu %11.6f %lu %lu\n", encoder_to_send[i].time_status[j], encoder_to_send[i].clock_overflow[j], time, (float)time/PRU_CLOCKSPEED, encoder_to_send[i].count[j], encoder_to_send[i].refcount[j]);
 	            fprintf(outfile, "%ld %lu %lu %llu %lu\n", time(NULL), 1-encoder_to_send[i].error_signal[j], encoder_to_send[i].quad[j], timer_count, (encoder_to_send[i].refcount[j]+REFERENCE_COUNT_MAX)%REFERENCE_COUNT_MAX);
 	            //fprintf(outfile,"%llu %lu\n", time, encoder_to_send[i].count[j]);
-              if(time(NULL) >= time_checkpoint + 1){
+              usec_t1 = usec_timestamp();
+              if(usec_t1 >= usec_t2 + 0.200){
                 encoder_position = fopen("iamhere.txt", "w");
                 fprintf(encoder_position, "%lu\n", (encoder_to_send[i].refcount[j]+REFERENCE_COUNT_MAX)%REFERENCE_COUNT_MAX);
                 //fprintf(encoder_position, "#time encoder_count\n %ld %lu\n", time(NULL), (encoder_to_send[i].refcount[j]+REFERENCE_COUNT_MAX)%REFERENCE_COUNT_MAX);
                 //printf("\r time: %10ld, encoder_place: %6lu", time(NULL), (encoder_to_send[i].refcount[j]+REFERENCE_COUNT_MAX)%REFERENCE_COUNT_MAX);
-                time_checkpoint = time(NULL); //reset time but after writing process
+                usec_t2 = usec_timestamp(); //reset time but after writing process
                 fclose(encoder_position);
               }
 	          }
