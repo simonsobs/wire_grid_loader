@@ -15,10 +15,10 @@ if sys.version_info.major == 2:
 
 file_path = '/home/kyoto/nfs/scripts/wire_grid_loader/Encoder/Beaglebone/iamhere.txt'
 
-feedback_time = [0.18, 0.22, 0.25, 0.28, 0.30]
+feedback_time = [0.181, 0.221, 0.251, 0.281, 0.301]
 wanted_angle = 22.5
 absolute_position = np.arange(0,360,22.5)
-feedback_loop = 5
+feedback_loop = 8
 Deg = 360/52000
 
 ### main function ###
@@ -62,7 +62,6 @@ def TimeControl(voltagelim=0., currentlim=0., timeperiod=0., notmakesure=False):
                         time.sleep(2)
                         cycle += 1
                         pass
-                    powerOn(12, 3.0, 1, notmakesure=True)
                     time.sleep(2)
                     pass
                 pass
@@ -86,19 +85,19 @@ def getPosition(filepath):
     return float(position)
 
 def feedbackfunction(position_difference):
-    if position_difference >= 4.5:
+    if position_difference >= 6.0:
         return feedback_time[4]
         pass
-    if (4.5 > position_difference) & (position_difference >= 3.5):
+    if (6.0 > position_difference) & (position_difference >= 4.5):
         return feedback_time[3]
         pass
-    if (3.5 > position_difference) & (position_difference >= 2.5):
+    if (4.5 > position_difference) & (position_difference >= 3.5):
         return feedback_time[2]
         pass
-    if (2.5 > position_difference) & (position_difference >= 1.5):
+    if (3.5 > position_difference) & (position_difference >= 2.5):
         return feedback_time[1]
         pass
-    if (1.5 > position_difference) & (position_difference >= 0.5):
+    if (2.5 > position_difference) & (position_difference >= 0.5):
         return feedback_time[0]
         pass
     if 0.5 > position_difference:
