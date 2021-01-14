@@ -117,7 +117,7 @@ int tos_read_len = sizeof(tos_read);
 int irig_secs, irig_mins, irig_hours, irig_day, irig_year;
 
 #define PRU_CLOCKSPEED 200000000
-#define REFERENCE_COUNT_MAX 100000 // max num_counts of a grid cycle
+#define REFERENCE_COUNT_MAX 70000 // max num_counts of a grid cycle
 
 char ifilename0[] = "Encoder1.bin";
 char ifilename1[] = "Encoder2.bin";
@@ -257,7 +257,8 @@ int main(int argc, char **argv)
   double usec_t1, usec_t2 = usec_timestamp();
 
   printf("Initializing DAQ\n");
-  printf("Ignoring IRIG timeout error\n");//please check comment out about irig below
+  printf("Notice that the Encoder Count Max is set to 52000!\n");
+  //printf("Ignoring IRIG timeout error\n");//please check comment out about irig below
 
   while( *on != 1 ){
 
@@ -392,7 +393,7 @@ int main(int argc, char **argv)
           irig_day = de_irig(irig_to_send[i].info[3], 0) \
                      + de_irig(irig_to_send[i].info[4], 0) * 100;
           irig_year = de_irig(irig_to_send[i].info[5], 0);
-          fprintf(irigout, "%llu %llu %d %d %d %d %d\n", irig_to_send[i].synch[0], irig_to_send[i].synch_overflow[0], irig_secs, irig_mins, irig_hours, irig_day, irig_year);
+          fprintf(irigout, "%d %d %d %d %d\n", irig_secs, irig_mins, irig_hours, irig_day, irig_year);
         };
 	      irig_ind = 0;
       }
@@ -408,7 +409,7 @@ int main(int argc, char **argv)
       }
 
       if(((double)(curr_time - irig_time))/CLOCKS_PER_SEC > IRIG_TIMEOUT){
-	      //printf("%lu: sending IRIG timeout packet\n", curr_time);
+	      printf("%lu: sending IRIG timeout packet\n", curr_time);
 	      timeout_packet->type = IRIG_TIMEOUT_FLAG;
 	      irig_time = curr_time; // Reset the last time the IRIG was monitored
       }
