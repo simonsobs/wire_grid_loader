@@ -17,7 +17,8 @@ file_path = '/home/kyoto/nfs/scripts/wire_grid_loader/Encoder/Beaglebone/iamhere
 
 feedback_time = [0.181, 0.221, 0.251, 0.281, 0.301]
 wanted_angle = 22.5
-absolute_position = np.arange(0,360,22.5)
+uncertaity_cancel = 5
+absolute_position = np.arange(0,360,wanted_angle)
 feedback_loop = 8
 Deg = 360/52000
 
@@ -33,37 +34,40 @@ def TimeControl(voltagelim=0., currentlim=0., timeperiod=0., notmakesure=False):
         if timeperiod > 0.:
             start_time = time.time()
             cycle = 0
-            for i in range(1):
-                for j in range(15):
-                    operation_current = currentlim
-                    num_execution = 32
-                    time.sleep(2)
-                    if operation_current > 3.0:
-                        print("operation current is over a range from 0. to 3.0")
-                        sys.exit(1)
-                    for k in range(num_execution):
-                        start_position = getPosition(file_path)*Deg
-                        goal_position = min(absolute_position[np.where(start_position < absolute_position)[0]])
-                        print(f'cycle num_{cycle} start_{round(start_position,2)} goal_{round(goal_position,2)}')
-                        operation_time = timeperiod
+            for j in range(20):
+                operation_current = currentlim
+                num_execution = 32
+                time.sleep(2)
+                if operation_current > 3.0:
+                    print("operation current is over a range from 0. to 3.0")
+                    sys.exit(1)
+                for k in range(num_execution):
+                    start_position = getPosition(file_path)*Deg
+                    if abosolute_position[-1] < start_position:
+                        goal_position = 0
+                        pass
+                    else:
+                        goal_position = min(absolute_position[np.where(start_position + uncertainty_cancel < absolute_position)[0]])
+                        pass
+                    print(f'cycle num_{cycle} start_{round(start_position,2)} goal_{round(goal_position,2)}')
+                    operation_time = timeperiod
+                    powerOn(voltagelim, operation_current, operation_time, notmakesure=True)
+                    time.sleep(1)
+                    for l in range(feedback_loop):
+                        mid_position = getPosition(file_path)*Deg
+                        if goal_position + wanted_angle < mid_position:
+                            operation_time = feedbackfunction(goal_position - (mid_position - 360))
+                            pass
+                        else:
+                            operation_time = feedbackfunction(goal_position - mid_position)
+                            pass
                         powerOn(voltagelim, operation_current, operation_time, notmakesure=True)
                         time.sleep(1)
-                        for l in range(feedback_loop):
-                            mid_position = getPosition(file_path)*Deg
-                            if goal_position + wanted_angle < mid_position:
-                                operation_time = feedbackfunction(goal_position - (mid_position - 360))
-                                pass
-                            else:
-                                operation_time = feedbackfunction(goal_position - mid_position)
-                                pass
-                            powerOn(voltagelim, operation_current, operation_time, notmakesure=True)
-                            time.sleep(1)
-                            pass
-                        time.sleep(2)
-                        cycle += 1
                         pass
                     time.sleep(2)
+                    cycle += 1
                     pass
+                time.sleep(2)
                 pass
             stop_time = time.time()
             print(stop_time - start_time)
