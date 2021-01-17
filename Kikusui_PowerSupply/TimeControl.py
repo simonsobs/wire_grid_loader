@@ -43,11 +43,11 @@ def TimeControl(voltagelim=0., currentlim=0., timeperiod=0., notmakesure=False):
                     sys.exit(1)
                 for k in range(num_execution):
                     start_position = getPosition(file_path)*Deg
-                    if abosolute_position[-1] < start_position:
+                    if absolute_position[-1] < start_position:
                         goal_position = 0
                         pass
                     else:
-                        goal_position = min(absolute_position[np.where(start_position + uncertainty_cancel < absolute_position)[0]])
+                        goal_position = min(absolute_position[np.where(start_position + uncertaity_cancel < absolute_position)[0]])
                         pass
                     print(f'cycle num_{cycle} start_{round(start_position,2)} goal_{round(goal_position,2)}')
                     operation_time = timeperiod
