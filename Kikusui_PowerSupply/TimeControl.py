@@ -34,9 +34,9 @@ def TimeControl(voltagelim=0., currentlim=0., timeperiod=0., notmakesure=False):
         if timeperiod > 0.:
             start_time = time.time()
             cycle = 0
-            for j in range(20):
+            for j in range(2):
                 operation_current = currentlim
-                num_execution = 32
+                num_execution = 5
                 time.sleep(2)
                 if operation_current > 3.0:
                     print("operation current is over a range from 0. to 3.0")
@@ -52,7 +52,7 @@ def TimeControl(voltagelim=0., currentlim=0., timeperiod=0., notmakesure=False):
                     print(f'cycle num_{cycle} start_{round(start_position,2)} goal_{round(goal_position,2)}')
                     operation_time = timeperiod
                     powerOn(voltagelim, operation_current, operation_time, notmakesure=True)
-                    time.sleep(1)
+                    time.sleep(0.6)
                     for l in range(feedback_loop):
                         mid_position = getPosition(file_path)*Deg
                         if goal_position + wanted_angle < mid_position:
@@ -62,12 +62,11 @@ def TimeControl(voltagelim=0., currentlim=0., timeperiod=0., notmakesure=False):
                             operation_time = feedbackfunction(goal_position - mid_position)
                             pass
                         powerOn(voltagelim, operation_current, operation_time, notmakesure=True)
-                        time.sleep(1)
+                        time.sleep(0.6)
                         pass
                     time.sleep(2)
                     cycle += 1
                     pass
-                time.sleep(2)
                 pass
             stop_time = time.time()
             print(stop_time - start_time)
@@ -76,7 +75,7 @@ def TimeControl(voltagelim=0., currentlim=0., timeperiod=0., notmakesure=False):
             print("This is a script to measure the relation between operation time of power supply and proceeded angle.")
 
 def getPosition(filepath):
-    for i in range(2):
+    for i in range(10):
         try:
             f = open(filepath,'r')
             data = f.readlines()
