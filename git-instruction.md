@@ -110,6 +110,28 @@ The ``push`` command does the following 2 steps;
   * This command shows the information of the remote branches fetched into your PC.
 
 
+## Check the log
+- ``git log``
+- ``git status``
+- ``git reflog``
+
+
+
+## How ot use branch
+- Create branch ``<BRANCH NAME>``
+
+      git branch <BRANCH NAME>
+
+- Move to the branch ``<BRANCH NAME>`` 
+
+      git commit -b <BRANCH NAME>
+
+- Push only the local branch ``<BRANCH NAME>`` to the remote  ``<REMOTE BRANCH>``
+
+      git push origin <BRANCH NAME>:<REMOTE BRANCH>
+
+  Usually, remote branch name is same as the local branch name ``<BRANCH NAME>``.
+
 ## Ignore changes in the working directories & pull remote repository
 - Get update in the remote repository
 
@@ -123,8 +145,18 @@ The ``push`` command does the following 2 steps;
 
         git pull
     
+## Ignore action at the local repository
+- check the all the actions at the local
 
+    git reflog
 
+- go back to the condition right before the ``<HEAD>`` action
+  ``<HEAD>`` looks like ex)"f55cb888" or ex)"HEAD@{0}" in the reflog output
+
+    git reset --hard <HEAD>
+
+  --hard means the local files(**A**) also will be changed.
+  Without --hard, the change is occurred only in the local repository(**B**).
 
 # Creating New Repository & Setting Git
 ## Creating new repository
@@ -175,22 +207,6 @@ Here, the situation is that you want to create a new git repository and uploaded
 
   \* This will not require access authorization or user account. But, if you use the *git@github.com:simonsobs/wire_grid_loader.git*, 
   you need to do account setting on your machine.
-
-## How ot use branch
-- Create branch ``<BRANCH NAME>``
-
-      git branch <BRANCH NAME>
-
-- Move to the branch ``<BRANCH NAME>`` 
-
-      git commit -b <BRANCH NAME>
-
-- Push only the local branch ``<BRANCH NAME>`` to the remote  ``<REMOTE BRANCH>``
-
-      git push origin <BRANCH NAME>:<REMOTE BRANCH>
-
-  Usually, remote branch name is same as the local branch name ``<BRANCH NAME>``.
-
 
 ## Customization
 ### ssh setting
