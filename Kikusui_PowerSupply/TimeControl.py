@@ -17,7 +17,7 @@ file_path = '/home/kyoto/nfs/scripts/wire_grid_loader/Encoder/Beaglebone/iamhere
 
 feedback_time = [0.181, 0.221, 0.251, 0.281, 0.301]
 wanted_angle = 22.5
-uncertaity_cancel = 5
+uncertaity_cancel = 3
 absolute_position = np.arange(0,360,wanted_angle)
 feedback_loop = 8
 Deg = 360/52000
@@ -43,7 +43,7 @@ def TimeControl(voltagelim=0., currentlim=0., timeperiod=0., notmakesure=False):
                     sys.exit(1)
                 for k in range(num_execution):
                     start_position = getPosition(file_path)*Deg
-                    if absolute_position[-1] < start_position:
+                    if absolute_position[-1] < start_position + uncertaity_cancel:
                         goal_position = 0
                         pass
                     else:
