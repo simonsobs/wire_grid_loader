@@ -253,11 +253,11 @@ int main(int argc, char **argv)
     irigout = fopen("irig_output_tmp.dat", "w");
     fprintf(irigout, "#sec min hour day year\n");
   }
-  // Measurement-time log file
+  // Measurement time file
   time(&measurement_start); //test
   measurement_time = fopen("timer.txt","w");
   fprintf(measurement_time, "Start at %ld\n", measurement_start);
-  // Current position log file
+  // Current position file
   encoder_position = fopen("iamhere.txt", "w");
 
   timeout_packet->header = 0x1234;
@@ -344,6 +344,7 @@ int main(int argc, char **argv)
 
       if( encd_ind == ENCODER_PACKETS_TO_SEND ){
 	      if( SAVEVERBOSE == 1 ) tmp1_time = clock();
+        // write encoder data
 	      for( i = 0; i < ENCODER_PACKETS_TO_SEND; i++ ){
 	        for( j = 0; j < ENCODER_COUNTER_SIZE; j++ ){
 	          timer_count = (unsigned long long int)encoder_to_send[i].clock[j] + ( (unsigned long long int)(encoder_to_send[i].clock_overflow[j]) << (4*8) );
@@ -354,6 +355,7 @@ int main(int argc, char **argv)
           // write iamhere at the end of encoder_to_send
           position = (encoder_to_send[ENCODER_PACKETS_TO_SEND-1].refcount[ENCODER_COUNTER_SIZE-1]+REFERENCE_COUNT_MAX)%REFERENCE_COUNT_MAX;
           write_iamhere(encoder_position, &usec_t1, &usec_t2, position);
+          // check measurement_stop
           time(&measurement_stop); //test
           if(measurement_stop - measurement_start > OPERATION_TIME){
             fprintf(measurement_time, "Stop at %ld\n", measurement_stop);
