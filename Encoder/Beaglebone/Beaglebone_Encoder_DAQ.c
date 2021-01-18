@@ -343,7 +343,6 @@ int main(int argc, char **argv)
     }else{ // Save data to a output file in BB
 
       // write encoder data
-      printf("encd_ind =  %d\n", encd_ind );
       if( encd_ind == ENCODER_PACKETS_TO_SEND ){
         if( SAVEVERBOSE == 1 ) tmp1_time = clock();
         for( i = 0; i < ENCODER_PACKETS_TO_SEND; i++ ){
@@ -354,7 +353,7 @@ int main(int argc, char **argv)
           }
         }
         // write iamhere at the end of encoder_to_send
-        position = (encoder_to_send[ENCODER_PACKETS_TO_SEND-1].refcount[ENCODER_COUNTER_SIZE-1]+REFERENCE_COUNT_MAX)%REFERENCE_COUNT_MAX;
+        //printf("position = %d\n", position);
         write_iamhere(encoder_position, &usec_t1, &usec_t2, position);
         // check measurement_stop
         time(&measurement_stop); //test
@@ -362,13 +361,13 @@ int main(int argc, char **argv)
           fprintf(measurement_time, "Stop at %ld\n", measurement_stop);
           exit(0);
         }
-      }
-      i += 1;
+        i += 1;
 
-      encd_ind = 0;
-      if( SAVEVERBOSE == 1 ){
-        tmp2_time = clock();
-        printf("CPU time: %f usec (CLOCKS_PER_SEC = %d)\n", 1.e+6*(float)(tmp2_time - tmp1_time)/(float)CLOCKS_PER_SEC, CLOCKS_PER_SEC );
+        encd_ind = 0;
+        if( SAVEVERBOSE == 1 ){
+          tmp2_time = clock();
+          printf("CPU time: %f usec (CLOCKS_PER_SEC = %d)\n", 1.e+6*(float)(tmp2_time - tmp1_time)/(float)CLOCKS_PER_SEC, CLOCKS_PER_SEC );
+        }
       }
 
       // write IRIG data
@@ -403,8 +402,14 @@ int main(int argc, char **argv)
     }
   } // end of while loop
 
-  if( !SAVETOBB ) close(sockfd);
-  else            fclose(outfile);
+  if( !SAVETOBB ){
+    close(sockfd);
+  }else{
+    fclose(outfile);
+    fclose(irigout);
+  }
+  fclose(encoder_position);
+  fclose(measurement_time);//test
 
   if(*on == 1){
     prussdrv_pru_wait_event(PRU_EVTOUT_1);
