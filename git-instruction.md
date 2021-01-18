@@ -176,6 +176,21 @@ Here, the situation is that you want to create a new git repository and uploaded
   \* This will not require access authorization or user account. But, if you use the *git@github.com:simonsobs/wire_grid_loader.git*, 
   you need to do account setting on your machine.
 
+## How ot use branch
+- Create branch ``<BRANCH NAME>``
+
+      git branch <BRANCH NAME>
+
+- Move to the branch ``<BRANCH NAME>`` 
+
+      git commit -b <BRANCH NAME>
+
+- Push only the local branch ``<BRANCH NAME>`` to the remote  ``<REMOTE BRANCH>``
+
+      git push origin <BRANCH NAME>:<REMOTE BRANCH>
+
+  Usually, remote branch name is same as the local branch name ``<BRANCH NAME>``.
+
 
 ## Customization
 ### ssh setting
