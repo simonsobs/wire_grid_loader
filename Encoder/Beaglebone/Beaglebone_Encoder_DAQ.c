@@ -297,6 +297,7 @@ int main(int argc, char **argv)
       err_ind += 1;
       *error_ready = 0;
     }
+
     if(!SAVETOBB){ // Send data to PC via ethernet
 
       if( encd_ind == ENCODER_PACKETS_TO_SEND ) {
@@ -305,6 +306,16 @@ int main(int argc, char **argv)
 	          fprintf(stderr, "Error sending encoder data [errorno=%d: %s]\n", errno, strerror(errno));
 	          fprintf(stderr, "    Sending data size = %d (size of 0 = %d)\n", sizeof(encoder_to_send), sizeof(0));
 	      }
+        // write iamhere at the end of encoder_to_send
+        position = (encoder_to_send[ENCODER_PACKETS_TO_SEND-1].refcount[ENCODER_COUNTER_SIZE-1]+REFERENCE_COUNT_MAX)%REFERENCE_COUNT_MAX;
+        write_iamhere(encoder_position, &usec_t1, &usec_t2, position);
+        // check measurement_stop
+        time(&measurement_stop); //test
+        if(measurement_stop - measurement_start > OPERATION_TIME){
+          fprintf(measurement_time, "Stop at %ld\n", measurement_stop);
+          exit(0);
+        }
+        // reseet encd_ind
 	      encd_ind = 0;
       }
 
@@ -323,6 +334,7 @@ int main(int argc, char **argv)
 	      err_ind = 0;
       }
 
+      // Sending encoder timeout packet
       if(((double)(curr_time - encd_time))/CLOCKS_PER_SEC > ENCODER_TIMEOUT){
 	      printf("%lu: sending encodet timeout packet\n", curr_time);
 	      timeout_packet->type = ENCODER_TIMEOUT_FLAG;
@@ -332,6 +344,7 @@ int main(int argc, char **argv)
 	      encd_time = curr_time; // Reset the last time the encoder was monitored
       }
 
+      // Sending IRIG timeout packet
       if(((double)(curr_time - irig_time))/CLOCKS_PER_SEC > IRIG_TIMEOUT){
 	      printf("%lu: sending IRIG timeout packet\n", curr_time);
 	      timeout_packet->type = IRIG_TIMEOUT_FLAG;
@@ -340,6 +353,7 @@ int main(int argc, char **argv)
 	      }
 	      irig_time = curr_time; // Reset the last time the IRIG was monitored
       }
+
     }else{ // Save data to a output file in BB
 
       // write encoder data
@@ -353,7 +367,6 @@ int main(int argc, char **argv)
           }
         }
         // write iamhere at the end of encoder_to_send
-        //printf("position = %d\n", position);
         write_iamhere(encoder_position, &usec_t1, &usec_t2, position);
         // check measurement_stop
         time(&measurement_stop); //test
@@ -361,13 +374,12 @@ int main(int argc, char **argv)
           fprintf(measurement_time, "Stop at %ld\n", measurement_stop);
           exit(0);
         }
-        i += 1;
-
-        encd_ind = 0;
         if( SAVEVERBOSE == 1 ){
           tmp2_time = clock();
           printf("CPU time: %f usec (CLOCKS_PER_SEC = %d)\n", 1.e+6*(float)(tmp2_time - tmp1_time)/(float)CLOCKS_PER_SEC, CLOCKS_PER_SEC );
         }
+        // reseet encd_ind
+        encd_ind = 0;
       }
 
       // write IRIG data
@@ -381,25 +393,30 @@ int main(int argc, char **argv)
           irig_year = de_irig(irig_to_send[i].info[5], 0);
           fprintf(irigout, "%d %d %d %d %d\n", irig_secs, irig_mins, irig_hours, irig_day, irig_year);
         };
+        // reset irig_ind
         irig_ind = 0;
       }
 
+      // write error (TODO: implementation)
       if(err_ind == ERROR_PACKETS_TO_SEND ){
+        // reset err_ind
         err_ind = 0;
       }
 
+      // Check encoder timeout
       if(((double)(curr_time - encd_time))/CLOCKS_PER_SEC > ENCODER_TIMEOUT){
-        printf("%lu: sending encoder timeout packet\n", curr_time);
-        timeout_packet->type = ENCODER_TIMEOUT_FLAG;
+        printf("%lu: encoder timeout\n", curr_time);
         encd_time = curr_time; // Reset the last time the encoder was monitored
       }
 
+      // Check IRIG timeout
       if(((double)(curr_time - irig_time))/CLOCKS_PER_SEC > IRIG_TIMEOUT){
-        printf("%lu: sending IRIG timeout packet\n", curr_time);
-        timeout_packet->type = IRIG_TIMEOUT_FLAG;
+        printf("%lu: IRIG timeout\n", curr_time);
         irig_time = curr_time; // Reset the last time the IRIG was monitored
       }
-    }
+
+    } // end of saving
+
   } // end of while loop
 
   if( !SAVETOBB ){
