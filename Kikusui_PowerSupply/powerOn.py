@@ -20,7 +20,7 @@ import src.pmx as pm  # noqa: E402
 from src.common import * # writelog(), openlog()
 
 ### main function ###
-def powerOn(voltagelim=0., currentlim=0., timeperiod=0., notmakesure=False, PMX=None) :
+def powerOn(voltagelim=0., currentlim=0., timeperiod=0., notmakesure=False, position=None, PMX=None) :
 
     # Connect to PMX power supply
     if PMX==None :
@@ -69,7 +69,7 @@ def powerOn(voltagelim=0., currentlim=0., timeperiod=0., notmakesure=False, PMX=
     else:
         # Turn On
         PMX.turn_on(notmakesure)
-        writelog(logfile, 'ON', notmakesure, voltagelim, currentlim, 2725, 2725, timeperiod)
+        writelog(logfile, 'ON', notmakesure, voltagelim, currentlim, 2725, 2725, timeperiod, position)
 
         if timeperiod > 0. :
             # Sleep for the specified time period

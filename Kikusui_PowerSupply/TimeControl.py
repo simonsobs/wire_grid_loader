@@ -51,7 +51,7 @@ def TimeControl(voltagelim=0., currentlim=0., timeperiod=0., notmakesure=False):
                         pass
                     print(f'cycle num_{cycle} start_{round(start_position,2)} goal_{round(goal_position,2)}')
                     operation_time = timeperiod
-                    powerOn(voltagelim, operation_current, operation_time, notmakesure=True)
+                    powerOn(voltagelim, operation_current, operation_time, notmakesure=True, position=start_position)
                     time.sleep(0.6)
                     for l in range(feedback_loop):
                         mid_position = getPosition(file_path)*Deg
