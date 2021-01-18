@@ -133,9 +133,20 @@ int de_irig(unsigned long int irig_signal, int base_shift){
 };
 
 double usec_timestamp(){
-struct timeval tv;
-gettimeofday(&tv, NULL);
-return tv.tv_sec + tv.tv_usec * 1e-6;
+  struct timeval tv;
+  gettimeofday(&tv, NULL);
+  return tv.tv_sec + tv.tv_usec * 1e-6;
+}
+
+int write_iamhere(FILE* file, double* usec_t1, double* usec_t2, unsigned long int position){
+  *usec_t1 = usec_timestamp();
+  if(*usec_t1 >= *usec_t2 + 0.200){
+    fseek(file,0,0); // back to the first point of the file
+    fprintf(file, "%lu\n", position); // write the position
+    fflush(file); // write to the output file
+    *usec_t2 = usec_timestamp(); //reset time but after writing process
+  }
+  return 0;
 }
 
 // *********************************
@@ -204,6 +215,7 @@ int main(int argc, char **argv)
   FILE *encoder_position;
   FILE *measurement_time; //test
   time_t measurement_start, measurement_stop;
+  unsigned long int position;
   if(!SAVETOBB){
 
     if(isTCP){
@@ -241,10 +253,12 @@ int main(int argc, char **argv)
     irigout = fopen("irig_output_tmp.dat", "w");
     fprintf(irigout, "#sec min hour day year\n");
   }
-  // Measurement time log
+  // Measurement-time log file
   time(&measurement_start); //test
   measurement_time = fopen("timer.txt","w");
   fprintf(measurement_time, "Start at %ld\n", measurement_start);
+  // Current position log file
+  encoder_position = fopen("iamhere.txt", "w");
 
   timeout_packet->header = 0x1234;
   encd_ind = 0;
@@ -287,10 +301,6 @@ int main(int argc, char **argv)
 
       if( encd_ind == ENCODER_PACKETS_TO_SEND ) {
 
-	      if( encoder_to_send[0].clock[0] % 100 == 0 ){
-	          printf("    encoder data[0].clock[0] = %lu\n", encoder_to_send[0].clock[0]);
-	          printf("    encoder data[0].clock_overflow[0] = %lu\n", encoder_to_send[0].clock_overflow[0]);
-	      }
 	      if( sendto(sockfd, (struct EncoderInfo *) encoder_to_send, sizeof(encoder_to_send), MSG_CONFIRM, (const struct sockaddr *) &servaddr, sizeof(servaddr)) < 0){
 	          fprintf(stderr, "Error sending encoder data [errorno=%d: %s]\n", errno, strerror(errno));
 	          fprintf(stderr, "    Sending data size = %d (size of 0 = %d)\n", sizeof(encoder_to_send), sizeof(0));
@@ -334,23 +344,16 @@ int main(int argc, char **argv)
 
       if( encd_ind == ENCODER_PACKETS_TO_SEND ){
 	      if( SAVEVERBOSE == 1 ) tmp1_time = clock();
-	      //fprintf(outfile, "#colomn status message\n");
 	      for( i = 0; i < ENCODER_PACKETS_TO_SEND; i++ ){
 	        for( j = 0; j < ENCODER_COUNTER_SIZE; j++ ){
 	          timer_count = (unsigned long long int)encoder_to_send[i].clock[j] + ( (unsigned long long int)(encoder_to_send[i].clock_overflow[j]) << (4*8) );
-	          //fprintf(outfile,"%lu %lu %llu %11.6f %lu %lu\n", encoder_to_send[i].time_status[j], encoder_to_send[i].clock_overflow[j], time, (float)time/PRU_CLOCKSPEED, encoder_to_send[i].count[j], encoder_to_send[i].refcount[j]);
-	          fprintf(outfile, "%ld %lu %lu %llu %lu\n", time(NULL), 1-encoder_to_send[i].error_signal[j], encoder_to_send[i].quad[j], timer_count, (encoder_to_send[i].refcount[j]+REFERENCE_COUNT_MAX)%REFERENCE_COUNT_MAX);
-	          //fprintf(outfile,"%llu %lu\n", time, encoder_to_send[i].count[j]);
-            usec_t1 = usec_timestamp();
-            if(usec_t1 >= usec_t2 + 0.200){
-              encoder_position = fopen("iamhere.txt", "w");
-              fprintf(encoder_position, "%lu\n", (encoder_to_send[i].refcount[j]+REFERENCE_COUNT_MAX)%REFERENCE_COUNT_MAX);
-              //fprintf(encoder_position, "#time encoder_count\n %ld %lu\n", time(NULL), (encoder_to_send[i].refcount[j]+REFERENCE_COUNT_MAX)%REFERENCE_COUNT_MAX);
-              //printf("\r time: %10ld, encoder_place: %6lu", time(NULL), (encoder_to_send[i].refcount[j]+REFERENCE_COUNT_MAX)%REFERENCE_COUNT_MAX);
-              usec_t2 = usec_timestamp(); //reset time but after writing process
-              fclose(encoder_position);
+            position = (encoder_to_send[i].refcount[j]+REFERENCE_COUNT_MAX)%REFERENCE_COUNT_MAX;
+	          fprintf(outfile, "%ld %lu %lu %llu %lu\n", time(NULL), 1-encoder_to_send[i].error_signal[j], encoder_to_send[i].quad[j], timer_count, position);
             }
 	        }
+          // write iamhere at the end of encoder_to_send
+          position = (encoder_to_send[ENCODER_PACKETS_TO_SEND-1].refcount[ENCODER_COUNTER_SIZE-1]+REFERENCE_COUNT_MAX)%REFERENCE_COUNT_MAX;
+          write_iamhere(encoder_position, &usec_t1, &usec_t2, position);
           time(&measurement_stop); //test
           if(measurement_stop - measurement_start > OPERATION_TIME){
             fprintf(measurement_time, "Stop at %ld\n", measurement_stop);
