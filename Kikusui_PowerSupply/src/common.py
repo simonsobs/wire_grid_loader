@@ -3,7 +3,7 @@ import datetime
 from pytz import timezone
 
 ### Log format ###
-def writelog(logfile, onoff, notmakesure, voltagelim, currentlim, vol, cur, timeperiod=0., position=None) :
+def writelog(logfile, onoff, notmakesure, voltagelim, currentlim, vol, cur, timeperiod=0., position=0.) :
     now = datetime.datetime.now(timezone('UTC'))
     nowStr  = now.strftime('%Y-%m-%d %H:%M:%S-%Z')
     if notmakesure==False:

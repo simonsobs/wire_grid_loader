@@ -20,7 +20,7 @@ import src.pmx as pm  # noqa: E402
 from src.common import * # writelog(), openlog()
 
 ### main function ###
-def powerOn(voltagelim=0., currentlim=0., timeperiod=0., notmakesure=False, position=None, PMX=None) :
+def powerOn(voltagelim=0., currentlim=0., timeperiod=0., notmakesure=False, position=0., PMX=None) :
 
     # Connect to PMX power supply
     if PMX==None :
