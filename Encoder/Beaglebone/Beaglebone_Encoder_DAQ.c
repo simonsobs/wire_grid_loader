@@ -345,7 +345,7 @@ int main(int argc, char **argv)
 	            fprintf(outfile, "%ld %lu %lu %llu %lu\n", time(NULL), 1-encoder_to_send[i].error_signal[j], encoder_to_send[i].quad[j], timer_count, (encoder_to_send[i].refcount[j]+REFERENCE_COUNT_MAX)%REFERENCE_COUNT_MAX);
 	            //fprintf(outfile,"%llu %lu\n", time, encoder_to_send[i].count[j]);
               usec_t1 = usec_timestamp();
-              if(usec_t1 >= usec_t2 + 0.200){
+              if(usec_t1 >= usec_t2 + 0.300){
                 encoder_position = fopen("iamhere.txt", "w");
                 fprintf(encoder_position, "%lu\n", (encoder_to_send[i].refcount[j]+REFERENCE_COUNT_MAX)%REFERENCE_COUNT_MAX);
                 //fprintf(encoder_position, "#time encoder_count\n %ld %lu\n", time(NULL), (encoder_to_send[i].refcount[j]+REFERENCE_COUNT_MAX)%REFERENCE_COUNT_MAX);

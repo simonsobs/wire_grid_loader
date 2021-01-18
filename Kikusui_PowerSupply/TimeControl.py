@@ -37,7 +37,7 @@ def TimeControl(voltagelim=0., currentlim=0., timeperiod=0., notmakesure=False):
             for j in range(2):
                 operation_current = currentlim
                 num_execution = 5
-                time.sleep(2)
+                time.sleep(1.5)
                 if operation_current > 3.0:
                     print("operation current is over a range from 0. to 3.0")
                     sys.exit(1)
@@ -64,7 +64,7 @@ def TimeControl(voltagelim=0., currentlim=0., timeperiod=0., notmakesure=False):
                         powerOn(voltagelim, operation_current, operation_time, notmakesure=True)
                         time.sleep(0.6)
                         pass
-                    time.sleep(2)
+                    time.sleep(1.5)
                     cycle += 1
                     pass
                 pass
