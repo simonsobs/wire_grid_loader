@@ -14,9 +14,8 @@
 
 #define OPERATION_TIME 120
 
-#define isTCP 0 // 0:UDP, 1:TCP
 #define SAVETOBB 1 // 1:True(save file), 0:False(send data to PC)
-#define SAVETYPE 0 // 0:save all data, 1:save first signal in the encoder pasket, 2:save the first packet of the bufferd packet
+#define isTCP 0 // 0:UDP, 1:TCP (Only when SAVETOBB is 0.)
 #define SAVEVERBOSE 0
 #define PORT 50007
 #define PRUSS_INTC_CUSTOM { { PRU0_PRU1_INTERRUPT, PRU1_PRU0_INTERRUPT, PRU0_ARM_INTERRUPT, \
@@ -49,10 +48,8 @@
 #define ENCODER_TIMEOUT_FLAG 1
 #define IRIG_TIMEOUT_FLAG 2
 
-//#define IP_ADDRESS "202.13.215.117" // beaglebone
-//#define IP_ADDRESS "192.168.7.2" //beaglebone
-#define IP_ADDRESS "202.13.215.85" //tandem PC
-//#define IP_ADDRESS "192.168.7.1" //tandem PC
+//#define IP_ADDRESS "202.13.215.85" // tandem PC
+#define IP_ADDRESS "202.13.215.223" // wire grid PC
 
 volatile int32_t* init_prumem()
 {
@@ -243,10 +240,11 @@ int main(int argc, char **argv)
     fprintf(outfile, "#TIME ERROR DIRECTION TIMERCOUNT REFERENCE\n");
     irigout = fopen("irig_output_tmp.dat", "w");
     fprintf(irigout, "#sec min hour day year\n");
-    time(&measurement_start); //test
-    measurement_time = fopen("timer.txt","w");
-    fprintf(measurement_time, "Start at %ld\n", measurement_start);
   }
+  // Measurement time log
+  time(&measurement_start); //test
+  measurement_time = fopen("timer.txt","w");
+  fprintf(measurement_time, "Start at %ld\n", measurement_start);
 
   timeout_packet->header = 0x1234;
   encd_ind = 0;
@@ -336,44 +334,28 @@ int main(int argc, char **argv)
 
       if( encd_ind == ENCODER_PACKETS_TO_SEND ){
 	      if( SAVEVERBOSE == 1 ) tmp1_time = clock();
-	      if( SAVETYPE == 0 ){
-	        //fprintf(outfile, "#colomn status message\n");
-	        for( i = 0; i < ENCODER_PACKETS_TO_SEND; i++ ){
-	          for( j = 0; j < ENCODER_COUNTER_SIZE; j++ ){
-	            timer_count = (unsigned long long int)encoder_to_send[i].clock[j] + ( (unsigned long long int)(encoder_to_send[i].clock_overflow[j]) << (4*8) );
-	            //fprintf(outfile,"%lu %lu %llu %11.6f %lu %lu\n", encoder_to_send[i].time_status[j], encoder_to_send[i].clock_overflow[j], time, (float)time/PRU_CLOCKSPEED, encoder_to_send[i].count[j], encoder_to_send[i].refcount[j]);
-	            fprintf(outfile, "%ld %lu %lu %llu %lu\n", time(NULL), 1-encoder_to_send[i].error_signal[j], encoder_to_send[i].quad[j], timer_count, (encoder_to_send[i].refcount[j]+REFERENCE_COUNT_MAX)%REFERENCE_COUNT_MAX);
-	            //fprintf(outfile,"%llu %lu\n", time, encoder_to_send[i].count[j]);
-              usec_t1 = usec_timestamp();
-              if(usec_t1 >= usec_t2 + 0.200){
-                encoder_position = fopen("iamhere.txt", "w");
-                fprintf(encoder_position, "%lu\n", (encoder_to_send[i].refcount[j]+REFERENCE_COUNT_MAX)%REFERENCE_COUNT_MAX);
-                //fprintf(encoder_position, "#time encoder_count\n %ld %lu\n", time(NULL), (encoder_to_send[i].refcount[j]+REFERENCE_COUNT_MAX)%REFERENCE_COUNT_MAX);
-                //printf("\r time: %10ld, encoder_place: %6lu", time(NULL), (encoder_to_send[i].refcount[j]+REFERENCE_COUNT_MAX)%REFERENCE_COUNT_MAX);
-                usec_t2 = usec_timestamp(); //reset time but after writing process
-                fclose(encoder_position);
-              }
-	          }
-            time(&measurement_stop); //test
-            if(measurement_stop - measurement_start > OPERATION_TIME){
-              fprintf(measurement_time, "Stop at %ld\n", measurement_stop);
-              exit(0);
+	      //fprintf(outfile, "#colomn status message\n");
+	      for( i = 0; i < ENCODER_PACKETS_TO_SEND; i++ ){
+	        for( j = 0; j < ENCODER_COUNTER_SIZE; j++ ){
+	          timer_count = (unsigned long long int)encoder_to_send[i].clock[j] + ( (unsigned long long int)(encoder_to_send[i].clock_overflow[j]) << (4*8) );
+	          //fprintf(outfile,"%lu %lu %llu %11.6f %lu %lu\n", encoder_to_send[i].time_status[j], encoder_to_send[i].clock_overflow[j], time, (float)time/PRU_CLOCKSPEED, encoder_to_send[i].count[j], encoder_to_send[i].refcount[j]);
+	          fprintf(outfile, "%ld %lu %lu %llu %lu\n", time(NULL), 1-encoder_to_send[i].error_signal[j], encoder_to_send[i].quad[j], timer_count, (encoder_to_send[i].refcount[j]+REFERENCE_COUNT_MAX)%REFERENCE_COUNT_MAX);
+	          //fprintf(outfile,"%llu %lu\n", time, encoder_to_send[i].count[j]);
+            usec_t1 = usec_timestamp();
+            if(usec_t1 >= usec_t2 + 0.200){
+              encoder_position = fopen("iamhere.txt", "w");
+              fprintf(encoder_position, "%lu\n", (encoder_to_send[i].refcount[j]+REFERENCE_COUNT_MAX)%REFERENCE_COUNT_MAX);
+              //fprintf(encoder_position, "#time encoder_count\n %ld %lu\n", time(NULL), (encoder_to_send[i].refcount[j]+REFERENCE_COUNT_MAX)%REFERENCE_COUNT_MAX);
+              //printf("\r time: %10ld, encoder_place: %6lu", time(NULL), (encoder_to_send[i].refcount[j]+REFERENCE_COUNT_MAX)%REFERENCE_COUNT_MAX);
+              usec_t2 = usec_timestamp(); //reset time but after writing process
+              fclose(encoder_position);
             }
 	        }
-	      }else if( SAVETYPE == 2 ){
-	        for( i = 0; i < ENCODER_PACKETS_TO_SEND ; i++ ){
-	          //fprintf(outfile, "%lu\n", encoder_to_send[i].count[0]);
-	        }
-	      }else if( SAVETYPE == 3 ){
-	        //fprintf(outfile, "%lu\n", encoder_to_send[0].count[0]);
-	        if( i % 100 == 0 ){
-	          tmp1_time = clock();
-	          fflush( outfile );
-	          if( SAVEVERBOSE == 1 ){
-	            tmp2_time = clock();
-	            printf("fflush CPU time: %f usec (CLOCKS_PER_SEC = %d)\n", 1.e+6*(float)(tmp2_time - tmp1_time)/(float)CLOCKS_PER_SEC, CLOCKS_PER_SEC );
-	          }
-	        }
+          time(&measurement_stop); //test
+          if(measurement_stop - measurement_start > OPERATION_TIME){
+            fprintf(measurement_time, "Stop at %ld\n", measurement_stop);
+            exit(0);
+          }
 	      }
 	      i += 1;
 
