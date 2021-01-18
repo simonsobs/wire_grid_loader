@@ -342,9 +342,9 @@ int main(int argc, char **argv)
       }
     }else{ // Save data to a output file in BB
 
+      // write encoder data
       if( encd_ind == ENCODER_PACKETS_TO_SEND ){
 	      if( SAVEVERBOSE == 1 ) tmp1_time = clock();
-        // write encoder data
 	      for( i = 0; i < ENCODER_PACKETS_TO_SEND; i++ ){
 	        for( j = 0; j < ENCODER_COUNTER_SIZE; j++ ){
 	          timer_count = (unsigned long long int)encoder_to_send[i].clock[j] + ( (unsigned long long int)(encoder_to_send[i].clock_overflow[j]) << (4*8) );
@@ -370,8 +370,7 @@ int main(int argc, char **argv)
 	        printf("CPU time: %f usec (CLOCKS_PER_SEC = %d)\n", 1.e+6*(float)(tmp2_time - tmp1_time)/(float)CLOCKS_PER_SEC, CLOCKS_PER_SEC );
 	      }
 
-      }
-
+      // write IRIG data
       if( irig_ind == IRIG_PACKETS_TO_SEND ){
         for(i = 0; i < IRIG_PACKETS_TO_SEND; i++){
           irig_secs = de_irig(irig_to_send[i].info[0], 1);
