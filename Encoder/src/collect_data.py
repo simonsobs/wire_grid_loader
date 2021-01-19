@@ -39,34 +39,34 @@ encoder_header = 0x1EAF ;
 encoder_header_size  = unsigned_long_int_size;
 encoder_header_str   = unsigned_long_int_str ;
 # encoder quad
-encoder_packet_indices.append(encoder_packet_indeces[-1]+1);
+encoder_packet_indices.append(encoder_packet_indices[-1]+1);
 encoder_quad_size = (encoder_counter_size * unsigned_long_int_size)
 encoder_quad_str  = (encoder_counter_size * unsigned_long_int_str )
 # encoder clock
-encoder_packet_indices.append(encoder_packet_indeces[-1]+encoder_counter_size);
+encoder_packet_indices.append(encoder_packet_indices[-1]+encoder_counter_size);
 encoder_clock_size   = (encoder_counter_size * unsigned_long_int_size)
 encoder_clock_str    = (encoder_counter_size * unsigned_long_int_str )
 # encoder clock_overflow
-encoder_packet_indices.append(encoder_packet_indeces[-1]+encoder_counter_size);
+encoder_packet_indices.append(encoder_packet_indices[-1]+encoder_counter_size);
 encoder_clock_overflow_size   = (encoder_counter_size * unsigned_long_int_size)
 encoder_clock_overflow_str    = (encoder_counter_size * unsigned_long_int_str )
 # encoder refcount
-encoder_packet_indices.append(encoder_packet_indeces[-1]+encoder_counter_size);
+encoder_packet_indices.append(encoder_packet_indices[-1]+encoder_counter_size);
 encoder_refcount_size   = (encoder_counter_size * unsigned_long_int_size)
 encoder_refcount_str    = (encoder_counter_size * unsigned_long_int_str )
 # encoder error_signal
-encoder_packet_indices.append(encoder_packet_indeces[-1]+encoder_counter_size);
+encoder_packet_indices.append(encoder_packet_indices[-1]+encoder_counter_size);
 encoder_error_signal_size   = (encoder_counter_size * unsigned_long_int_size)
 encoder_error_signal_str    = (encoder_counter_size * unsigned_long_int_str )
 # append last index
-encoder_packet_indices.append(encoder_packet_indeces[-1]+encoder_counter_size);
+encoder_packet_indices.append(encoder_packet_indices[-1]+encoder_counter_size);
 
 # Encoder packet size
 encoder_packet_size = (
     encoder_header_size
     + encoder_quad_size
-    + encolder_clock_size
-    + encoder_clock_overflow
+    + encoder_clock_size
+    + encoder_clock_overflow_size
     + encoder_refcount_size
     + encoder_error_signal_size);
 # String to unpack encoder data
