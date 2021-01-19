@@ -347,7 +347,7 @@ int main(int argc, char **argv)
               usec_t1 = usec_timestamp();
               if(usec_t1 >= usec_t2 + 0.300){
                 encoder_position = fopen("iamhere.txt", "w");
-                fprintf(encoder_position, "%lu\n", (long)((encoder_to_send[i].refcount[j]+REFERENCE_COUNT_MAX*2)%REFERENCE_COUNT_MAX)-REFERENCE_COUNT_MAX);
+                fprintf(encoder_position, "%ld\n", (long)((encoder_to_send[i].refcount[j]+REFERENCE_COUNT_MAX*2)%REFERENCE_COUNT_MAX)-REFERENCE_COUNT_MAX);
                 usec_t2 = usec_timestamp(); //reset time but after writing process
                 fclose(encoder_position);
 	            }
