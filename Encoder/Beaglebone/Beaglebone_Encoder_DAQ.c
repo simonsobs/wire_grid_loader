@@ -63,7 +63,6 @@ struct EncoderInfo {
   unsigned long int quad[ENCODER_COUNTER_SIZE];
   unsigned long int clock[ENCODER_COUNTER_SIZE];
   unsigned long int clock_overflow[ENCODER_COUNTER_SIZE];
-  //unsigned long int count[ENCODER_COUNTER_SIZE];
   unsigned long int refcount[ENCODER_COUNTER_SIZE];
   unsigned long int error_signal[ENCODER_COUNTER_SIZE];
 };
