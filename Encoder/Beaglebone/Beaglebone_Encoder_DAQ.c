@@ -346,18 +346,18 @@ int main(int argc, char **argv)
 	            //fprintf(outfile,"%llu %lu\n", time, encoder_to_send[i].count[j]);
             }
           }
-            usec_t1 = usec_timestamp();
-            if(usec_t1 >= usec_t2 + 0.300){
-              encoder_position = fopen("iamhere.txt", "w");
-              fprintf(encoder_position, "%lu\n", (encoder_to_send[0].refcount[0]+REFERENCE_COUNT_MAX)%REFERENCE_COUNT_MAX);
-              usec_t2 = usec_timestamp(); //reset time but after writing process
-              fclose(encoder_position);
-	          }
-            time(&measurement_stop); //test
-            if(measurement_stop - measurement_start > OPERATION_TIME){
-              fprintf(measurement_time, "Stop at %ld\n", measurement_stop);
-              exit(0);
-            }
+          usec_t1 = usec_timestamp();
+          if(usec_t1 >= usec_t2 + 0.300){
+            encoder_position = fopen("iamhere.txt", "w");
+            fprintf(encoder_position, "%lu\n", (encoder_to_send[0].refcount[0]+REFERENCE_COUNT_MAX)%REFERENCE_COUNT_MAX);
+            usec_t2 = usec_timestamp(); //reset time but after writing process
+            fclose(encoder_position);
+	        }
+          time(&measurement_stop); //test
+          if(measurement_stop - measurement_start > OPERATION_TIME){
+            fprintf(measurement_time, "Stop at %ld\n", measurement_stop);
+            exit(0);
+          }
 	      }else if( SAVETYPE == 2 ){
 	        for( i = 0; i < ENCODER_PACKETS_TO_SEND ; i++ ){
 	          //fprintf(outfile, "%lu\n", encoder_to_send[i].count[0]);
