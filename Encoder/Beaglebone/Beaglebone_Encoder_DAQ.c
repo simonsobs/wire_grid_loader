@@ -254,7 +254,7 @@ int main(int argc, char **argv)
   curr_time = clock();
   int i, j = 0;
   unsigned long long int timer_count;
-  long registered_position = 0;
+  unsigned long registered_position = 0;
   double usec_t1, usec_t2 = usec_timestamp();
 
   printf("Initializing DAQ\n");
@@ -343,7 +343,7 @@ int main(int argc, char **argv)
 	          for( j = 0; j < ENCODER_COUNTER_SIZE; j++ ){
 	            timer_count = (unsigned long long int)encoder_to_send[i].clock[j] + ( (unsigned long long int)(encoder_to_send[i].clock_overflow[j]) << (4*8) );
 	            //fprintf(outfile,"%lu %lu %llu %11.6f %lu %lu\n", encoder_to_send[i].time_status[j], encoder_to_send[i].clock_overflow[j], time, (float)time/PRU_CLOCKSPEED, encoder_to_send[i].count[j], encoder_to_send[i].refcount[j]);
-              registered_position = (long)((encoder_to_send[i].refcount[j]+REFERENCE_COUNT_MAX*2)%REFERENCE_COUNT_MAX)-REFERENCE_COUNT_MAX
+              registered_position = (encoder_to_send[i].refcount[j]+REFERENCE_COUNT_MAX)%REFERENCE_COUNT_MAX);
 	            fprintf(outfile, "%ld %lu %lu %llu %ld\n", time(NULL), 1-encoder_to_send[i].error_signal[j], encoder_to_send[i].quad[j], timer_count, registered_position);
 	            //fprintf(outfile,"%llu %lu\n", time, encoder_to_send[i].count[j]);
               usec_t1 = usec_timestamp();
