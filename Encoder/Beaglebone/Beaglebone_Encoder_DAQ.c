@@ -14,9 +14,8 @@
 
 #define OPERATION_TIME 120
 
-#define isTCP 0 // 0:UDP, 1:TCP
 #define SAVETOBB 1 // 1:True(save file), 0:False(send data to PC)
-#define SAVETYPE 0 // 0:save all data, 1:save first signal in the encoder pasket, 2:save the first packet of the bufferd packet
+#define isTCP 0 // 0:UDP, 1:TCP (Only when SAVETOBB is 0.)
 #define SAVEVERBOSE 0
 #define PORT 50007
 #define PRUSS_INTC_CUSTOM { { PRU0_PRU1_INTERRUPT, PRU1_PRU0_INTERRUPT, PRU0_ARM_INTERRUPT, \
@@ -49,10 +48,8 @@
 #define ENCODER_TIMEOUT_FLAG 1
 #define IRIG_TIMEOUT_FLAG 2
 
-//#define IP_ADDRESS "202.13.215.117" // beaglebone
-//#define IP_ADDRESS "192.168.7.2" //beaglebone
-#define IP_ADDRESS "202.13.215.85" //tandem PC
-//#define IP_ADDRESS "192.168.7.1" //tandem PC
+//#define IP_ADDRESS "202.13.215.85" // tandem PC
+#define IP_ADDRESS "202.13.215.223" // wire grid PC
 
 volatile int32_t* init_prumem()
 {
@@ -66,7 +63,6 @@ struct EncoderInfo {
   unsigned long int quad[ENCODER_COUNTER_SIZE];
   unsigned long int clock[ENCODER_COUNTER_SIZE];
   unsigned long int clock_overflow[ENCODER_COUNTER_SIZE];
-  //unsigned long int count[ENCODER_COUNTER_SIZE];
   unsigned long int refcount[ENCODER_COUNTER_SIZE];
   unsigned long int error_signal[ENCODER_COUNTER_SIZE];
 };
@@ -136,9 +132,20 @@ int de_irig(unsigned long int irig_signal, int base_shift){
 };
 
 double usec_timestamp(){
-struct timeval tv;
-gettimeofday(&tv, NULL);
-return tv.tv_sec + tv.tv_usec * 1e-6;
+  struct timeval tv;
+  gettimeofday(&tv, NULL);
+  return tv.tv_sec + tv.tv_usec * 1e-6;
+}
+
+int write_iamhere(FILE* file, double* usec_t1, double* usec_t2, unsigned long int position){
+  *usec_t1 = usec_timestamp();
+  if(*usec_t1 >= *usec_t2 + 0.300){
+    fseek(file,0,0); // back to the first point of the file
+    fprintf(file, "%lu\n", position); // write the position
+    fflush(file); // write to the output file
+    *usec_t2 = usec_timestamp(); //reset time but after writing process
+  }
+  return 0;
 }
 
 // *********************************
@@ -207,6 +214,7 @@ int main(int argc, char **argv)
   FILE *encoder_position;
   FILE *measurement_time; //test
   time_t measurement_start, measurement_stop;
+  unsigned long int position;
   if(!SAVETOBB){
 
     if(isTCP){
@@ -243,10 +251,13 @@ int main(int argc, char **argv)
     fprintf(outfile, "#TIME ERROR DIRECTION TIMERCOUNT REFERENCE\n");
     irigout = fopen("irig_output_tmp.dat", "w");
     fprintf(irigout, "#sec min hour day year\n");
-    time(&measurement_start); //test
-    measurement_time = fopen("timer.txt","w");
-    fprintf(measurement_time, "Start at %ld\n", measurement_start);
   }
+  // Measurement time file
+  time(&measurement_start); //test
+  measurement_time = fopen("timer.txt","w");
+  fprintf(measurement_time, "Start at %ld\n", measurement_start);
+  // Current position file
+  encoder_position = fopen("iamhere.txt", "w");
 
   timeout_packet->header = 0x1234;
   encd_ind = 0;
@@ -286,18 +297,25 @@ int main(int argc, char **argv)
       err_ind += 1;
       *error_ready = 0;
     }
+
     if(!SAVETOBB){ // Send data to PC via ethernet
 
       if( encd_ind == ENCODER_PACKETS_TO_SEND ) {
 
-	      if( encoder_to_send[0].clock[0] % 100 == 0 ){
-	          printf("    encoder data[0].clock[0] = %lu\n", encoder_to_send[0].clock[0]);
-	          printf("    encoder data[0].clock_overflow[0] = %lu\n", encoder_to_send[0].clock_overflow[0]);
-	      }
 	      if( sendto(sockfd, (struct EncoderInfo *) encoder_to_send, sizeof(encoder_to_send), MSG_CONFIRM, (const struct sockaddr *) &servaddr, sizeof(servaddr)) < 0){
 	          fprintf(stderr, "Error sending encoder data [errorno=%d: %s]\n", errno, strerror(errno));
 	          fprintf(stderr, "    Sending data size = %d (size of 0 = %d)\n", sizeof(encoder_to_send), sizeof(0));
 	      }
+        // write iamhere at the end of encoder_to_send
+        position = (encoder_to_send[ENCODER_PACKETS_TO_SEND-1].refcount[ENCODER_COUNTER_SIZE-1]+REFERENCE_COUNT_MAX)%REFERENCE_COUNT_MAX;
+        write_iamhere(encoder_position, &usec_t1, &usec_t2, position);
+        // check measurement_stop
+        time(&measurement_stop); //test
+        if(measurement_stop - measurement_start > OPERATION_TIME){
+          fprintf(measurement_time, "Stop at %ld\n", measurement_stop);
+          exit(0);
+        }
+        // reseet encd_ind
 	      encd_ind = 0;
       }
 
@@ -316,6 +334,7 @@ int main(int argc, char **argv)
 	      err_ind = 0;
       }
 
+      // Sending encoder timeout packet
       if(((double)(curr_time - encd_time))/CLOCKS_PER_SEC > ENCODER_TIMEOUT){
 	      printf("%lu: sending encodet timeout packet\n", curr_time);
 	      timeout_packet->type = ENCODER_TIMEOUT_FLAG;
@@ -325,6 +344,7 @@ int main(int argc, char **argv)
 	      encd_time = curr_time; // Reset the last time the encoder was monitored
       }
 
+      // Sending IRIG timeout packet
       if(((double)(curr_time - irig_time))/CLOCKS_PER_SEC > IRIG_TIMEOUT){
 	      printf("%lu: sending IRIG timeout packet\n", curr_time);
 	      timeout_packet->type = IRIG_TIMEOUT_FLAG;
@@ -333,58 +353,36 @@ int main(int argc, char **argv)
 	      }
 	      irig_time = curr_time; // Reset the last time the IRIG was monitored
       }
+
     }else{ // Save data to a output file in BB
 
+      // write encoder data
       if( encd_ind == ENCODER_PACKETS_TO_SEND ){
-	      if( SAVEVERBOSE == 1 ) tmp1_time = clock();
-	      if( SAVETYPE == 0 ){
-	        //fprintf(outfile, "#colomn status message\n");
-	        for( i = 0; i < ENCODER_PACKETS_TO_SEND; i++ ){
-	          for( j = 0; j < ENCODER_COUNTER_SIZE; j++ ){
-	            timer_count = (unsigned long long int)encoder_to_send[i].clock[j] + ( (unsigned long long int)(encoder_to_send[i].clock_overflow[j]) << (4*8) );
-	            //fprintf(outfile,"%lu %lu %llu %11.6f %lu %lu\n", encoder_to_send[i].time_status[j], encoder_to_send[i].clock_overflow[j], time, (float)time/PRU_CLOCKSPEED, encoder_to_send[i].count[j], encoder_to_send[i].refcount[j]);
-              registered_position = (encoder_to_send[i].refcount[j]+REFERENCE_COUNT_MAX)%REFERENCE_COUNT_MAX);
-	            fprintf(outfile, "%ld %lu %lu %llu %ld\n", time(NULL), 1-encoder_to_send[i].error_signal[j], encoder_to_send[i].quad[j], timer_count, registered_position);
-	            //fprintf(outfile,"%llu %lu\n", time, encoder_to_send[i].count[j]);
-              usec_t1 = usec_timestamp();
-              if(usec_t1 >= usec_t2 + 0.300){
-                encoder_position = fopen("iamhere.txt", "w");
-                fprintf(encoder_position, "%ld\n", registered_position);
-                usec_t2 = usec_timestamp(); //reset time but after writing process
-                fclose(encoder_position);
-	            }
-            }
+        if( SAVEVERBOSE == 1 ) tmp1_time = clock();
+        for( i = 0; i < ENCODER_PACKETS_TO_SEND; i++ ){
+          for( j = 0; j < ENCODER_COUNTER_SIZE; j++ ){
+            timer_count = (unsigned long long int)encoder_to_send[i].clock[j] + ( (unsigned long long int)(encoder_to_send[i].clock_overflow[j]) << (4*8) );
+            position = (encoder_to_send[i].refcount[j]+REFERENCE_COUNT_MAX)%REFERENCE_COUNT_MAX;
+            fprintf(outfile, "%ld %lu %lu %llu %lu\n", time(NULL), 1-encoder_to_send[i].error_signal[j], encoder_to_send[i].quad[j], timer_count, position);
           }
-          time(&measurement_stop); //test
-          if(measurement_stop - measurement_start > OPERATION_TIME){
-            fprintf(measurement_time, "Stop at %ld\n", measurement_stop);
-            exit(0);
-          }
-	      }else if( SAVETYPE == 2 ){
-	        for( i = 0; i < ENCODER_PACKETS_TO_SEND ; i++ ){
-	          //fprintf(outfile, "%lu\n", encoder_to_send[i].count[0]);
-	        }
-	      }else if( SAVETYPE == 3 ){
-	        //fprintf(outfile, "%lu\n", encoder_to_send[0].count[0]);
-	        if( i % 100 == 0 ){
-	          tmp1_time = clock();
-	          fflush( outfile );
-	          if( SAVEVERBOSE == 1 ){
-	            tmp2_time = clock();
-	            printf("fflush CPU time: %f usec (CLOCKS_PER_SEC = %d)\n", 1.e+6*(float)(tmp2_time - tmp1_time)/(float)CLOCKS_PER_SEC, CLOCKS_PER_SEC );
-	          }
-	        }
-	      }
-	      i += 1;
-
-	      encd_ind = 0;
-	      if( SAVEVERBOSE == 1 ){
-	        tmp2_time = clock();
-	        printf("CPU time: %f usec (CLOCKS_PER_SEC = %d)\n", 1.e+6*(float)(tmp2_time - tmp1_time)/(float)CLOCKS_PER_SEC, CLOCKS_PER_SEC );
-	      }
-
+        }
+        // write iamhere at the end of encoder_to_send
+        write_iamhere(encoder_position, &usec_t1, &usec_t2, position);
+        // check measurement_stop
+        time(&measurement_stop); //test
+        if(measurement_stop - measurement_start > OPERATION_TIME){
+          fprintf(measurement_time, "Stop at %ld\n", measurement_stop);
+          exit(0);
+        }
+        if( SAVEVERBOSE == 1 ){
+          tmp2_time = clock();
+          printf("CPU time: %f usec (CLOCKS_PER_SEC = %d)\n", 1.e+6*(float)(tmp2_time - tmp1_time)/(float)CLOCKS_PER_SEC, CLOCKS_PER_SEC );
+        }
+        // reseet encd_ind
+        encd_ind = 0;
       }
 
+      // write IRIG data
       if( irig_ind == IRIG_PACKETS_TO_SEND ){
         for(i = 0; i < IRIG_PACKETS_TO_SEND; i++){
           irig_secs = de_irig(irig_to_send[i].info[0], 1);
@@ -395,33 +393,49 @@ int main(int argc, char **argv)
           irig_year = de_irig(irig_to_send[i].info[5], 0);
           fprintf(irigout, "%d %d %d %d %d\n", irig_secs, irig_mins, irig_hours, irig_day, irig_year);
         };
-	      irig_ind = 0;
+        // reset irig_ind
+        irig_ind = 0;
       }
 
+      // write error (TODO: implementation)
       if(err_ind == ERROR_PACKETS_TO_SEND ){
-	      err_ind = 0;
+        // reset err_ind
+        err_ind = 0;
       }
 
+      // Check encoder timeout
       if(((double)(curr_time - encd_time))/CLOCKS_PER_SEC > ENCODER_TIMEOUT){
-	      printf("%lu: sending encoder timeout packet\n", curr_time);
-	      timeout_packet->type = ENCODER_TIMEOUT_FLAG;
-	      encd_time = curr_time; // Reset the last time the encoder was monitored
+        printf("%lu: encoder timeout\n", curr_time);
+        encd_time = curr_time; // Reset the last time the encoder was monitored
       }
 
+      // Check IRIG timeout
       if(((double)(curr_time - irig_time))/CLOCKS_PER_SEC > IRIG_TIMEOUT){
-	      printf("%lu: sending IRIG timeout packet\n", curr_time);
-	      timeout_packet->type = IRIG_TIMEOUT_FLAG;
-	      irig_time = curr_time; // Reset the last time the IRIG was monitored
+        printf("%lu: IRIG timeout\n", curr_time);
+        irig_time = curr_time; // Reset the last time the IRIG was monitored
       }
-    }
+
+    } // end of saving
+
   } // end of while loop
 
+<<<<<<< HEAD
   if( !SAVETOBB ) close(sockfd);
   else{
     fclose(outfile);
     fclose(irigout);
     fclose(measurement_time);
   }
+=======
+  if( !SAVETOBB ){
+    close(sockfd);
+  }else{
+    fclose(outfile);
+    fclose(irigout);
+  }
+  fclose(encoder_position);
+  fclose(measurement_time);//test
+>>>>>>> bb1a7d7222a05b246cbbb5f1336400ed9fa8345d
 
   if(*on == 1){
     prussdrv_pru_wait_event(PRU_EVTOUT_1);

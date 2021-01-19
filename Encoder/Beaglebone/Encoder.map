@@ -1,7 +1,7 @@
 ******************************************************************************
                      PRU Linker Unix v2.1.5                    
 ******************************************************************************
->> Linked Fri Aug 21 20:52:46 2020
+>> Linked Tue Jan 19 01:10:23 2021
 
 OUTPUT FILE NAME:   <Encoder.elf>
 ENTRY POINT SYMBOL: "_c_int00_noinit_noargs_noexit"  address: 00000000
@@ -12,10 +12,10 @@ MEMORY CONFIGURATION
          name            origin    length      used     unused   attr    fill
 ----------------------  --------  ---------  --------  --------  ----  --------
 PAGE 0:
-  PRU_IMEM              00000000   00002000  00000480  00001b80  RWIX
+  PRU_IMEM              00000000   00002000  000004e4  00001b1c  RWIX
 
 PAGE 1:
-  PRU_DMEM_0_1          00000000   00002000  00000138  00001ec8  RWIX
+  PRU_DMEM_0_1          00000000   00002000  0000013c  00001ec4  RWIX
   PRU_DMEM_1_0          00002000   00002000  00000000  00002000  RWIX
 
 PAGE 2:
@@ -60,27 +60,24 @@ section   page    origin      length       input sections
 *          0    00000000    00000014     
                   00000000    00000014     rtspruv2_le.lib : boot_special.obj (.text:_c_int00_noinit_noargs_noexit)
 
-.text      0    00000014    0000046c     
-                  00000014    0000045c     Encoder.obj (.text:main)
-                  00000470    00000008     rtspruv2_le.lib : exit.obj (.text:abort)
-                  00000478    00000008                     : exit.obj (.text:loader_exit)
+.text      0    00000014    000004d0     
+                  00000014    000004c0     Encoder.obj (.text:main)
+                  000004d4    00000008     rtspruv2_le.lib : exit.obj (.text:abort)
+                  000004dc    00000008                     : exit.obj (.text:loader_exit)
 
 .stack     1    00000000    00000100     UNINITIALIZED
                   00000000    00000004     rtspruv2_le.lib : boot.obj (.stack)
                   00000004    000000fc     --HOLE--
 
-.bss       1    00000100    00000024     UNINITIALIZED
-                  00000100    00000008     (.common:ECAP)
-                  00000108    00000004     (.common:edge_sample)
-                  0000010c    00000004     (.common:i)
-                  00000110    00000004     (.common:input_capture_count)
-                  00000114    00000004     (.common:input_reference_count)
-                  00000118    00000004     (.common:previous_time)
-                  0000011c    00000004     (.common:quad_needed)
-                  00000120    00000004     (.common:x)
+.bss       1    00000124    00000018     UNINITIALIZED
+                  00000124    00000008     (.common:ECAP)
+                  0000012c    00000004     (.common:edge_sample)
+                  00000130    00000004     (.common:i)
+                  00000134    00000004     (.common:j)
+                  00000138    00000004     (.common:previous_time)
 
-.data      1    00000124    00000014     
-                  00000124    00000014     Encoder.obj (.data)
+.data      1    00000100    00000024     
+                  00000100    00000024     Encoder.obj (.data)
 
 .cinit     1    00000000    00000000     UNINITIALIZED
 
@@ -97,8 +94,8 @@ GLOBAL SYMBOLS: SORTED ALPHABETICALLY BY Name
 
 page  address   name                         
 ----  -------   ----                         
-0     00000478  C$$EXIT                      
-1     00000100  ECAP                         
+0     000004dc  C$$EXIT                      
+1     00000124  ECAP                         
 abs   481cc000  __PRU_CREG_BASE_DCAN0        
 abs   481d0000  __PRU_CREG_BASE_DCAN1        
 abs   80000000  __PRU_CREG_BASE_DDR          
@@ -169,21 +166,22 @@ abs   ffffffff  __binit__
 abs   ffffffff  __c_args__                   
 0     00000000  _c_int00_noinit_noargs_noexit
 1     00000000  _stack                       
-0     00000470  abort                        
+0     000004d4  abort                        
 abs   ffffffff  binit                        
-1     0000012c  clock_overflow               
-1     00000124  count_condition              
-1     00000108  edge_sample                  
-1     00000134  encoder_packets              
-1     00000130  encoder_ready                
-1     0000010c  i                            
-1     00000110  input_capture_count          
-1     00000114  input_reference_count        
+1     00000114  clock_overflow               
+1     00000100  count_condition              
+1     00000108  direction_status_flag        
+1     0000012c  edge_sample                  
+1     0000011c  encoder_packets              
+1     00000118  encoder_ready                
+1     0000010c  error_flag                   
+1     00000130  i                            
+1     00000120  input_reference_count        
+1     00000134  j                            
 0     00000014  main                         
-1     00000128  on                           
-1     00000118  previous_time                
-1     0000011c  quad_needed                  
-1     00000120  x                            
+1     00000110  on                           
+1     00000104  packing_status_flag          
+1     00000138  previous_time                
 
 
 GLOBAL SYMBOLS: SORTED BY Symbol Address 
@@ -192,23 +190,24 @@ page  address   name
 ----  -------   ----                         
 0     00000000  _c_int00_noinit_noargs_noexit
 0     00000014  main                         
-0     00000470  abort                        
-0     00000478  C$$EXIT                      
+0     000004d4  abort                        
+0     000004dc  C$$EXIT                      
 1     00000000  _stack                       
-1     00000100  ECAP                         
 1     00000100  __TI_STACK_END               
-1     00000108  edge_sample                  
-1     0000010c  i                            
-1     00000110  input_capture_count          
-1     00000114  input_reference_count        
-1     00000118  previous_time                
-1     0000011c  quad_needed                  
-1     00000120  x                            
-1     00000124  count_condition              
-1     00000128  on                           
-1     0000012c  clock_overflow               
-1     00000130  encoder_ready                
-1     00000134  encoder_packets              
+1     00000100  count_condition              
+1     00000104  packing_status_flag          
+1     00000108  direction_status_flag        
+1     0000010c  error_flag                   
+1     00000110  on                           
+1     00000114  clock_overflow               
+1     00000118  encoder_ready                
+1     0000011c  encoder_packets              
+1     00000120  input_reference_count        
+1     00000124  ECAP                         
+1     0000012c  edge_sample                  
+1     00000130  i                            
+1     00000134  j                            
+1     00000138  previous_time                
 abs   00000000  __PRU_CREG_BASE_PRU_DMEM_0_1 
 abs   00000000  __PRU_CREG_PRU_INTC          
 abs   00000001  __PRU_CREG_DMTIMER2          
@@ -278,4 +277,4 @@ abs   ffffffff  __binit__
 abs   ffffffff  __c_args__                   
 abs   ffffffff  binit                        
 
-[87 symbols]
+[88 symbols]

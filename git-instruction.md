@@ -110,6 +110,42 @@ The ``push`` command does the following 2 steps;
   * This command shows the information of the remote branches fetched into your PC.
 
 
+## Check the log
+- ``git log``
+- ``git status``
+- ``git reflog``
+
+
+
+## How ot use branch
+- Create branch ``<BRANCH NAME>``
+
+      git branch <BRANCH NAME>
+
+- Move to the branch ``<BRANCH NAME>`` 
+
+      git checkout <BRANCH NAME>
+
+- Create and move to a new branch ``<BRANCH NAME>`` 
+
+      git checkout -b <BRANCH NAME>
+
+- Push only the local branch ``<BRANCH NAME>`` to the remote  ``<REMOTE BRANCH>``
+
+      git push origin <BRANCH NAME>:<REMOTE BRANCH>
+
+  Usually, remote branch name is same as the local branch name ``<BRANCH NAME>``.
+
+### Copy the branch in the remote repository to the local
+1. Create the same name branch (``<BRANCH NAME>``) at the local
+
+      git checkout -b <BRANCH NAME>
+
+2. Pull the remote branch
+
+      git pull origin <BRANCH NAME>
+
+
 ## Ignore changes in the working directories & pull remote repository
 - Get update in the remote repository
 
@@ -123,8 +159,18 @@ The ``push`` command does the following 2 steps;
 
         git pull
     
+## Ignore action at the local repository
+- check the all the actions at the local
 
+    git reflog
 
+- go back to the condition right before the ``<HEAD>`` action
+  ``<HEAD>`` looks like ex)"f55cb888" or ex)"HEAD@{0}" in the reflog output
+
+    git reset --hard <HEAD>
+
+  --hard means the local files(**A**) also will be changed.
+  Without --hard, the change is occurred only in the local repository(**B**).
 
 # Creating New Repository & Setting Git
 ## Creating new repository
@@ -140,9 +186,6 @@ Here, the situation is that you want to create a new git repository and uploaded
 
       The HTTPS address cannot use the ssh public key authentification and you need to type your username&password every time you want to push or pull from the remote repository. 
       
-    
-    
-
 3. In your PC, move to the top directory of the scripts to be uploaded to git   
 
 4. Make ``README.md``
@@ -175,7 +218,6 @@ Here, the situation is that you want to create a new git repository and uploaded
 
   \* This will not require access authorization or user account. But, if you use the *git@github.com:simonsobs/wire_grid_loader.git*, 
   you need to do account setting on your machine.
-
 
 ## Customization
 ### ssh setting
