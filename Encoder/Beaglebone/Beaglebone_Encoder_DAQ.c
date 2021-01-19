@@ -14,7 +14,7 @@
 
 #define OPERATION_TIME 120
 
-#define SAVETOBB 1 // 1:True(save file), 0:False(send data to PC)
+#define SAVETOBB 0 // 1:True(save file), 0:False(send data to PC)
 #define isTCP 0 // 0:UDP, 1:TCP (Only when SAVETOBB is 0.)
 #define SAVEVERBOSE 0
 #define PORT 50007
@@ -419,14 +419,6 @@ int main(int argc, char **argv)
 
   } // end of while loop
 
-<<<<<<< HEAD
-  if( !SAVETOBB ) close(sockfd);
-  else{
-    fclose(outfile);
-    fclose(irigout);
-    fclose(measurement_time);
-  }
-=======
   if( !SAVETOBB ){
     close(sockfd);
   }else{
@@ -435,7 +427,6 @@ int main(int argc, char **argv)
   }
   fclose(encoder_position);
   fclose(measurement_time);//test
->>>>>>> bb1a7d7222a05b246cbbb5f1336400ed9fa8345d
 
   if(*on == 1){
     prussdrv_pru_wait_event(PRU_EVTOUT_1);
