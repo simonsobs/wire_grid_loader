@@ -120,31 +120,33 @@ The ``push`` command does the following 2 steps;
 ## How ot use branch
 - Create branch ``<BRANCH NAME>``
 
-      git branch <BRANCH NAME>
+        git branch <BRANCH NAME>
 
 - Move to the branch ``<BRANCH NAME>`` 
 
-      git checkout <BRANCH NAME>
+        git checkout <BRANCH NAME>
 
 - Create and move to a new branch ``<BRANCH NAME>`` 
 
-      git checkout -b <BRANCH NAME>
+        git checkout -b <BRANCH NAME>
 
 - Push only the local branch ``<BRANCH NAME>`` to the remote  ``<REMOTE BRANCH>``
 
-      git push origin <BRANCH NAME>:<REMOTE BRANCH>
+        git push origin <BRANCH NAME>:<REMOTE BRANCH>
 
   Usually, remote branch name is same as the local branch name ``<BRANCH NAME>``.
 
 ### Copy the branch in the remote repository to the local
-1. Create the same name branch (``<BRANCH NAME>``) at the local
+1. Check remote branch
+      
+        git branch -a 
 
-      git checkout -b <BRANCH NAME>
+   origin/aaaa is a remote branch
 
-2. Pull the remote branch
+2. Create the new branch (``<LOCAL BRANCH>``) at the local from remote branch ``<REMOTE BRANCH>`` (aaaa)
 
-      git pull origin <BRANCH NAME>
-
+        git checkout -b <LOCAL BRANCH> origin/<REMOTE BRANCH>
+ 
 
 ## Ignore changes in the working directories & pull remote repository
 - Get update in the remote repository
@@ -162,12 +164,12 @@ The ``push`` command does the following 2 steps;
 ## Ignore action at the local repository
 - check the all the actions at the local
 
-    git reflog
+        git reflog
 
 - go back to the condition right before the ``<HEAD>`` action
   ``<HEAD>`` looks like ex)"f55cb888" or ex)"HEAD@{0}" in the reflog output
 
-    git reset --hard <HEAD>
+        git reset --hard <HEAD>
 
   --hard means the local files(**A**) also will be changed.
   Without --hard, the change is occurred only in the local repository(**B**).
