@@ -147,6 +147,14 @@ The ``push`` command does the following 2 steps;
 
         git checkout -b <LOCAL BRANCH> origin/<REMOTE BRANCH>
  
+3. Set an upstream remote branch to ``origin/<REMOTE BRANCH>``
+
+        git push --set-upstream origin <REMOTE BRANCH>
+
+   or 
+
+        git push -u origin <REMOTE BRANCH>
+
 
 ## Ignore changes in the working directories & pull remote repository
 - Get update in the remote repository
