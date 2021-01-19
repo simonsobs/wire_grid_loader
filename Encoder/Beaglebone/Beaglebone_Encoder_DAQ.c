@@ -117,7 +117,7 @@ int tos_read_len = sizeof(tos_read);
 int irig_secs, irig_mins, irig_hours, irig_day, irig_year;
 
 #define PRU_CLOCKSPEED 200000000
-#define REFERENCE_COUNT_MAX 70000 // max num_counts of a grid cycle
+#define REFERENCE_COUNT_MAX 62000 // max num_counts of a grid cycle
 
 char ifilename0[] = "Encoder1.bin";
 char ifilename1[] = "Encoder2.bin";
@@ -257,7 +257,7 @@ int main(int argc, char **argv)
   double usec_t1, usec_t2 = usec_timestamp();
 
   printf("Initializing DAQ\n");
-  printf("Notice that the Encoder Count Max is set to 52000!\n");
+  printf("Notice that the Encoder Count Max is set to 62000!\n");
   //printf("Ignoring IRIG timeout error\n");//please check comment out about irig below
 
   while( *on != 1 ){
@@ -417,7 +417,11 @@ int main(int argc, char **argv)
   } // end of while loop
 
   if( !SAVETOBB ) close(sockfd);
-  else            fclose(outfile);
+  else{
+    fclose(outfile);
+    fclose(irigout);
+    fclose(measurement_time);
+  }
 
   if(*on == 1){
     prussdrv_pru_wait_event(PRU_EVTOUT_1);
