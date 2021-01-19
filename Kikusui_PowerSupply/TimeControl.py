@@ -46,7 +46,7 @@ def TimeControl(voltagelim=0., currentlim=0., timeperiod=0., notmakesure=False):
                     if (360 < start_position + uncertaity_cancel):
                         goal_position = wanted_angle
                         pass
-                    else absolute_position[-1] < start_position + uncertaity_cancel:
+                    elif absolute_position[-1] < start_position + uncertaity_cancel:
                         goal_position = 0
                         pass
                     else:
