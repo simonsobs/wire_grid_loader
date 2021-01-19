@@ -43,7 +43,10 @@ def TimeControl(voltagelim=0., currentlim=0., timeperiod=0., notmakesure=False):
                     sys.exit(1)
                 for k in range(num_execution):
                     start_position = getPosition(file_path)*Deg
-                    if absolute_position[-1] < start_position + uncertaity_cancel:
+                    if (360 < start_position + uncertaity_cancel):
+                        goal_position = wanted_angle
+                        pass
+                    else absolute_position[-1] < start_position + uncertaity_cancel:
                         goal_position = 0
                         pass
                     else:
