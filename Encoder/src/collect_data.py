@@ -93,33 +93,33 @@ def process_encoder_packet(data, parse_index):
     # Parse the counter packets
     # Extract the header
     header = unpacked_data[encoder_packet_indices[0]:encoder_packet_indices[1]][0]
-    print(unpacked_data[encoder_packet_indices[0]:encoder_packet_indices[1]]);
+    #print(unpacked_data[encoder_packet_indices[0]:encoder_packet_indices[1]]);
     if header != encoder_header:
         raise RuntimeError("Encoder header error: 0x%04X" % (header))
     # Extract the quadrature data
-    quad_data = unpacked_data[ind1:ind2][0]
-    quad_data = unpacked_data[encoder_packet_indices[1]:encoder_packet_indices[2]][0]
+    quad_data     = unpacked_data[encoder_packet_indices[1]:encoder_packet_indices[2]]
     # Extract the clock
-    clock_data = unpacked_data[encoder_packet_indices[2]:encoder_packet_indices[3]][0]
+    clock_data    = unpacked_data[encoder_packet_indices[2]:encoder_packet_indices[3]]
     # Extract the clock overflow
-    ovflow_data = unpacked_data[encoder_packet_indices[3]:encoder_packet_indices[4]][0]
+    overflow_data = unpacked_data[encoder_packet_indices[3]:encoder_packet_indices[4]]
     # Extract the count (refcount)
-    count_data = unpacked_data[encoder_packet_indices[4]:encoder_packet_indices[5]][0]
+    count_data    = unpacked_data[encoder_packet_indices[4]:encoder_packet_indices[5]]
     # Extract the error signal
-    error_data = unpacked_data[encoder_packet_indices[5]:encoder_packet_indices[6]][0]
+    error_data    = unpacked_data[encoder_packet_indices[5]:encoder_packet_indices[6]]
 
     # modify data
-    quad        = int(quad_data);
-    timer_count = clock_data + (ovflw_data << num_overflow_bits); # clock_data + ovflw_data * 2^(num_overflow_bits)
-    position    = (count_data+REFERENCE_COUNT_MAX) % REFERENCE_COUNT_MAX;
-    error       = error_data;
+    #print(quad_data);
+    quad       = quad_data;
+    timercount = clock_data + (overflow_data << num_overflow_bits); # clock_data + overflow_data * 2^(num_overflow_bits)
+    position   = (count_data+REFERENCE_COUNT_MAX) % REFERENCE_COUNT_MAX;
+    error      = error_data;
 
     # Create and return a frame with clock and encoder data
     encoder_frame = {};
-    encoder_frame['quad'        ] = quad;
-    encoder_frame['timer_count' ] = timer_count;
-    encoder_frame['position'    ] = position;
-    encoder_frame['error'       ] = error;
+    encoder_frame['quad'       ] = quad;
+    encoder_frame['timercount' ] = timercount;
+    encoder_frame['position'   ] = position;
+    encoder_frame['error'      ] = error;
     return encoder_frame
 
 
@@ -172,6 +172,7 @@ def collect_data(outfilename) :
       # Reset data string
       data = ''
       pass; # end of loop over ``i``
+    #print('end of loop over i');
 
     # write data
     for frame in return_frames :
