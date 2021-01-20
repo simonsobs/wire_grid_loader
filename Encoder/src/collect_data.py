@@ -13,35 +13,37 @@ isTCP = False; # True: TCP / False: UDP
 
 port = 50007;
 unsigned_long_int_size = 4;  # bytes
-header_size            = unsigned_long_int_size ;
 endian = '<';
 unsigned_long_int_str = 'L';
 num_overflow_bits = unsigned_long_int_size * 8;  # bits
 REFERENCE_COUNT_MAX=70000; # max num_counts of a grid cycle
 
+verbose = 0; # -1: No output / 0: Normal output / 1: verbose output
+
 class PacketInfo() :
   def __init__(self, header):
     self.header = header;
     self.header_num  = 1; # number of data in header
-    self.header_byte_size = unsigned_long_int_size; # byte size of header
+    self.header_bytesize = unsigned_long_int_size; # byte size of header
     self.header_str       = unsigned_long_int_str ; # unpac str of header
     self.num_overflow_bits = unsigned_long_int_size * 8; # bits
 
     self.num_datatype = 0 ; # number of data type
     self.data_indices = []; # initial indices for each data type
     self.data_nums    = []; # number of data for each data type
-    self.data_byte_sizes = []; # total byte sizes of datas for each data type
+    self.data_bytesizes = []; # total byte sizes of datas for each data type
     self.data_strs    = []; # unpack str for each data type
 
-    self.total_byte_size = 0 ; # total byte size of header + all the data
+    self.total_bytesize = 0 ; # total byte size of header + all the data
     self.unpack_str = '';
     pass;
 
   def unpack_data(self, data, parse_index):
     # Unpack the encoder data
     start_ind = parse_index ;
-    end_ind   = start_ind + self.total_packet_size ;
+    end_ind   = start_ind + self.total_bytesize ;
     unpacked_data = np.array(struct.unpack(self.unpack_str,data[start_ind:end_ind]));
+    if verbose>0 : print('unpacked data = {}'.format(unpacked_data));
     # Parse the counter packets
     # Extract the header
     header = unpacked_data[0:self.header_num][0];
@@ -50,8 +52,12 @@ class PacketInfo() :
     data_array = [];
     for i in range(self.num_datatype) :
       init_ind = self.data_indices[i];
-      end_ind  = init_index+self.data_nums[i];
-      data_array.append(unpacked_data[init_ind][end_ind]);
+      end_ind  = init_ind+self.data_nums[i];
+      if verbose>0 :
+          print('init index = {} / {}(unpacked data size)'.format(init_ind, len(unpacked_data)));
+          print('end  index = {} / {}(unpacked data size)'.format(end_ind , len(unpacked_data)));
+          pass;
+      data_array.append(unpacked_data[init_ind:end_ind]);
       pass;
 
     return data_array;
@@ -75,42 +81,42 @@ class EncoderExtractor() :
     self.encoder_packet_size = 100;
 
     # header
-    self.pi.total_typte_size = self.header_byte_size;
-    self.pi.unpack_str = '%s%s' % (endian, self.header);
+    self.pi.total_typte_size = self.pi.header_bytesize;
+    self.pi.unpack_str = '%s%s' % (endian, self.pi.header_str);
     # for encoder quad
     index = 1;
-    self.pi.data_indices   .append(index);
-    self.pi.data_nums      .append(encoder_packet_size);
-    self.pi.data_byte_sizes.append(unsigned_long_int_size * self.encoder_packet_size);
-    self.pi.data_strs      .append(unsigned_long_int_str  * self.encoder_packet_size);
+    self.pi.data_indices  .append(index);
+    self.pi.data_nums     .append(self.encoder_packet_size);
+    self.pi.data_bytesizes.append(unsigned_long_int_size * self.encoder_packet_size);
+    self.pi.data_strs     .append(unsigned_long_int_str  * self.encoder_packet_size);
     # for encoder clock
-    index += len(self.pi.data_nums[-1]);
-    self.pi.data_indices   .append(index);
-    self.pi.data_nums      .append(encoder_packet_size);
-    self.pi.data_byte_sizes.append(unsigned_long_int_size * self.encoder_packet_size);
-    self.pi.data_strs      .append(unsigned_long_int_str  * self.encoder_packet_size);
+    index += self.pi.data_nums[-1];
+    self.pi.data_indices  .append(index);
+    self.pi.data_nums     .append(self.encoder_packet_size);
+    self.pi.data_bytesizes.append(unsigned_long_int_size * self.encoder_packet_size);
+    self.pi.data_strs     .append(unsigned_long_int_str  * self.encoder_packet_size);
     # for encoder clock_overflow
-    index += len(self.pi.data_nums[-1]);
-    self.pi.data_indices   .append(index);
-    self.pi.data_nums      .append(encoder_packet_size);
-    self.pi.data_byte_sizes.append(unsigned_long_int_size * self.encoder_packet_size);
-    self.pi.data_strs      .append(unsigned_long_int_str  * self.encoder_packet_size);
+    index += self.pi.data_nums[-1];
+    self.pi.data_indices  .append(index);
+    self.pi.data_nums     .append(self.encoder_packet_size);
+    self.pi.data_bytesizes.append(unsigned_long_int_size * self.encoder_packet_size);
+    self.pi.data_strs     .append(unsigned_long_int_str  * self.encoder_packet_size);
     # for encoder refcount
-    index += len(self.pi.data_nums[-1]);
-    self.pi.data_indices   .append(index);
-    self.pi.data_nums      .append(encoder_packet_size);
-    self.pi.data_byte_sizes.append(unsigned_long_int_size * self.encoder_packet_size);
-    self.pi.data_strs      .append(unsigned_long_int_str  * self.encoder_packet_size);
+    index += self.pi.data_nums[-1];
+    self.pi.data_indices  .append(index);
+    self.pi.data_nums     .append(self.encoder_packet_size);
+    self.pi.data_bytesizes.append(unsigned_long_int_size * self.encoder_packet_size);
+    self.pi.data_strs     .append(unsigned_long_int_str  * self.encoder_packet_size);
     # for encoder error signal
-    index += len(self.pi.data_nums[-1]);
-    self.pi.data_indices   .append(index);
-    self.pi.data_nums      .append(encoder_packet_size);
-    self.pi.data_byte_sizes.append(unsigned_long_int_size * self.encoder_packet_size);
-    self.pi.data_strs      .append(unsigned_long_int_str  * self.encoder_packet_size);
+    index += self.pi.data_nums[-1];
+    self.pi.data_indices  .append(index);
+    self.pi.data_nums     .append(self.encoder_packet_size);
+    self.pi.data_bytesizes.append(unsigned_long_int_size * self.encoder_packet_size);
+    self.pi.data_strs     .append(unsigned_long_int_str  * self.encoder_packet_size);
 
     # calculate total info
     self.pi.num_datatype = len(self.pi.data_indices);
-    self.pi.total_byte_size = self.pi.header_byte_size + sum(self.pi.data_byte_sizes);
+    self.pi.total_bytesize = self.pi.header_bytesize + sum(self.pi.data_bytesizes);
     self.pi.unpack_str = ( '%s%s%s' %
         (endian, self.pi.header_str, ''.join(self.pi.data_strs)));
     pass;
@@ -197,8 +203,8 @@ def define_encoder_packet(){
       encoder_refcount_str, 
       encoder_clock_str)
   );
-  print('encoder_packet_size= {}'.format(encoder_packet_size));
-  print('encoder_unpack_str = {}'.format(encoder_unpack_str));
+  if verbose>-1: print('encoder_packet_size= {}'.format(encoder_packet_size));
+  if verbose>-1: print('encoder_unpack_str = {}'.format(encoder_unpack_str));
 
   return encoder_packet
   
@@ -249,19 +255,22 @@ def collect_data(outfilename) :
   outfile = open(outfilename,'w');
   outfile.write('#TIME ERROR DIRECTION TIMERCOUNT REFERENCE\n');
 
-  header_size     = 1;
   encoder_header  = 0x1EAF;
   irig_header     = 0xCAFE;
   timeout_header  = 0x1234;
   error_header    = 0xE12A;
 
   encoder_extractor = EncoderExtractor(encoder_header);
+  header_unpack_str = encoder_extractor.pi.header_str;
+  header_size       = encoder_extractor.pi.header_num;
+  header_bytesize   = encoder_extractor.pi.header_bytesize;
+  encoder_bytesize  = encoder_extractor.pi.total_bytesize;
   
   while True :
     return_frames = [];
     # Empty the queue and parse its contents appropriately
     approx_size = collector.queue.qsize()
-    #if approx_size>0 : print('approximate size = {}'.format(approx_size));
+    if approx_size>0 and verbose>0 : print('approximate size = {}'.format(approx_size));
   
     for i in range(approx_size):
       # Block=True : Block execution until there is something in the queue to retrieve
@@ -271,24 +280,33 @@ def collect_data(outfilename) :
       # Once data is extracted from the queue, parse its contents
       # and loop until data is empty
       data_len = len(data);
+      if verbose>0 : 
+          print('obtained data size = {}'.format(data_len));
+          pass;
       parse_index = 0;
       while parse_index < data_len:
           # Extract header
-          header = data[parse_index : parse_index + header_size];
+          header = data[parse_index : parse_index + header_bytesize];
+          if verbose>0 : 
+              print('obtained header      = {}'.format(header));
+              print('obtained header size = {}'.format(len(header)));
+              pass;
           # unpack from binary ( byte order: little endian(<), format : L (unsigned long) )
-          header = struct.unpack(("%s%s" % (endian, unsigned_long_int_str)), header)[0]
+          header = struct.unpack(("%s%s" % (endian, header_unpack_str)), header)[0]
           # Check for Encoder packet
           if header == encoder_header:
               return_frames.append(encoder_extractor.extract(data, parse_index));
-              parse_index += encoder_packet_size
+              parse_index += encoder_bytesize
           else:
               try :
                 raise RuntimeError(("Bad header! This is not encoder header! : %s" % (str(header))))
               except RuntimeError as e:
                   print(e);
-                  print('###get data###');
-                  print(data);
-                  print('##############');
+                  if verbose>0 :
+                    print('###get data###');
+                    print(data);
+                    print('##############');
+                    pass;
                   #sys.exit(-1);
                   break;
                   pass;
