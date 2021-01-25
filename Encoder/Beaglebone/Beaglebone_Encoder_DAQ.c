@@ -12,7 +12,7 @@
 #include<arpa/inet.h>
 #include<netinet/in.h>
 
-#define OPERATION_TIME 10
+#define OPERATION_TIME 60
 
 #define isTCP 0 // 0:UDP, 1:TCP
 #define SAVETOBB 1 // 1:True(save file), 0:False(send data to PC)
@@ -393,7 +393,7 @@ int main(int argc, char **argv)
           irig_day = de_irig(irig_to_send[i].info[3], 0) \
                      + de_irig(irig_to_send[i].info[4], 0) * 100;
           irig_year = de_irig(irig_to_send[i].info[5], 0);
-          fprintf(irigout, "%d %d %d %d %d\n", irig_secs, irig_mins, irig_hours, irig_day, irig_year);
+          fprintf(irigout, "%lu %lu %d %d %d %d %d\n", irig_to_send[i].clock, irig_to_send[i].clock_overflow, irig_secs, irig_mins, irig_hours, irig_day, irig_year);
         };
 	      irig_ind = 0;
       }
