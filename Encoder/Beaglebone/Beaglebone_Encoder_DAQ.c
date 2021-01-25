@@ -243,7 +243,7 @@ int main(int argc, char **argv)
     outfile = fopen(argv[1], "w");
     fprintf(outfile, "#TIME ERROR DIRECTION TIMERCOUNT REFERENCE\n");
     irigout = fopen("irig_output_tmp.dat", "w");
-    fprintf(irigout, "#sec min hour day year\n");
+    fprintf(irigout, "#PRU_clock sec min hour day year\n");
     time(&measurement_start); //test
     measurement_time = fopen("timer.txt","w");
     fprintf(measurement_time, "Start at %ld\n", measurement_start);
