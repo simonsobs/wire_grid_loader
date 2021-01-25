@@ -13,6 +13,7 @@
 #include<netinet/in.h>
 
 #define OPERATION_TIME 60
+#define REFERENCE_COUNT_MAX 62000 // max num_counts of a grid cycle ignoring z-signal
 
 #define isTCP 0 // 0:UDP, 1:TCP
 #define SAVETOBB 1 // 1:True(save file), 0:False(send data to PC)
@@ -105,6 +106,8 @@ volatile struct IrigInfo irig_to_send[IRIG_PACKETS_TO_SEND];
 volatile struct ErrorInfo error_to_send[ERROR_PACKETS_TO_SEND];
 volatile struct TimeoutInfo timeout_packet[TIMEOUT_PACKETS_TO_SEND];
 
+#define PRU_CLOCKSPEED 200000000
+
 unsigned long int offset;
 unsigned long int encd_ind, irig_ind, err_ind;
 clock_t curr_time, encd_time, irig_time, tmp1_time, tmp2_time;
@@ -115,9 +118,7 @@ int tos_read;
 int tos_read_len = sizeof(tos_read);
 
 int irig_secs, irig_mins, irig_hours, irig_day, irig_year;
-
-#define PRU_CLOCKSPEED 200000000
-#define REFERENCE_COUNT_MAX 62000 // max num_counts of a grid cycle
+unsigned long long int irig_pruclock;
 
 char ifilename0[] = "Encoder1.bin";
 char ifilename1[] = "Encoder2.bin";
@@ -258,7 +259,7 @@ int main(int argc, char **argv)
   double usec_t1, usec_t2 = usec_timestamp();
 
   printf("Initializing DAQ\n");
-  printf("Notice that the Encoder Count Max is set to 62000!\n");
+  printf("Notice that the Encoder Count Max is set to %d!\n", REFERENCE_COUNT_MAX);
   //printf("Ignoring IRIG timeout error\n");//please check comment out about irig below
 
   while( *on != 1 ){
@@ -338,14 +339,11 @@ int main(int argc, char **argv)
       if( encd_ind == ENCODER_PACKETS_TO_SEND ){
 	      if( SAVEVERBOSE == 1 ) tmp1_time = clock();
 	      if( SAVETYPE == 0 ){
-	        //fprintf(outfile, "#colomn status message\n");
 	        for( i = 0; i < ENCODER_PACKETS_TO_SEND; i++ ){
 	          for( j = 0; j < ENCODER_COUNTER_SIZE; j++ ){
 	            timer_count = (unsigned long long int)encoder_to_send[i].clock[j] + ( (unsigned long long int)(encoder_to_send[i].clock_overflow[j]) << (4*8) );
-	            //fprintf(outfile,"%lu %lu %llu %11.6f %lu %lu\n", encoder_to_send[i].time_status[j], encoder_to_send[i].clock_overflow[j], time, (float)time/PRU_CLOCKSPEED, encoder_to_send[i].count[j], encoder_to_send[i].refcount[j]);
               registered_position = (encoder_to_send[i].refcount[j]+REFERENCE_COUNT_MAX)%REFERENCE_COUNT_MAX;
 	            fprintf(outfile, "%ld %lu %lu %llu %ld\n", time(NULL), 1-encoder_to_send[i].error_signal[j], encoder_to_send[i].quad[j], timer_count, registered_position);
-	            //fprintf(outfile,"%llu %lu\n", time, encoder_to_send[i].count[j]);
               usec_t1 = usec_timestamp();
               if(usec_t1 >= usec_t2 + 0.300){
                 encoder_position = fopen("iamhere.txt", "w");
@@ -393,7 +391,8 @@ int main(int argc, char **argv)
           irig_day = de_irig(irig_to_send[i].info[3], 0) \
                      + de_irig(irig_to_send[i].info[4], 0) * 100;
           irig_year = de_irig(irig_to_send[i].info[5], 0);
-          fprintf(irigout, "%lu %lu %d %d %d %d %d\n", irig_to_send[i].clock, irig_to_send[i].clock_overflow, irig_secs, irig_mins, irig_hours, irig_day, irig_year);
+          irig_pruclock = (unsigned long long int)irig_to_send[i].clock + ( (unsigned long long int)(irig_to_send[i].clock_overflow) << (4*8) );
+          fprintf(irigout, "%llu %d %d %d %d %d\n", irig_pruclock, irig_secs, irig_mins, irig_hours, irig_day, irig_year);
         };
 	      irig_ind = 0;
       }
