@@ -310,9 +310,11 @@ int main(int argc, char **argv)
 	          fprintf(stderr, "Error sending encoder data [errorno=%d: %s]\n", errno, strerror(errno));
 	          fprintf(stderr, "    Sending data size = %d (size of 0 = %d)\n", sizeof(encoder_to_send), sizeof(0));
 	      }
+
         // write iamhere at the end of encoder_to_send
-        position = (encoder_to_send[ENCODER_PACKETS_TO_SEND-1].refcount[ENCODER_COUNTER_SIZE-1]+REFERENCE_COUNT_MAX)%REFERENCE_COUNT_MAX;
-        write_iamhere(encoder_position, &usec_t1, &usec_t2, position);
+        //position = (encoder_to_send[ENCODER_PACKETS_TO_SEND-1].refcount[ENCODER_COUNTER_SIZE-1]+REFERENCE_COUNT_MAX)%REFERENCE_COUNT_MAX;
+        //write_iamhere(encoder_position, &usec_t1, &usec_t2, position);
+
         // check measurement_stop
         time(&measurement_stop); //test
         if(measurement_stop - measurement_start > OPERATION_TIME && OPERATION_TIME>0 ){
