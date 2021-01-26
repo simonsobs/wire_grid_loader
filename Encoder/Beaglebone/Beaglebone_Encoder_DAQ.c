@@ -18,7 +18,8 @@
 #define REFERENCE_COUNT_MAX 54000 // max num_counts of a grid cycle
 
 //#define IP_ADDRESS "202.13.215.85" // tandem PC
-//#define IP_ADDRESS "202.13.215.223" // wire grid PC at kyoto
+//#define IP_ADDRESS "202.13.215.223" // wire grid PC at Kyoto
+#define IP_ADDRESS "192.168.0.2"// wire grid PC at Tokyo via local etha
 
 #define SAVETOBB 0 // 1:True(save file), 0:False(send data to PC)
 #define isTCP 0 // 0:UDP, 1:TCP (Only when SAVETOBB is 0.)
