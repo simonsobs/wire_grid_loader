@@ -15,6 +15,11 @@
 //define OPERATION_TIME 120
 #define OPERATION_TIME -1 // OPERATION_TIME<0 : No limit
 
+#define REFERENCE_COUNT_MAX 54000 // max num_counts of a grid cycle
+
+//#define IP_ADDRESS "202.13.215.85" // tandem PC
+//#define IP_ADDRESS "202.13.215.223" // wire grid PC at kyoto
+
 #define SAVETOBB 0 // 1:True(save file), 0:False(send data to PC)
 #define isTCP 0 // 0:UDP, 1:TCP (Only when SAVETOBB is 0.)
 #define SAVEVERBOSE 0
@@ -48,9 +53,6 @@
 #define IRIG_TIMEOUT 10
 #define ENCODER_TIMEOUT_FLAG 1
 #define IRIG_TIMEOUT_FLAG 2
-
-//#define IP_ADDRESS "202.13.215.85" // tandem PC
-#define IP_ADDRESS "202.13.215.223" // wire grid PC
 
 volatile int32_t* init_prumem()
 {
@@ -112,9 +114,9 @@ int tos_read;
 int tos_read_len = sizeof(tos_read);
 
 int irig_secs, irig_mins, irig_hours, irig_day, irig_year;
+unsigned long long irig_pruclock;
 
 #define PRU_CLOCKSPEED 200000000
-#define REFERENCE_COUNT_MAX 62000 // max num_counts of a grid cycle
 
 char ifilename0[] = "Encoder1.bin";
 char ifilename1[] = "Encoder2.bin";
@@ -270,7 +272,7 @@ int main(int argc, char **argv)
   double usec_t1, usec_t2 = usec_timestamp();
 
   printf("Initializing DAQ\n");
-  printf("Notice that the Encoder Count Max is set to 62000!\n");
+  printf("Notice that the Encoder Count Max is set to %d!\n", REFERENCE_COUNT_MAX);
   //printf("Ignoring IRIG timeout error\n");//please check comment out about irig below
 
   while( *on != 1 ){
@@ -392,7 +394,9 @@ int main(int argc, char **argv)
           irig_day = de_irig(irig_to_send[i].info[3], 0) \
                      + de_irig(irig_to_send[i].info[4], 0) * 100;
           irig_year = de_irig(irig_to_send[i].info[5], 0);
-          fprintf(irigout, "%d %d %d %d %d\n", irig_secs, irig_mins, irig_hours, irig_day, irig_year);
+          irig_pruclock = (unsigned long long int)irig_to_send[i].clock + ( (unsigned long long int\
+)(irig_to_send[i].clock_overflow) << (4*8) );
+          fprintf(irigout, "%llu %d %d %d %d %d\n", irig_pruclock, irig_secs, irig_mins, irig_hours, irig_day, irig_year);
         };
         // reset irig_ind
         irig_ind = 0;
