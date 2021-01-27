@@ -27,12 +27,16 @@ def collect_data(outfilename) :
   
   outfile_encoder = open(outfilename+'_encoder.dat','w');
   outfile_encoder.write('#TIME ERROR DIRECTION TIMERCOUNT REFERENCE\n');
+  outfile_encoder.flush()
   outfile_irig = open(outfilename+'_irig.dat','w');
   outfile_irig.write('#TIMERCOUNT YEAR DAY HOUR MINUTE SECOND\n');
+  outfile_irig.flush()
   outfile_timeout = open(outfilename+'_timeout.dat','w');
   outfile_timeout.write('#TIME TYPE\n');
+  outfile_timeout.flush()
   outfile_error = open(outfilename+'_error.dat','w');
   outfile_error.write('#TIME ERRORCODE\n');
+  outfile_error.flush()
 
   encoder_header  = 0x1EAF;
   irig_header     = 0xCAFE;
@@ -121,20 +125,24 @@ def collect_data(outfilename) :
       ncount = len(frame['timercount']);
       for i in range(ncount) :
         outfile_encoder.write('{} {} {} {} {}\n'.format(currenttime, 1-frame['error'][i],frame['quad'][i],frame['timercount'][i],frame['position'][i]));
+        outfile_encoder.flush()
         pass;
       pass; 
     # write irig data
     for frame in irig_frames :
       ncount = len(frame['timercount']);
       outfile_irig.write('{} {} {} {} {}\n'.format(frame['timercount'],frame['year'],frame['day'],frame['hour'],frame['minute'],frame['second']));
+      outfile_irig.flush()
       pass; 
     # write timeout data
     for frame in timeout_frames :
       outfile_timeout.write('{} {}\n'.format(currenttime, frame['type']));
+      outfile_timeout.flush()
       pass; 
     # write error data
     for frame in error_frames :
       outfile_error.write('{} {}\n'.format(currenttime, frame['error']));
+      outfile_error.flush()
       pass; 
 
     pass; # end of ``while True :``
