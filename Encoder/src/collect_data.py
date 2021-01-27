@@ -123,7 +123,6 @@ def collect_data(outfilename, measurement_time=10) :
                   break;
                   pass;
               pass;
-            if()
           pass; # end of ``while parse_index < data_len:``
         stop_time = time.time()
         if(stop_time - start_time >= measurement_time): break
