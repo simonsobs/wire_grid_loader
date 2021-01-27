@@ -26,7 +26,7 @@ class PacketInfo() :
     start_ind = parse_index ;
     end_ind   = start_ind + self.total_bytesize ;
     unpacked_data = np.array(struct.unpack(self.unpack_str,data[start_ind:end_ind]));
-    if verbose>0 : print('unpacked data = {}'.format(unpacked_data));
+    if verbose>1 : print('unpacked data = {}'.format(unpacked_data));
     # Parse the counter packets
     # Extract the header
     header = unpacked_data[0:self.header_num][0];

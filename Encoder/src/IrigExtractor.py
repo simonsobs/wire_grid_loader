@@ -5,6 +5,7 @@ from PacketInfo import PacketInfo;
 
 from constant import *;
 
+
 class IrigExtractor() :
   def __init__(self, header) :
     '''
@@ -62,20 +63,26 @@ class IrigExtractor() :
         (endian, self.pi.header_str, ''.join(self.pi.data_strs)));
     pass;
 
+  # For internal usage
+  def _de_irig(self,irig_signal, base_shift) :
+    if verbose>0 : print('_de_irig',irig_signal,base_shift);
+    ret = ( ((irig_signal >> (0+base_shift)) & 1)
+          + ((irig_signal >> (1+base_shift)) & 1) * 2
+          + ((irig_signal >> (2+base_shift)) & 1) * 4
+          + ((irig_signal >> (3+base_shift)) & 1) * 8
+          + ((irig_signal >> (5+base_shift)) & 1) * 10
+          + ((irig_signal >> (6+base_shift)) & 1) * 20
+          + ((irig_signal >> (7+base_shift)) & 1) * 40
+          + ((irig_signal >> (8+base_shift)) & 1) * 80);
+    if verbose>0 : print('ret = {}'.format(ret));
+    return ret;
 
-  def de_irig(irig_signal, base_shift) :
-      return (((irig_signal >> (0+base_shift)) & 1)
-            + ((irig_signal >> (1+base_shift)) & 1) * 2
-            + ((irig_signal >> (2+base_shift)) & 1) * 4
-            + ((irig_signal >> (3+base_shift)) & 1) * 8
-            + ((irig_signal >> (5+base_shift)) & 1) * 10
-            + ((irig_signal >> (6+base_shift)) & 1) * 20
-            + ((irig_signal >> (7+base_shift)) & 1) * 40
-            + ((irig_signal >> (8+base_shift)) & 1) * 80);
+
 
 
   def extract(self, data, parse_index) :
   
+    if verbose>0 : print('IrigExtractor::extract(): Start');
     data_array = self.pi.unpack_data(data, parse_index);
     # Extract the clock
     clock_data    = data_array[0][0];
@@ -90,11 +97,11 @@ class IrigExtractor() :
   
     # modify data
     timercount = clock_data + (overflow_data << num_overflow_bits); # clock_data + overflow_data * 2^(num_overflow_bits)
-    second = de_irig(info_data[0],1);
-    minute = de_irig(info_data[1],0);
-    hour   = de_irig(info_data[2],0);
-    day    = de_irig(info_data[3],0) + de_irig(info_data[4],0)*100;
-    year   = de_irig(info_data[5],0);
+    second = self._de_irig(info_data[0],1);
+    minute = self._de_irig(info_data[1],0);
+    hour   = self._de_irig(info_data[2],0);
+    day    = self._de_irig(info_data[3],0) + self._de_irig(info_data[4],0)*100;
+    year   = self._de_irig(info_data[5],0);
   
     # Create and return a frame with clock and encoder data
     irig_frame = {};
@@ -104,8 +111,15 @@ class IrigExtractor() :
     irig_frame['hour'       ] = hour;
     irig_frame['day'        ] = day;
     irig_frame['year'       ] = year;
+    if verbose>0 : print('IrigExtractor::extract(): End');
     return irig_frame;
 
+
+
+
+
   pass; # end of class IrigExtractor()
+
+
 
 

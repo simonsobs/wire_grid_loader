@@ -78,27 +78,36 @@ def collect_data(outfilename) :
           pass;
       parse_index = 0;
       while parse_index < data_len:
+          if verbose>0 : print('parse_index = {} / data_len = {}'.format(parse_index, data_len));
           # Extract header
           header = data[parse_index : parse_index + header_bytesize];
           if verbose>0 : 
-              print('obtained header      = {}'.format(header));
-              print('obtained header size = {}'.format(len(header)));
+              if   header!=0 : print('obtained header (size) = {} ({})'.format(header,len(header)));
+              elif verbose>1 : print('obtained header (size) = {} ({})'.format(header,len(header)));
               pass;
           # unpack from binary ( byte order: little endian(<), format : L (unsigned long) )
           header = struct.unpack(("%s%s" % (endian, header_unpack_str)), header)[0]
           # Check for Encoder packet
           if header == encoder_header:
+              if verbose>0 : print('  header == encoder');
               encoder_frames.append(encoder_extractor.extract(data, parse_index));
               parse_index += encoder_bytesize
           elif header == irig_header:
+              if verbose>0 : print('  header == irig');
               irig_frames.append(irig_extractor.extract(data, parse_index));
               parse_index += irig_bytesize
           elif header == timeout_header:
+              if verbose>0 : print('  header == timeout');
               timeout_frames.append(timeout_extractor.extract(data, parse_index));
               parse_index += timeout_bytesize
           elif header == error_header:
+              if verbose>0 : print('  header == error');
               error_frames.append(error_extractor.extract(data, parse_index));
               parse_index += error_bytesize
+          elif header == 0:
+              if verbose>1 : print('  header == 0');
+              parse_index += header_bytesize
+              #break;
           else:
               try :
                 raise RuntimeError(("Bad header! This is not encoder/irig/timeout/error header! : %s" % (str(header))))
@@ -125,25 +134,26 @@ def collect_data(outfilename) :
       ncount = len(frame['timercount']);
       for i in range(ncount) :
         outfile_encoder.write('{} {} {} {} {}\n'.format(currenttime, 1-frame['error'][i],frame['quad'][i],frame['timercount'][i],frame['position'][i]));
-        outfile_encoder.flush()
         pass;
       pass; 
     # write irig data
     for frame in irig_frames :
-      ncount = len(frame['timercount']);
-      outfile_irig.write('{} {} {} {} {}\n'.format(frame['timercount'],frame['year'],frame['day'],frame['hour'],frame['minute'],frame['second']));
-      outfile_irig.flush()
+      outfile_irig.write('{} {} {} {} {} {}\n'.format(frame['timercount'],frame['year'],frame['day'],frame['hour'],frame['minute'],frame['second']));
       pass; 
     # write timeout data
     for frame in timeout_frames :
       outfile_timeout.write('{} {}\n'.format(currenttime, frame['type']));
-      outfile_timeout.flush()
       pass; 
     # write error data
     for frame in error_frames :
       outfile_error.write('{} {}\n'.format(currenttime, frame['error']));
-      outfile_error.flush()
       pass; 
+
+    # flush output
+    outfile_encoder.flush();
+    outfile_irig.flush();
+    outfile_timeout.flush();
+    outfile_error.flush();
 
     pass; # end of ``while True :``
   

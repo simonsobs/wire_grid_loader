@@ -20,6 +20,8 @@ class Collector(object):
             port     - port to use
             isTCP    - True : use TCP / Fasle : use UDP
         """
+        self._showcounts=1e+6;
+
         # Number of bits to read in chunks from the input buffer
         self._read_chunk_size = 2**20
         #self._read_chunk_size = 2**12
@@ -34,15 +36,14 @@ class Collector(object):
         # Connect to the microcontroller unit
         self._s.bind(("", port))
         # Data colleciton object
-        self._data = [b'', b''];
-        self._data2= b'';
+        self._data = b'';
         # Enable connection
         if self._isTCP : self._s.listen(0)
 
         # Used to signal to stop recording
         self._should_stop = multiprocessing.Value(ctypes.c_bool, False)
         self._stopped = multiprocessing.Value(ctypes.c_bool, False)
-        self._stopped2= multiprocessing.Value(ctypes.c_bool, False)
+        #self._stopped2= multiprocessing.Value(ctypes.c_bool, False)
 
         # Start the relaying process
         self.queue = multiprocessing.Queue()
@@ -51,11 +52,11 @@ class Collector(object):
         self._process = multiprocessing.Process(
             target=self.relay_data,
             args=(self._should_stop, self._stopped , 0b0))
-        self._process2 = multiprocessing.Process(
-            target=self.relay_data,
-            args=(self._should_stop, self._stopped2, 0b1))
+        #self._process2 = multiprocessing.Process(
+        #    target=self.relay_data,
+        #    args=(self._should_stop, self._stopped2, 0b1))
         self._process.start()
-        self._process2.start()
+        #self._process2.start()
 
         # Deal with SIGINT interruptions (nominally how we stop the DAQ) nicely
         signal.signal(signal.SIGINT , self.sigint_handler_parent)
@@ -81,7 +82,7 @@ class Collector(object):
             if should_stop.value:
                 break
 
-            if self._pcount[processID]%1000 == 0 : print('process{} count in Collector = {}'.format(processID, self._pcount[processID]));
+            #if self._pcount[processID]%self._showcounts == 0 : print('process{} count in Collector = {}'.format(processID, self._pcount[processID]));
 
             # check the socket, continuing if there's nothing there yet
             try:
@@ -98,7 +99,7 @@ class Collector(object):
                       #print('received data size = {}'.format(len(data)));
                       self._data[processID] += data;
                       if len(data)<self._read_chunk_size : break;
-                      if recvcount%1000 == 0 : print('receive count = {}'.format(recvcount));
+                      if recvcount%self._showcounts == 0 : print('receive count = {}'.format(recvcount));
                       recvcount += 1;
                       pass;
                     self._runprocess = ( ~self._runprocess & 0b1 ); # bit reverse 0b0<->0b1
@@ -109,8 +110,8 @@ class Collector(object):
                     pass;
                 else :
                   #print('try recv');
-                  self._data2 += self._s.recv(self._read_chunk_size)
-                  #print('_data2 = {}'.format(self._data));
+                  self._data += self._s.recv(self._read_chunk_size)
+                  #print('_data = {}'.format(self._data));
                   pass;
             except socket.error as err:
                 #print('error');
@@ -124,9 +125,9 @@ class Collector(object):
                     pass
 
             # Push the data to the queue
-            if len(self._data2) > 0:
-                self.queue.put(obj=self._data2, block=True, timeout=None)
-                self._data2 = b''
+            if len(self._data) > 0:
+                self.queue.put(obj=self._data, block=True, timeout=None)
+                self._data = b''
                 pass;
 
             self._pcount[processID] += 1;
@@ -152,7 +153,8 @@ class Collector(object):
             pass
 
         # Wait until the process is in a safe state, then terminate it
-        while not (self._stopped.value and self._stopped2.value):
+        #while not (self._stopped.value and self._stopped2.value):
+        while not self._stopped.value :
             time.sleep(0.001)
             pass
         self._process.terminate()
