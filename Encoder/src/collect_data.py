@@ -11,6 +11,8 @@ isTCP = False; # True: TCP / False: UDP
 
 port = 50007;
 
+default_time = 10.;
+
 from constant import *;
 
 from EncoderExtractor import EncoderExtractor;
@@ -19,7 +21,7 @@ from TimeoutExtractor import TimeoutExtractor;
 from ErrorExtractor import ErrorExtractor;
 
 
-def collect_data(outfilename, measurement_time=10) :
+def collect_data(outfilename, measurement_time=default_time) :
   
   collector = Collector(port,isTCP=isTCP);
   time.sleep(1);
@@ -174,7 +176,7 @@ def collect_data(outfilename, measurement_time=10) :
 def parseCmdLine(args):
     from optparse import OptionParser
     parser = OptionParser()
-    parser.add_option('-t', '--time'   , dest='timeperiod', help='measurement time with UDP', type = float, default=0.)
+    parser.add_option('-t', '--time'   , dest='timeperiod', help='measurement time with UDP', type = float, default=default_time)
     (config, args) = parser.parse_args(args)
     return config
 
