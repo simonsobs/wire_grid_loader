@@ -1,7 +1,7 @@
 ******************************************************************************
                      PRU Linker Unix v2.1.5                    
 ******************************************************************************
->> Linked Wed Jan 20 18:29:46 2021
+>> Linked Wed Jan 27 15:07:38 2021
 
 OUTPUT FILE NAME:   <Encoder.elf>
 ENTRY POINT SYMBOL: "_c_int00_noinit_noargs_noexit"  address: 00000000
@@ -12,7 +12,7 @@ MEMORY CONFIGURATION
          name            origin    length      used     unused   attr    fill
 ----------------------  --------  ---------  --------  --------  ----  --------
 PAGE 0:
-  PRU_IMEM              00000000   00002000  000004e4  00001b1c  RWIX
+  PRU_IMEM              00000000   00002000  000004f0  00001b10  RWIX
 
 PAGE 1:
   PRU_DMEM_0_1          00000000   00002000  0000013c  00001ec4  RWIX
@@ -60,10 +60,10 @@ section   page    origin      length       input sections
 *          0    00000000    00000014     
                   00000000    00000014     rtspruv2_le.lib : boot_special.obj (.text:_c_int00_noinit_noargs_noexit)
 
-.text      0    00000014    000004d0     
-                  00000014    000004c0     Encoder.obj (.text:main)
-                  000004d4    00000008     rtspruv2_le.lib : exit.obj (.text:abort)
-                  000004dc    00000008                     : exit.obj (.text:loader_exit)
+.text      0    00000014    000004dc     
+                  00000014    000004cc     Encoder.obj (.text:main)
+                  000004e0    00000008     rtspruv2_le.lib : exit.obj (.text:abort)
+                  000004e8    00000008                     : exit.obj (.text:loader_exit)
 
 .stack     1    00000000    00000100     UNINITIALIZED
                   00000000    00000004     rtspruv2_le.lib : boot.obj (.stack)
@@ -94,7 +94,7 @@ GLOBAL SYMBOLS: SORTED ALPHABETICALLY BY Name
 
 page  address   name                         
 ----  -------   ----                         
-0     000004dc  C$$EXIT                      
+0     000004e8  C$$EXIT                      
 1     00000124  ECAP                         
 abs   481cc000  __PRU_CREG_BASE_DCAN0        
 abs   481d0000  __PRU_CREG_BASE_DCAN1        
@@ -166,7 +166,7 @@ abs   ffffffff  __binit__
 abs   ffffffff  __c_args__                   
 0     00000000  _c_int00_noinit_noargs_noexit
 1     00000000  _stack                       
-0     000004d4  abort                        
+0     000004e0  abort                        
 abs   ffffffff  binit                        
 1     00000114  clock_overflow               
 1     00000100  count_condition              
@@ -190,8 +190,8 @@ page  address   name
 ----  -------   ----                         
 0     00000000  _c_int00_noinit_noargs_noexit
 0     00000014  main                         
-0     000004d4  abort                        
-0     000004dc  C$$EXIT                      
+0     000004e0  abort                        
+0     000004e8  C$$EXIT                      
 1     00000000  _stack                       
 1     00000100  __TI_STACK_END               
 1     00000100  count_condition              

@@ -64,7 +64,8 @@ int main(void){
 
   *encoder_ready = 0;
 
-  ECAP.p_sample = 0;
+  //ECAP.p_sample = 0;
+  ECAP.p_sample = ((__R31 & (1 << 10)) >> 10); // initial count signal
   ECAP.ts = *IEP_TMR_CNT;
 
   previous_time = (unsigned long long int)*IEP_TMR_CNT;
@@ -83,81 +84,81 @@ int main(void){
       j = 0;
       while(j < ENCODER_COUNTER_SIZE){
 
-	if((*IEP_TMR_GLB_STS & 1) == 1){
-	  *clock_overflow +=1;
-	  *IEP_TMR_GLB_STS = 1;
-	  packing_status_flag = 1;
-	}
+        if((*IEP_TMR_GLB_STS & 1) == 1){
+          *clock_overflow +=1;
+          *IEP_TMR_GLB_STS = 1;
+          packing_status_flag = 1;
+        }
 
-	ECAP.ts = *IEP_TMR_CNT;
+        ECAP.ts = *IEP_TMR_CNT;
 
-	if(packing_status_flag){
-	  if(PACK_INTERVAL <= (unsigned long long int)ECAP.ts + CLOCK_MAX - (unsigned long long int)previous_time){
-	    tstts = overflow_time;
-	    packing_status_flag = 0;
-	  }
-	}else{
-	  if((unsigned long long int)previous_time + PACK_INTERVAL <= (unsigned long long int)ECAP.ts){
-	    tstts = regular_time;
-	  }
-	}
+        if(packing_status_flag){
+          if(PACK_INTERVAL <= (unsigned long long int)ECAP.ts + CLOCK_MAX - (unsigned long long int)previous_time){
+            tstts = overflow_time;
+            packing_status_flag = 0;
+          }
+        }else{
+          if((unsigned long long int)previous_time + PACK_INTERVAL <= (unsigned long long int)ECAP.ts){
+            tstts = regular_time;
+          }
+        }
 
-	switch(tstts){
-	case regular_time:
-	case overflow_time:
+        switch(tstts){
+          case regular_time:
+          case overflow_time:
 
-	  encoder_packets[i].clock[j] = ECAP.ts;
-	  encoder_packets[i].clock_overflow[j] = (*clock_overflow);
-	  //encoder_packets[i].count[j] = input_capture_count;
-	  encoder_packets[i].refcount[j] = input_reference_count;
-	  encoder_packets[i].quad[j] = direction_status_flag;
-	  encoder_packets[i].error_signal[j] = error_flag;
+            encoder_packets[i].clock[j] = ECAP.ts;
+            encoder_packets[i].clock_overflow[j] = (*clock_overflow);
+            //encoder_packets[i].count[j] = input_capture_count;
+            encoder_packets[i].refcount[j] = input_reference_count;
+            encoder_packets[i].quad[j] = direction_status_flag;
+            encoder_packets[i].error_signal[j] = error_flag;
 
-	  previous_time = ECAP.ts;
-	  tstts = counting;
-	  j += 1;
-	  break;
+            previous_time = ECAP.ts;
+            tstts = counting;
+            j += 1;
+            break;
 
-	default:
-	  break;
-	}
+          default:
+            break;
+        }
 
-	error_flag = ((__R31 & (1 << 7)) >> 7);
-	edge_sample = ((__R31 & (1 << 10)) >> 10);
-	count_condition = edge_sample ^ ECAP.p_sample;
+        error_flag = ((__R31 & (1 << 7)) >> 7);
+        edge_sample = ((__R31 & (1 << 10)) >> 10);
+        count_condition = edge_sample ^ ECAP.p_sample;
 
-	if( (((__R31 & (1 << 9)) >> 9) & 0x1) == 1){
-	  input_reference_count = 0;
-	}
+        if( (((__R31 & (1 << 9)) >> 9) & 0x1) == 1){
+          input_reference_count = 0;
+        }
 
-	if(count_condition){
-	  /*if(input_capture_count == MAX_COUNTER_VALUE){
-	    input_capture_count = 0;
-	    }*/
+        if(count_condition){
+          /*if(input_capture_count == MAX_COUNTER_VALUE){
+            input_capture_count = 0;
+            }*/
 
-	  if(edge_sample == 1){
-	    if( ((__R31 & (1 << 8)) >> 8) == 0 ){
-	      direction_status_flag = 0;
-	      //input_capture_count += 1;
-	      input_reference_count += 1;
-	    }else{
-	      direction_status_flag = 1;
-	      //input_capture_count -= 1;
-	      input_reference_count -= 1;
-	    }
-	  }else{
-	    if( ((__R31 & (1 << 8)) >> 8) == 0){
-		direction_status_flag = 1;
-		//input_capture_count -= 1;
-		input_reference_count -= 1;
-	      }else{
-		direction_status_flag = 0;
-		//input_capture_count += 1;
-		input_reference_count += 1;
-	      }
-	  }
-	  ECAP.p_sample = edge_sample;
-	}
+          if(edge_sample == 1){
+            if( ((__R31 & (1 << 8)) >> 8) == 0 ){
+              direction_status_flag = 0;
+              //input_capture_count += 1;
+              input_reference_count += 1;
+            }else{
+              direction_status_flag = 1;
+              //input_capture_count -= 1;
+              input_reference_count -= 1;
+            }
+          }else{
+            if( ((__R31 & (1 << 8)) >> 8) == 0){
+              direction_status_flag = 1;
+              //input_capture_count -= 1;
+              input_reference_count -= 1;
+            }else{
+              direction_status_flag = 0;
+              //input_capture_count += 1;
+              input_reference_count += 1;
+            }
+          }
+          ECAP.p_sample = edge_sample;
+        }
 
       }
       *encoder_ready = (i + 1);
