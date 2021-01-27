@@ -295,7 +295,7 @@ int main(int argc, char **argv)
       irig_ind += 1;
       *irig_ready = 0;
       irig_time = curr_time; // Update the last time the IRIG data was recorded
-      //printf("IRIG header = %d / irig_ind = %d\n", irig_packets[offset].header, irig_ind);
+      printf("%d", irig_packets[offset].header);
     }
     if( *error_ready != 0 ){
       offset = *error_ready - 1;
@@ -328,7 +328,6 @@ int main(int argc, char **argv)
       }
 
       if( irig_ind == IRIG_PACKETS_TO_SEND ){
-	      //printf("%lu: sending IRIG packets\n", curr_time);
 	      if( sendto(sockfd, (struct IRIGInfo *) irig_to_send, sizeof(irig_to_send), MSG_CONFIRM, (const struct sockaddr *) &servaddr, sizeof(servaddr)) < 0 ){
 	        fprintf(stderr, "Error sending IRIG data\n");
 	      }
