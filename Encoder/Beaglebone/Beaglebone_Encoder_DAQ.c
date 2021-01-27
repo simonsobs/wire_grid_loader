@@ -13,7 +13,7 @@
 #include<netinet/in.h>
 
 //define OPERATION_TIME 120
-#define OPERATION_TIME -1 // OPERATION_TIME<0 : No limit
+#define OPERATION_TIME 10 // OPERATION_TIME<0 : No limit
 
 #define REFERENCE_COUNT_MAX 54000 // max num_counts of a grid cycle
 
@@ -287,6 +287,7 @@ int main(int argc, char **argv)
       encoder_to_send[encd_ind] = encoder_packets[offset];
       encd_ind += 1;
       encd_time = curr_time; // Update the last time the encoder data was recorded
+      printf("%d", encoder_packets[offset].refcount[0]);
     }
     if( *irig_ready != 0 ){
       offset = *irig_ready - 1;
