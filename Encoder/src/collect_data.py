@@ -121,20 +121,24 @@ def collect_data(outfilename) :
       ncount = len(frame['timercount']);
       for i in range(ncount) :
         outfile_encoder.write('{} {} {} {} {}\n'.format(currenttime, 1-frame['error'][i],frame['quad'][i],frame['timercount'][i],frame['position'][i]));
+        outfile_encoder.flush()
         pass;
       pass; 
     # write irig data
     for frame in irig_frames :
       ncount = len(frame['timercount']);
       outfile_irig.write('{} {} {} {} {}\n'.format(frame['timercount'],frame['year'],frame['day'],frame['hour'],frame['minute'],frame['second']));
+      outfile_irig.flush()
       pass; 
     # write timeout data
     for frame in timeout_frames :
       outfile_timeout.write('{} {}\n'.format(currenttime, frame['type']));
+      outfile_timeout.flush()
       pass; 
     # write error data
     for frame in error_frames :
       outfile_error.write('{} {}\n'.format(currenttime, frame['error']));
+      outfile_error.flush()
       pass; 
 
     pass; # end of ``while True :``
