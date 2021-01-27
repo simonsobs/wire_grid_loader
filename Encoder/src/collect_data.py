@@ -124,8 +124,6 @@ def collect_data(outfilename, measurement_time=10) :
                   pass;
               pass;
           pass; # end of ``while parse_index < data_len:``
-        stop_time = time.time()
-        if(stop_time - start_time >= measurement_time): break
       # Reset data string
       data = ''
       pass; # end of loop over ``i``
@@ -156,6 +154,11 @@ def collect_data(outfilename, measurement_time=10) :
     outfile_irig.flush();
     outfile_timeout.flush();
     outfile_error.flush();
+
+    stop_time = time.time()
+    if(stop_time - start_time >= measurement_time):
+      print(f'{measurement_time} have passed and stopped UDP')
+      break
 
     pass; # end of ``while True :``
   
