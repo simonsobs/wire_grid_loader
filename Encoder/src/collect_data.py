@@ -11,7 +11,6 @@ isTCP = False; # True: TCP / False: UDP
 
 port = 50007;
 
-
 from constant import *;
 
 from EncoderExtractor import EncoderExtractor;
@@ -20,7 +19,7 @@ from TimeoutExtractor import TimeoutExtractor;
 from ErrorExtractor import ErrorExtractor;
 
 
-def collect_data(outfilename) :
+def collect_data(outfilename, measurement_time=10) :
   
   collector = Collector(port,isTCP=isTCP);
   time.sleep(1);
@@ -55,6 +54,8 @@ def collect_data(outfilename) :
   header_unpack_str = encoder_extractor.pi.header_str;
   header_size       = encoder_extractor.pi.header_num;
   header_bytesize   = encoder_extractor.pi.header_bytesize;
+
+  start_time = time.time()
 
   while True :
     encoder_frames = [];
@@ -122,8 +123,10 @@ def collect_data(outfilename) :
                   break;
                   pass;
               pass;
+            if()
           pass; # end of ``while parse_index < data_len:``
-
+        stop_time = time.time()
+        if(stop_time - start_time >= measurement_time): break
       # Reset data string
       data = ''
       pass; # end of loop over ``i``
@@ -165,12 +168,20 @@ def collect_data(outfilename) :
 
   return 0;
 
+### parseCmdLine() ###
+def parseCmdLine(args):
+    from optparse import OptionParser
+    parser = OptionParser()
+    parser.add_option('-t', '--time'   , dest='timeperiod', help='measurement time with UDP', type = float, default=0.)
+    (config, args) = parser.parse_args(args)
+    return config
 
 if __name__ == '__main__' :
+
+  config = parseCmdLine(sys.argv)
+  measurement_time = config.timeperiod
+
   outfilename = 'aho';
   if len(sys.argv) > 1 : outfilename = sys.argv[1];
-  collect_data(outfilename);
+  collect_data(outfilename,measurement_time);
   pass;
-  
-
-

@@ -12,9 +12,8 @@
 #include<arpa/inet.h>
 #include<netinet/in.h>
 
-//define OPERATION_TIME 120
-//#define OPERATION_TIME 10 // OPERATION_TIME<0 : No limit
-#define OPERATION_TIME -1 // OPERATION_TIME<0 : No limit
+#define OPERATION_TIME 10 // OPERATION_TIME<0 : No limit
+//#define OPERATION_TIME -1 // OPERATION_TIME<0 : No limit
 
 #define REFERENCE_COUNT_MAX 54000 // max num_counts of a grid cycle
 
