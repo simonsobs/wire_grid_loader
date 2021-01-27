@@ -27,12 +27,16 @@ def collect_data(outfilename) :
   
   outfile_encoder = open(outfilename+'_encoder.dat','w');
   outfile_encoder.write('#TIME ERROR DIRECTION TIMERCOUNT REFERENCE\n');
+  outfile_encoder.flush()
   outfile_irig = open(outfilename+'_irig.dat','w');
   outfile_irig.write('#TIMERCOUNT YEAR DAY HOUR MINUTE SECOND\n');
+  outfile_irig.flush()
   outfile_timeout = open(outfilename+'_timeout.dat','w');
   outfile_timeout.write('#TIME TYPE\n');
+  outfile_timeout.flush()
   outfile_error = open(outfilename+'_error.dat','w');
   outfile_error.write('#TIME ERRORCODE\n');
+  outfile_error.flush()
 
   encoder_header  = 0x1EAF;
   irig_header     = 0xCAFE;
