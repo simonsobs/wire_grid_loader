@@ -19,7 +19,7 @@ file_path = '/home/kyoto/nfs/scripts/wire_grid_loader/Encoder/Beaglebone/iamhere
 
 Deg = 360/52000
 feedback_time = [0.181, 0.221, 0.251, 0.281, 0.301]
-feedback_cut = [0.5, 2.5, 3.5, 4.5, 6.0]
+feedback_cut = [0.5, 2.5, 4.5, 6.0, 7.0]
 
 ### main function ###
 def Controls(voltagelim=12.,
@@ -27,8 +27,8 @@ def Controls(voltagelim=12.,
             control_type=False,
             timeperiod=10,
             num_laps=10,
-            num_feedback=5,
-            stopped_time=10.,
+            num_feedback=8,
+            stopped_time=30.,
             notmakesure=False):
     if voltagelim != 12.:
         print("the rated Voltage of this motor DMN37KA is 12V.\n")
@@ -36,6 +36,7 @@ def Controls(voltagelim=12.,
         pass
     if control_type == True: # discrete rotation
         powerOn(12., 3., 5.01, notmakesure=True)
+        time.sleep(3)
         start_position = getPosition(file_path)*Deg
         start_time = time.time()
         startStr = datetime.fromtimestamp(start_time).strftime('%Y/%m/%d %H:%M:%S')
@@ -58,6 +59,7 @@ def Controls(voltagelim=12.,
             pass
         else:
             powerOn(12., 3., 5.01, notmakesure=True)
+            time.sleep(3)
             start_position = getPosition(file_path)*Deg
             start_time = time.time()
             startStr = datetime.fromtimestamp(start_time).strftime('%Y/%m/%d %H:%M:%S')
