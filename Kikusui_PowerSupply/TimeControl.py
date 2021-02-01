@@ -3,6 +3,7 @@
 # Built-in python functions
 import sys
 import time
+from datetime import datetime
 import numpy as np
 from powerOn import powerOn
 from src.common import parseCmdLine
@@ -37,9 +38,10 @@ def Controls(voltagelim=12.,
         powerOn(12., 3., 5.01, notmakesure=True)
         start_position = getPosition(file_path)*Deg
         start_time = time.time()
+        startStr = datetime.fromtimestamp(start_time).strftime('%Y/%m/%d %H:%M:%S')
         print('start discrete rotation under these condition:\n\
                 number of laps = {}, number of feedbacks = {}\n\
-                positon={}, start_time={}\n'.format(num_laps, num_feedback, start_position, start_time))
+                positon={}, start at {}\n'.format(num_laps, num_feedback, round(start_position,3), startStr))
         cycle = 1
         for i in range(num_laps):
             feedbackfunction(3.0, 0.4, num_feedback, notmakesure=True)
@@ -58,9 +60,10 @@ def Controls(voltagelim=12.,
             powerOn(12., 3., 5.01, notmakesure=True)
             start_position = getPosition(file_path)*Deg
             start_time = time.time()
+            startStr = datetime.fromtimestamp(start_time).strftime('%Y/%m/%d %H:%M:%S')
             print('start continuous rotation under these condition:\n\
                     voltagelim={}, currentlim={}, timeperiod={}, makesure_voltage_and_current={}\n\
-                    positon={}, start_time={}\n'.format(voltagelim, currentlim, timeperiod, not notmakesure, start_position, start_time))
+                    positon={}, start_time={}\n'.format(voltagelim, currentlim, timeperiod, not notmakesure, round(start_position,3), startStr))
             powerOn(voltagelim, currentlim, timeperiod, position=start_position)
             stop_time = time.time()
             print(f'measurement time is {stop_time - start_time} sec')
@@ -82,6 +85,7 @@ def feedbackfunction(operation_current, operation_time, feedback_loop, notmakesu
     else:
         goal_position = min(absolute_position[np.where(start_position + uncertaity_cancel < absolute_position)[0]])
         pass
+    print('start: {}, goal: {}'.format(round(start_position,3), round(goal_position,3)))
     powerOn(voltagelim, operation_current, operation_time, position=start_position, notmakesure=notmakesure)
     time.sleep(0.4)
     for l in range(feedback_loop):
