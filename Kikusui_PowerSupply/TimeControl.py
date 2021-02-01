@@ -44,7 +44,7 @@ def Controls(voltagelim=12.,
                 positon={}, start at {}\n'.format(num_laps, num_feedback, round(start_position,3), startStr))
         cycle = 1
         for i in range(num_laps):
-            feedbackfunction(3.0, 0.4, num_feedback, notmakesure=True)
+            feedbackfunction(3.0, 0.401, num_feedback, notmakesure=True)
             time.sleep(stopped_time)
             cycle += 1
             pass
@@ -78,7 +78,10 @@ def feedbackfunction(operation_current, operation_time, feedback_loop, notmakesu
     absolute_position = np.arange(0,360,wanted_angle)
 
     start_position = getPosition(file_path)*Deg
-    if absolute_position[-1] < start_position + uncertaity_cancel:
+    if (360 < start_position + uncertaity_cancel):
+        goal_position = wanted_angle
+        pass
+    elif absolute_position[-1] < start_position + uncertaity_cancel:
         goal_position = 0
         pass
     else:
