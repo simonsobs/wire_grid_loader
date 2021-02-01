@@ -41,8 +41,8 @@ def Controls(voltagelim=12.,
     startStr = datetime.fromtimestamp(start_time).strftime('%Y/%m/%d %H:%M:%S')
     if control_type == True: # discrete rotation
         print('start discrete rotation under these condition:\n\
-                number of laps = {}, number of feedbacks = {}\n\
-                positon={}, start at {}\n'.format(num_laps, num_feedback, round(start_position,3), startStr))
+number of laps = {}, number of feedbacks = {}\n\
+positon={}, start at {}\n'.format(num_laps, num_feedback, round(start_position,3), startStr))
         cycle = 1
         for i in range(num_laps):
             feedbackfunction(3.0, 0.401, num_feedback, notmakesure=True)
@@ -57,8 +57,8 @@ def Controls(voltagelim=12.,
             pass
         else:
             print('start continuous rotation under these condition:\n\
-                    voltagelim={}, currentlim={}, timeperiod={}, makesure_voltage_and_current={}\n\
-                    positon={}, start_time={}\n'.format(voltagelim, currentlim, timeperiod, not notmakesure, round(start_position,3), startStr))
+voltagelim={}, currentlim={}, timeperiod={}, makesure_voltage_and_current={}\n\
+positon={}, start_time={}\n'.format(voltagelim, currentlim, timeperiod, not notmakesure, round(start_position,3), startStr))
             powerOn(voltagelim, currentlim, timeperiod, position=start_position, notmakesure=notmakesure)
             pass
         pass
