@@ -17,10 +17,10 @@ if sys.version_info.major == 2:
 import pmx_config as cg  # noqa: E402
 import src.pmx as pm  # noqa: E402
 
-from src.common import * # writelog(), openlog()
+from src.common import * # writelog(), openlog(), parseCmdLine()
 
 ### main function ###
-def powerOn(voltagelim=0., currentlim=0., timeperiod=0., notmakesure=False, position=0., PMX=None) :
+def powerOn(voltagelim=0., currentlim=0., timeperiod=0., position=0., notmakesure=False, PMX=None) :
 
     # Connect to PMX power supply
     if PMX==None :
@@ -45,7 +45,7 @@ def powerOn(voltagelim=0., currentlim=0., timeperiod=0., notmakesure=False, posi
         msg, vol = PMX.check_voltage()
         msg, cur = PMX.check_current()
         wait_turn_on = PMX.waittime * 4.
-        writelog(logfile, 'ON', notmakesure, voltagelim, currentlim, vol, cur, timeperiod)
+        writelog(logfile, 'ON', voltagelim, currentlim, vol, cur, timeperiod)
 
         # Turn OFF after timeperiod
         # If timeperiod <= 0., the power is ON permanently.
@@ -63,41 +63,24 @@ def powerOn(voltagelim=0., currentlim=0., timeperiod=0., notmakesure=False, posi
             PMX.turn_off()
             vol   , cur    = PMX.check_voltage_current()
             vollim, curlim = PMX.check_voltage_current_limit()
-            writelog(logfile, 'OFF', notmakesure, vollim, curlim, vol, cur)
+            writelog(logfile, 'OFF', vollim, curlim, vol, cur)
             pass
         pass
     else:
         # Turn On
         PMX.turn_on(notmakesure)
-        writelog(logfile, 'ON', notmakesure, voltagelim, currentlim, 2725, 2725, timeperiod, position)
+        writelog(logfile, 'ON', voltagelim, currentlim, timeperiod=timeperiod, position=position, notmakesure=notmakesure)
 
         if timeperiod > 0. :
             # Sleep for the specified time period
             time.sleep(timeperiod)
 
             PMX.turn_off(notmakesure)
-            writelog(logfile, 'OFF', notmakesure, voltagelim, currentlim, 2725, 2725)
+            writelog(logfile, 'OFF', voltagelim, currentlim, notmakesure=notmakesure)
             pass
         pass
 
     return PMX
-
-
-
-
-### parseCmdLine() ###
-def parseCmdLine(args):
-    from optparse import OptionParser
-    parser = OptionParser()
-    parser.add_option('-v', '--voltage', dest='voltagelim', help='Voltage limit [V]', type = float, default=0.)
-    parser.add_option('-c', '--current', dest='currentlim', help='Current limit [A]', type = float, default=0.)
-    parser.add_option('-t', '--time'   , dest='timeperiod', help='Powering-on time [sec]: If the time=<0, KIKUSUI power supply continues to power on until you run the powerOff script.', type = float, default=0.)
-    parser.add_option('-n', '--notmakesure', action="store_true", dest='notmakesure', help='Whether to check Voltage and Current', default=False)
-    #parser.add_option('-v', '--verbose', dest='verbose', help='verbosity (0:Normal, -1:output all)', type = int, default=0)
-    (config, args) = parser.parse_args(args)
-    return config
-
-
 
 
 ### main command when this script is directly run ###
