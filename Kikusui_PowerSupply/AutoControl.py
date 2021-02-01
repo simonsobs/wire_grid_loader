@@ -34,12 +34,12 @@ def Controls(voltagelim=12.,
         print("the rated Voltage of this motor DMN37KA is 12V.\n")
         sys.exit(1)
         pass
+    powerOn(12., 3., 5.01, notmakesure=True)
+    time.sleep(3)
+    start_position = getPosition(file_path)*Deg
+    start_time = time.time()
+    startStr = datetime.fromtimestamp(start_time).strftime('%Y/%m/%d %H:%M:%S')
     if control_type == True: # discrete rotation
-        powerOn(12., 3., 5.01, notmakesure=True)
-        time.sleep(3)
-        start_position = getPosition(file_path)*Deg
-        start_time = time.time()
-        startStr = datetime.fromtimestamp(start_time).strftime('%Y/%m/%d %H:%M:%S')
         print('start discrete rotation under these condition:\n\
                 number of laps = {}, number of feedbacks = {}\n\
                 positon={}, start at {}\n'.format(num_laps, num_feedback, round(start_position,3), startStr))
@@ -49,8 +49,6 @@ def Controls(voltagelim=12.,
             time.sleep(stopped_time)
             cycle += 1
             pass
-        stop_time = time.time()
-        print(f'measurement time is {stop_time - start_time} sec')
         pass
     else: # continuous rotation
         if(currentlim > 3.):
@@ -58,19 +56,14 @@ def Controls(voltagelim=12.,
             sys.exit(1)
             pass
         else:
-            powerOn(12., 3., 5.01, notmakesure=True)
-            time.sleep(3)
-            start_position = getPosition(file_path)*Deg
-            start_time = time.time()
-            startStr = datetime.fromtimestamp(start_time).strftime('%Y/%m/%d %H:%M:%S')
             print('start continuous rotation under these condition:\n\
                     voltagelim={}, currentlim={}, timeperiod={}, makesure_voltage_and_current={}\n\
                     positon={}, start_time={}\n'.format(voltagelim, currentlim, timeperiod, not notmakesure, round(start_position,3), startStr))
             powerOn(voltagelim, currentlim, timeperiod, position=start_position, notmakesure=notmakesure)
-            stop_time = time.time()
-            print(f'measurement time is {stop_time - start_time} sec')
             pass
         pass
+    stop_time = time.time()
+    print(f'measurement time is {stop_time - start_time} sec')
     pass
 
 
