@@ -43,8 +43,8 @@ def openlog(log_dir) :
     now = datetime.datetime.now(timezone('UTC'))
     nowStr  = now.strftime('%Y-%m-%d %H:%M:%S-%Z')
     dateStr = now.strftime('%Y-%m-%d')
-    logfilename = '{}/PMX_{}.dat'.format(log_dir, dateStr);
-    if not os.path.isdir(log_dir) : os.mkdir(log_dir);
+    logfilename = '{}/PMX_{}.dat'.format(log_dir, dateStr)
+    if not os.path.isdir(log_dir) : os.mkdir(log_dir)
     if os.path.exists(logfilename) :
       logfile = open(logfilename, 'a+')
     else :

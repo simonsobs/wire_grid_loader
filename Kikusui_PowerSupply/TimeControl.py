@@ -74,7 +74,6 @@ def Controls(voltagelim=12.,
 
 def feedbackfunction(operation_current, operation_time, feedback_loop, notmakesure):
     wanted_angle = 22.5
-
     uncertaity_cancel = 3
     absolute_position = np.arange(0,360,wanted_angle)
 
