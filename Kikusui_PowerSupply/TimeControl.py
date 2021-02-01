@@ -3,8 +3,10 @@
 # Built-in python functions
 import sys
 import time
+from datetime import datetime
 import numpy as np
-from powerOn import powerOn, parseCmdLine
+from powerOn import powerOn
+from src.common import parseCmdLine
 
 # Check the python version
 if sys.version_info.major == 2:
@@ -15,72 +17,93 @@ if sys.version_info.major == 2:
 
 file_path = '/home/kyoto/nfs/scripts/wire_grid_loader/Encoder/Beaglebone/iamhere.txt'
 
-feedback_time = [0.181, 0.221, 0.251, 0.281, 0.301]
-wanted_angle = 22.5
-uncertaity_cancel = 3
-absolute_position = np.arange(0,360,wanted_angle)
-feedback_loop = 8
 Deg = 360/52000
+feedback_time = [0.181, 0.221, 0.251, 0.281, 0.301]
+feedback_cut = [0.5, 2.5, 3.5, 4.5, 6.0]
 
 ### main function ###
-def TimeControl(voltagelim=0., currentlim=0., timeperiod=0., notmakesure=False):
-    if notmakesure==False:
-        print("Sorry, this script still cannot meet the request. please add '-n' option")
+def Controls(voltagelim=12.,
+            currentlim=3.,
+            control_type=False,
+            timeperiod=10,
+            num_laps=10,
+            num_feedback=5,
+            stopped_time=10.,
+            notmakesure=False):
+    if voltagelim != 12.:
+        print("the rated Voltage of this motor DMN37KA is 12V.\n")
+        sys.exit(1)
         pass
-    else:
-        if voltagelim != 12.:
-            print("the rated Voltage of this motor DMN37KA is 12V")
+    if control_type == True: # discrete rotation
+        powerOn(12., 3., 5.01, notmakesure=True)
+        start_position = getPosition(file_path)*Deg
+        start_time = time.time()
+        startStr = datetime.fromtimestamp(start_time).strftime('%Y/%m/%d %H:%M:%S')
+        print('start discrete rotation under these condition:\n\
+                number of laps = {}, number of feedbacks = {}\n\
+                positon={}, start at {}\n'.format(num_laps, num_feedback, round(start_position,3), startStr))
+        cycle = 1
+        for i in range(num_laps):
+            feedbackfunction(3.0, 0.4, num_feedback, notmakesure=True)
+            time.sleep(stopped_time)
+            cycle += 1
+            pass
+        stop_time = time.time()
+        print(f'measurement time is {stop_time - start_time} sec')
+        pass
+    else: # continuous rotation
+        if(currentlim > 3.):
+            print("Please set the current to 3.0 A or less")
             sys.exit(1)
-        if timeperiod > 0.:
-            start_time = time.time()
-            cycle = 0
-            for j in range(1):
-                operation_current = currentlim
-                num_execution = 3
-                time.sleep(1.5)
-                if operation_current > 3.0:
-                    print("operation current is over a range from 0. to 3.0")
-                    sys.exit(1)
-                for k in range(num_execution):
-                    start_position = getPosition(file_path)*Deg
-                    if (360 < start_position + uncertaity_cancel):
-                        goal_position = wanted_angle
-                        pass
-                    elif absolute_position[-1] < start_position + uncertaity_cancel:
-                        goal_position = 0
-                        pass
-                    else:
-                        goal_position = min(absolute_position[np.where(start_position + uncertaity_cancel < absolute_position)[0]])
-                        pass
-                    print(f'cycle num_{cycle} start_{round(start_position,2)} goal_{round(goal_position,2)}')
-                    operation_time = timeperiod
-                    powerOn(voltagelim, operation_current, operation_time, notmakesure=True, position=start_position)
-                    time.sleep(0.6)
-                    for l in range(feedback_loop):
-                        mid_position = getPosition(file_path)*Deg
-                        if goal_position + wanted_angle < mid_position:
-                            operation_time = feedbackfunction(goal_position - (mid_position - 360))
-                            pass
-                        else:
-                            operation_time = feedbackfunction(goal_position - mid_position)
-                            pass
-                        powerOn(voltagelim, operation_current, operation_time, notmakesure=True)
-                        time.sleep(0.6)
-                        pass
-                    time.sleep(1.5)
-                    cycle += 1
-                    pass
-                pass
-            stop_time = time.time()
-            print(stop_time - start_time)
             pass
         else:
-            print("This is a script to measure the relation between operation time of power supply and proceeded angle.")
+            powerOn(12., 3., 5.01, notmakesure=True)
+            start_position = getPosition(file_path)*Deg
+            start_time = time.time()
+            startStr = datetime.fromtimestamp(start_time).strftime('%Y/%m/%d %H:%M:%S')
+            print('start continuous rotation under these condition:\n\
+                    voltagelim={}, currentlim={}, timeperiod={}, makesure_voltage_and_current={}\n\
+                    positon={}, start_time={}\n'.format(voltagelim, currentlim, timeperiod, not notmakesure, round(start_position,3), startStr))
+            powerOn(voltagelim, currentlim, timeperiod, position=start_position)
+            stop_time = time.time()
+            print(f'measurement time is {stop_time - start_time} sec')
+            pass
+        pass
+    pass
+
+
+def feedbackfunction(operation_current, operation_time, feedback_loop, notmakesure):
+    wanted_angle = 22.5
+
+    uncertaity_cancel = 3
+    absolute_position = np.arange(0,360,wanted_angle)
+
+    start_position = getPosition(file_path)*Deg
+    if absolute_position[-1] < start_position + uncertaity_cancel:
+        goal_position = 0
+        pass
+    else:
+        goal_position = min(absolute_position[np.where(start_position + uncertaity_cancel < absolute_position)[0]])
+        pass
+    print('start: {}, goal: {}'.format(round(start_position,3), round(goal_position,3)))
+    powerOn(voltagelim, operation_current, operation_time, position=start_position, notmakesure=notmakesure)
+    time.sleep(0.4)
+    for l in range(feedback_loop):
+        mid_position = getPosition(file_path)*Deg
+        if goal_position + wanted_angle < mid_position:
+            operation_time = howlong(goal_position - (mid_position - 360))
+            pass
+        else:
+            operation_time = howlong(goal_position - mid_position)
+            pass
+        powerOn(voltagelim, operation_current, operation_time, position=mid_position, notmakesure=notmakesure)
+        time.sleep(0.4)
+        pass
 
 def getPosition(filepath):
     for i in range(10):
         try:
-            f = open(filepath,'r')
+            f = open(filepath, 'r')
             data = f.readlines()
             f.close()
             position = data[0]
@@ -90,25 +113,27 @@ def getPosition(filepath):
         break
     return float(position)
 
-def feedbackfunction(position_difference):
-    if position_difference >= 6.0:
-        return feedback_time[4]
+def howlong(position_difference):
+    if position_difference >= feedback_cut[4]:
+        operation_time = feedback_time[4]
         pass
-    if (6.0 > position_difference) & (position_difference >= 4.5):
-        return feedback_time[3]
+    if (feedback_cut[4] > position_difference) & (position_difference >= feedback_cut[3]):
+        operation_time = feedback_time[3]
         pass
-    if (4.5 > position_difference) & (position_difference >= 3.5):
-        return feedback_time[2]
+    if (feedback_cut[3] > position_difference) & (position_difference >= feedback_cut[2]):
+        operation_time = feedback_time[2]
         pass
-    if (3.5 > position_difference) & (position_difference >= 2.5):
-        return feedback_time[1]
+    if (feedback_cut[2] > position_difference) & (position_difference >= feedback_cut[1]):
+        operation_time = feedback_time[1]
         pass
-    if (2.5 > position_difference) & (position_difference >= 0.5):
-        return feedback_time[0]
+    if (feedback_cut[1] > position_difference) & (position_difference >= feedback_cut[0]):
+        operation_time = feedback_time[0]
         pass
-    if 0.5 > position_difference:
-        return 0.04
+    if feedback_cut[0] > position_difference:
+        operation_time = 0.04
         pass
+    return operation_time
+
 
 ### main command when this script is directly run ###
 if __name__ == '__main__':
@@ -116,8 +141,12 @@ if __name__ == '__main__':
     config = parseCmdLine(sys.argv)
     voltagelim = config.voltagelim
     currentlim = config.currentlim
+    control_type = config.control_type
     timeperiod = config.timeperiod
+    num_laps = config.num_laps
+    num_feedback = config.num_feedback
+    stopped_time = config.stopped_time
     notmakesure = config.notmakesure
 
-    TimeControl(voltagelim, currentlim, timeperiod, notmakesure)
+    Controls(voltagelim, currentlim, control_type, timeperiod, num_laps, num_feedback, stopped_time, notmakesure)
     pass

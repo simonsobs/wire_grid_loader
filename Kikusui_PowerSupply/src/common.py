@@ -2,8 +2,24 @@ import os
 import datetime
 from pytz import timezone
 
+### parseCmdLine() ###
+def parseCmdLine(args):
+    from optparse import OptionParser
+    parser = OptionParser()
+    parser.add_option('-v', '--voltage', dest='voltagelim', help='Voltage limit [V]', type = float, default=12.)
+    parser.add_option('-c', '--current', dest='currentlim', help='Current limit [A]', type = float, default=3.)
+    parser.add_option('-t', '--time'   , dest='timeperiod', help='Powering-on time [sec]: If the period=<0, KIKUSUI power supply continues to power on until you run the powerOff script.', type = float, default=0.)
+    parser.add_option('-l', '--laps', dest='num_laps', help='the number of laps for discrete angle measurement. default is 10', type=int, default=10)
+    parser.add_option('-f', '--feedback', dest='num_feedback', help='the number of feedbacks for one action. default is 5', type=int, default=5)
+    parser.add_option('-s', '--stopped', dest='stopped_time', help='stopped time between the actions. defalut 10 sec', type=float, default=10.)
+    parser.add_option('-d', '--discrete', action="store_true", dest='control_type', help='False:continuous rotation, True:discrete rotation, default is False', default=False)
+    parser.add_option('-n', '--notmakesure', action="store_true", dest='notmakesure', help='Whether to check Voltage and Current. default is False', default=False)
+    #parser.add_option('-v', '--verbose', dest='verbose', help='verbosity (0:Normal, -1:output all)', type = int, default=0)
+    (config, args) = parser.parse_args(args)
+    return config
+
 ### Log format ###
-def writelog(logfile, onoff, notmakesure, voltagelim, currentlim, vol, cur, timeperiod=0., position=0.) :
+def writelog(logfile, onoff, voltagelim, currentlim, vol=0., cur=0., timeperiod=0., position=0., notmakesure=False) :
     now = datetime.datetime.now(timezone('UTC'))
     nowStr  = now.strftime('%Y-%m-%d %H:%M:%S-%Z')
     if notmakesure==False:
