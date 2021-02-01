@@ -37,8 +37,8 @@ def Controls(voltagelim=12.,
         powerOn(12., 3., 5.01, notmakesure=True)
         start_position = getPosition(file_path)*Deg
         start_time = time.time()
-        print(f'start discrete rotation under these condition:\n/
-                number of laps = {num_laps}, number of feedbacks = {num_feedback}\n/
+        print(f'start discrete rotation under these condition:\n\
+                number of laps = {num_laps}, number of feedbacks = {num_feedback}\n\
                 positon={start_position}, start_time={start_time}\n')
         cycle = 1
         for i in range(num_laps):
@@ -58,8 +58,8 @@ def Controls(voltagelim=12.,
             powerOn(12., 3., 5.01, notmakesure=True)
             start_position = getPosition(file_path)*Deg
             start_time = time.time()
-            print(f'start continuous rotation under these condition:\n/
-                    voltagelim={voltagelim}, currentlim={currentlim}, timeperiod={timeperiod}, makesure_voltage_and_current={!notmakesure}\n/
+            print(f'start continuous rotation under these condition:\n\
+                    voltagelim={voltagelim}, currentlim={currentlim}, timeperiod={timeperiod}, makesure_voltage_and_current={!notmakesure}\n\
                     positon={start_position}, start_time={start_time}\n')
             powerOn(voltagelim, currentlim, timeperiod, position=start_position)
             stop_time = time.time()
