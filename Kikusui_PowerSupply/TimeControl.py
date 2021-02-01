@@ -144,5 +144,5 @@ if __name__ == '__main__':
     stopped_time = config.stopped_time
     notmakesure = config.notmakesure
 
-    TimeControl(voltagelim, currentlim, control_type, timeperiod, num_laps, num_feedback, stopped_time, notmakesure)
+    Controls(voltagelim, currentlim, control_type, timeperiod, num_laps, num_feedback, stopped_time, notmakesure)
     pass
