@@ -66,7 +66,7 @@ def Controls(voltagelim=12.,
             print('start continuous rotation under these condition:\n\
                     voltagelim={}, currentlim={}, timeperiod={}, makesure_voltage_and_current={}\n\
                     positon={}, start_time={}\n'.format(voltagelim, currentlim, timeperiod, not notmakesure, round(start_position,3), startStr))
-            powerOn(voltagelim, currentlim, timeperiod, position=start_position)
+            powerOn(voltagelim, currentlim, timeperiod, position=start_position, notmakesure=notmakesure)
             stop_time = time.time()
             print(f'measurement time is {stop_time - start_time} sec')
             pass
