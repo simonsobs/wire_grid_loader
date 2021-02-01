@@ -103,7 +103,7 @@ def feedbackfunction(operation_current, operation_time, feedback_loop, notmakesu
 def getPosition(filepath):
     for i in range(10):
         try:
-            f = open(file_path, 'r')
+            f = open(filepath, 'r')
             data = f.readlines()
             f.close()
             position = data[0]
