@@ -20,10 +20,10 @@
   - To rotate wire grid ring discretely or continuously(default: continuous)
   - command options(continuous rotation):
     - -t <time [sec]>         :time to keep powering on
-    - -n <notmakesure>        :not to check the actually current and voltage, for correct time operation
+    - -n <notmakesure [additional]>        :not to check the actually current and voltage, for correct time operation
   - command options(discrete rotation, with -d option):
-    - -l <laps>               :number of laps in one measurement
-    - -f <feedback>           :number of feedback cycles for one action
+    - -l <laps [additional]>               :number of laps in one measurement
+    - -f <feedback [additional]>           :number of feedback cycles for one action
     - -s <stopped time [sec]> :time holding or staying after one action
   - eg) ``python3 AutoControl.py -d -l 10 -f 8 -s 10``
     - 10 laps discrete rotaion with 8 feedbacks and holding 10 sec
