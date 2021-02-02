@@ -16,6 +16,17 @@
   - Please see help by ``python3 powerOn.py -h``
   - ex) ``python3 powerOn.py -v 12 -c 3 -t 10``
     - set voltage=12V & current=3A and keep on for 10 seconds.
+- ``AutoControl.py``
+  - To rotate wire grid ring discretely or continuously(default: continuous)
+  - command options(continuous rotation):
+    - -t <time [sec]>         :time to keep powering on
+    - -n <notmakesure>        :not to check the actually current and voltage, for correct time operation
+  - command options(discrete rotation, with -d option):
+    - -l <laps>               :number of laps in one measurement
+    - -f <feedback>           :number of feedback cycles for one action
+    - -s <stopped time [sec]> :time holding or staying after one action
+  - eg) ``python3 AutoControl.py -d -l 10 -f 8 -s 10``
+    - 10 laps discrete rotaion with 8 feedbacks and holding 10 sec
 
 ## Configuration
 - ``pmx\_config.py``
