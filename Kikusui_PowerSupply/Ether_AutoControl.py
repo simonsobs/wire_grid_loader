@@ -70,7 +70,7 @@ positon={}, start_time={}\n'.format(voltagelim, currentlim, timeperiod, not notm
 def default_control(voltagelim, currentlim, timeperiod, position=0., notmakesure=False):
     msg_vollim, vollim = set_voltage(voltagelim)
     msg_curlim, curlim = set_current(currentlim)
-    print(msg_vol + '\n' + msg_cur)
+    print(msg_vollim + '\n' + msg_curlim)
     msg_output = turn_on(notmakesure=notmakesure)
     print(msg_output)
     msg_vol, vol = check_voltage()
