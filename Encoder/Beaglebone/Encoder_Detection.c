@@ -64,7 +64,7 @@ int main(void){
 
   *encoder_ready = 0;
 
-  ECAP.p_sample = 0;
+  ECAP.p_sample = ((__R31 & (1 << 10)) >> 10);
   ECAP.ts = *IEP_TMR_CNT;
 
   previous_time = (unsigned long long int)*IEP_TMR_CNT;
