@@ -4,7 +4,7 @@
 import sys
 import time
 import numpy as np
-from datetime import datetime
+import datetime
 from src.common import *
 from Ether_basic import *
 
@@ -16,7 +16,7 @@ if sys.version_info.major == 2:
     pass
 
 logfile = openlog('log_ether')
-file_path = '/home/kyoto/nfs/scripts/wire_grid_loader/Encoder/Beaglebone/iamhere.txt'
+file_path = '/home/wire-grid-pc/nfs/scripts/wire_grid_loader/Encoder/Beaglebone/iamhere.txt'
 
 Deg = 360/52000
 feedback_time = [0.181, 0.221, 0.251, 0.281, 0.301]
@@ -39,7 +39,7 @@ def Controls(voltagelim=12.,
     time.sleep(3)
     start_position = getPosition(file_path)*Deg
     start_time = time.time()
-    startStr = datetime.fromtimestamp(start_time).strftime('%Y/%m/%d %H:%M:%S')
+    startStr = datetime.datetime.fromtimestamp(start_time).strftime('%Y/%m/%d %H:%M:%S')
     if control_type == True: # discrete rotation
         print('start discrete rotation under these condition:\n\
 number of laps = {}, number of feedbacks = {}\n\
