@@ -19,6 +19,7 @@ logfile = openlog('log_ether')
 file_path = '/home/wire-grid-pc/nfs/scripts/wire_grid_loader/Encoder/Beaglebone/iamhere.txt'
 
 Deg = 360/52000
+wanted_angle = 22.5
 feedback_time = [0.181, 0.221, 0.251, 0.281, 0.301]
 feedback_cut = [0.5, 2.5, 4.5, 6.0, 7.0]
 
@@ -36,7 +37,7 @@ def Controls(voltagelim=12.,
         sys.exit(1)
         pass
     default_control(12., 3., 5.01)
-    time.sleep(3)
+    time.sleep(30)
     start_position = getPosition(file_path)*Deg
     start_time = time.time()
     startStr = datetime.datetime.fromtimestamp(start_time).strftime('%Y/%m/%d %H:%M:%S')
@@ -45,7 +46,7 @@ def Controls(voltagelim=12.,
 number of laps = {}, number of feedbacks = {}\n\
 positon={}, start at {}\n'.format(num_laps, num_feedback, round(start_position,3), startStr))
         cycle = 1
-        for i in range(num_laps):
+        for i in range(num_laps*int(360/wanted_angle)):
             feedbackfunction(3.0, 0.401, num_feedback, notmakesure=True)
             time.sleep(stopped_time)
             cycle += 1
@@ -90,7 +91,6 @@ def feedback_control(voltagelim, currentlim, timeperiod, position, notmakesure=T
     pass
 
 def feedbackfunction(operation_current, operation_time, feedback_loop, notmakesure):
-    wanted_angle = 22.5
     uncertaity_cancel = 3
     absolute_position = np.arange(0,360,wanted_angle)
 
