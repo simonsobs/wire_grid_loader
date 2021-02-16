@@ -353,11 +353,6 @@ int main(int argc, char **argv)
 	            }
             }
           }
-          time(&measurement_stop); //test
-          if(measurement_stop - measurement_start > OPERATION_TIME){
-            fprintf(measurement_time, "Stop at %ld\n", measurement_stop);
-            exit(0);
-          }
 	      }else if( SAVETYPE == 2 ){
 	        for( i = 0; i < ENCODER_PACKETS_TO_SEND ; i++ ){
 	          //fprintf(outfile, "%lu\n", encoder_to_send[i].count[0]);
@@ -381,6 +376,12 @@ int main(int argc, char **argv)
 	        printf("CPU time: %f usec (CLOCKS_PER_SEC = %d)\n", 1.e+6*(float)(tmp2_time - tmp1_time)/(float)CLOCKS_PER_SEC, CLOCKS_PER_SEC );
 	      }
 
+      }
+
+      time(&measurement_stop); //test
+      if(measurement_stop - measurement_start > OPERATION_TIME){
+        fprintf(measurement_time, "Stop at %ld\n", measurement_stop);
+        exit(0);
       }
 
       if( irig_ind == IRIG_PACKETS_TO_SEND ){
