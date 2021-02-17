@@ -23,7 +23,7 @@ Deg = 360/52000
 ### main function ###
 def Checks(voltagelim=12.,
             currentlim=3.,
-            notmakesure=False,
+            notmakesure=True,
             initializing_option=0):
     if voltagelim != 12.:
         print("the rated Voltage of this motor DMN37KA is 12V.\n")
