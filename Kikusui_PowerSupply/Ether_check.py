@@ -30,8 +30,6 @@ def Checks(voltagelim=12.,
         sys.exit(1)
         pass
 
-    notmakesure=True
-
     default_control(voltagelim, 3., 5.01)
     time.sleep(10)
     start_position = getPosition(file_path)*Deg
@@ -50,11 +48,7 @@ positon={}, start at {}\n'.format(currentlim, round(start_position,3), startStr)
             for k in range(2):
                 print(f'num_cycle {cycle}')
 
-                turn_on(notmakesure=notmakesure)
-                writelog(logfile, 'ON', voltagelim=12., currentlim=curlim, timeperiod=tperiod, notmakesure=notmakesure)
-                time.sleep(tperiod)
-                turn_off(notmakesure=notmakesure)
-                writelog(logfile, 'OFF', voltagelim=12., currentlim=curlim, notmakesure=notmakesure)
+                check_control(voltagelim, curlim, tperiod, notmakesure=True)
 
                 time.sleep(2)
 
@@ -80,11 +74,7 @@ positon={}, start at {}\n'.format(round(start_position,3), startStr))
                 for k in range(2):
                     print(f'num_cycle {cycle}')
 
-                    turn_on(notmakesure=notmakesure)
-                    writelog(logfile, 'ON', voltagelim=12., currentlim=curlim, timeperiod=tperiod, notmakesure=notmakesure)
-                    time.sleep(tperiod)
-                    turn_off(notmakesure=notmakesure)
-                    writelog(logfile, 'OFF', voltagelim=12., currentlim=curlim, notmakesure=notmakesure)
+                    check_control(voltagelim, curlim, tperiod, notmakesure=True)
 
                     time.sleep(2)
 
@@ -114,6 +104,14 @@ def default_control(voltagelim, currentlim, timeperiod, position=0., notmakesure
     time.sleep(timeperiod)
     msg_output = turn_off(notmakesure=notmakesure)
     print(msg_output)
+    pass
+
+def check_control(voltagelim, currentlim, timeperiod, notmakesure=True):
+    turn_on(notmakesure=notmakesure)
+    writelog(logfile, 'ON', voltagelim, currentlim, timeperiod=timeperiod, notmakesure=notmakesure)
+    time.sleep(timeperiod)
+    turn_off(notmakesure=notmakesure)
+    writelog(logfile, 'OFF', voltagelim, currentlim, notmakesure=notmakesure)
     pass
 
 def getPosition(filepath):
