@@ -46,10 +46,10 @@ def Checks(voltagelim=12.,
             tperiod = 0.10 + 0.02(i+1)
             for k in range(2):
                 turn_on(notmakesure=notmakesure)
-                writelog(logfile, 'ON', voltagelim=12., curlim, timeperiod=tperiod, position=position, notmakesure=notmakesure)
+                writelog(logfile, 'ON', voltagelim=12., currentlim=curlim, timeperiod=tperiod, position=position, notmakesure=notmakesure)
                 time.sleep(tperiod)
                 turn_off(notmakesure=notmakesure)
-                writelog(logfile, 'OFF', voltagelim=12., curlim, notmakesure=notmakesure)
+                writelog(logfile, 'OFF', voltagelim=12., currentlime=curlim, notmakesure=notmakesure)
 
                 time.sleep(2)
 
@@ -72,10 +72,10 @@ def Checks(voltagelim=12.,
                 tperiod = 0.4 + 0.4*j
                 for k in range(2):
                     turn_on(notmakesure=notmakesure)
-                    writelog(logfile, 'ON', voltagelim, curlim, timeperiod=tperiod, position=position, notmakesure=notmakesure)
+                    writelog(logfile, 'ON', voltagelim=12., currentlim=curlim, timeperiod=tperiod, position=position, notmakesure=notmakesure)
                     time.sleep(tperiod)
                     turn_off(notmakesure=notmakesure)
-                    writelog(logfile, 'OFF', voltagelim, curlim, notmakesure=notmakesure)
+                    writelog(logfile, 'OFF', voltagelim=12., currentlim=curlim, notmakesure=notmakesure)
 
                     time.sleep(2)
 
