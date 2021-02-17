@@ -98,7 +98,7 @@ def default_control(voltagelim, currentlim, timeperiod, position=0., notmakesure
     print(msg_output)
     msg_vol, vol = check_voltage()
     msg_cur, cur = check_current()
-    writelog(logfile, 'ON', vollim, curlim, vol, cur, position=position, timeperiod=timeperiod)
+    writelog(logfile, 'ON', voltagelim, curlim, vol, cur, position=position, timeperiod=timeperiod)
     time.sleep(timeperiod)
     msg_output = turn_off(notmakesure=notmakesure)
     print(msg_output)
