@@ -43,7 +43,7 @@ def Checks(voltagelim=12.,
 
         curlim = currentlim
         for i in range(11):
-            tperiod = 0.10 + 0.02(i+1)
+            tperiod = 0.10 + 0.02*i
             for k in range(2):
                 turn_on(notmakesure=notmakesure)
                 writelog(logfile, 'ON', voltagelim=12., currentlim=curlim, timeperiod=tperiod, position=position, notmakesure=notmakesure)
