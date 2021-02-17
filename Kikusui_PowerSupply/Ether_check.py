@@ -16,7 +16,7 @@ if sys.version_info.major == 2:
     pass
 
 logfile = openlog('log_ether')
-#file_path = '/home/wire-grid-pc/nfs/scripts/wire_grid_loader/Encoder/Beaglebone/iamhere.txt'
+file_path = '/home/wire-grid-pc/nfs/scripts/wire_grid_loader/Encoder/Beaglebone/iamhere.txt'
 
 Deg = 360/52000
 
@@ -106,6 +106,19 @@ def default_control(voltagelim, currentlim, timeperiod, position=0., notmakesure
     print(msg_output)
     pass
 
+def getPosition(filepath):
+    for i in range(10):
+        try:
+            f = open(filepath, 'r')
+            data = f.readlines()
+            f.close()
+            position = data[0]
+        except IndexError:
+            time.sleep(0.1)
+            continue
+        break
+    return float(position)
+
 ### main command when this script is directly run ###
 if __name__ == '__main__':
 
@@ -114,5 +127,5 @@ if __name__ == '__main__':
     curlim = config.currentlim
     init_op = config.initializing_option
 
-    Checks(vollim=12., currentlim=curlim, notmakesure=True, init_op)
+    Checks(vollim=12., currentlim=curlim, notmakesure=True, initializing_option=init_op)
     pass
