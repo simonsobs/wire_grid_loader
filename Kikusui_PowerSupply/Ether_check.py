@@ -31,6 +31,7 @@ def Checks(voltagelim=12.,
         pass
 
     notmakesure=True
+
     default_control(voltagelim, 3., 5.01)
     time.sleep(10)
     start_position = getPosition(file_path)*Deg
@@ -143,5 +144,5 @@ if __name__ == '__main__':
     notmakesure = config.notmakesure
     init_op = config.initializing_option
 
-    Checks(voltagelim=12., currentlim, notmakesure=True, initializing_option=init_op)
+    Checks(voltagelim, currentlim, notmakesure=True, initializing_option=init_op)
     pass
