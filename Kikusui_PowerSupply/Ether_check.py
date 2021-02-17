@@ -127,5 +127,5 @@ if __name__ == '__main__':
     curlim = config.currentlim
     init_op = config.initializing_option
 
-    Checks(vollim=12., currentlim=curlim, notmakesure=True, initializing_option=init_op)
+    Checks(voltagelim=12., currentlim=curlim, notmakesure=True, initializing_option=init_op)
     pass
