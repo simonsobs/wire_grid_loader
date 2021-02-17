@@ -38,8 +38,8 @@ def Checks(voltagelim=12.,
 
     if initializing_option == 0: # matrix
         print('check the minimal control-angle under these condition:\n\
-            voltage_lim=12V, current_lim={}A, time_period;0.10sec ~ 0.30sec(delta 0.02sec)\n\
-            positon={}, start at {}\n'.format(currentlim, round(start_position,3), startStr))
+voltage_lim=12V, current_lim={}A, time_period;0.10sec ~ 0.30sec(delta 0.02sec)\n\
+positon={}, start at {}\n'.format(currentlim, round(start_position,3), startStr))
 
         cycle = 1
         curlim = currentlim
@@ -52,7 +52,7 @@ def Checks(voltagelim=12.,
                 writelog(logfile, 'ON', voltagelim=12., currentlim=curlim, timeperiod=tperiod, notmakesure=notmakesure)
                 time.sleep(tperiod)
                 turn_off(notmakesure=notmakesure)
-                writelog(logfile, 'OFF', voltagelim=12., currentlime=curlim, notmakesure=notmakesure)
+                writelog(logfile, 'OFF', voltagelim=12., currentlim=curlim, notmakesure=notmakesure)
 
                 time.sleep(2)
 
@@ -67,8 +67,8 @@ def Checks(voltagelim=12.,
 
     elif initializing_option == 1: # check the minimal control andgle
         print('check the minimal control-angle under these condition:\n\
-            matrix Ampere;1.5A ~ 3.0A(delta 0.3A), time;0.4sec ~ 2.4sec(delta 0.4sec)\n\
-            positon={}, start at {}\n'.format(round(start_position,3), startStr))
+matrix Ampere;1.5A ~ 3.0A(delta 0.3A), time;0.4sec ~ 2.4sec(delta 0.4sec)\n\
+positon={}, start at {}\n'.format(round(start_position,3), startStr))
 
         cycle = 1
         for i in range(6):
