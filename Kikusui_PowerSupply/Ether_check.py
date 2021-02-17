@@ -53,11 +53,10 @@ positon={}, start at {}\n'.format(currentlim, round(start_position,3), startStr)
                 time.sleep(2)
 
                 default_control(voltagelim, 3., 0.5)
-                time.sleep(3)
+                time.sleep(2)
                 cycle += 1
                 pass
-            default_control(voltagelim, 3., 1)
-            time.sleep(3)
+            time.sleep(1)
 
         pass
 
@@ -79,13 +78,13 @@ positon={}, start at {}\n'.format(round(start_position,3), startStr))
                     time.sleep(2)
 
                     default_control(voltagelim, 3., 0.5)
-                    time.sleep(3)
+                    time.sleep(2)
                     cycle += 1
                     pass
-                time.sleep(3)
+                time.sleep(2)
                 pass
             default_control(voltagelim, 3., 1)
-            time.sleep(3)
+            time.sleep(2)
         pass
 
     stop_time = time.time()
