@@ -114,5 +114,5 @@ if __name__ == '__main__':
     curlim = config.currentlim
     init_op = config.initializing_option
 
-    Checks(vollim=12., curlim, notmakesure=True, init_op)
+    Checks(vollim=12., currentlim=curlim, notmakesure=True, init_op)
     pass
