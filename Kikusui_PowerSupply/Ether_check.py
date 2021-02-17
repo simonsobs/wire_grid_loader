@@ -23,13 +23,14 @@ Deg = 360/52000
 ### main function ###
 def Checks(voltagelim=12.,
             currentlim=3.,
-            notmakesure=True,
+            notmakesure=False,
             initializing_option=0):
     if voltagelim != 12.:
         print("the rated Voltage of this motor DMN37KA is 12V.\n")
         sys.exit(1)
         pass
 
+    notmakesure=True
     default_control(voltagelim, 3., 5.01)
     time.sleep(10)
     start_position = getPosition(file_path)*Deg
@@ -132,7 +133,14 @@ if __name__ == '__main__':
 
     config = parseCmdLine(sys.argv)
 
-    curlim = config.currentlim
+    voltagelim = config.voltagelim
+    currentlim = config.currentlim
+    control_type = config.control_type
+    timeperiod = config.timeperiod
+    num_laps = config.num_laps
+    num_feedback = config.num_feedback
+    stopped_time = config.stopped_time
+    notmakesure = config.notmakesure
     init_op = config.initializing_option
 
     Checks(voltagelim=12., currentlim=curlim, notmakesure=True, initializing_option=init_op)
