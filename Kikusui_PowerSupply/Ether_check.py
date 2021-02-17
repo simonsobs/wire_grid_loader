@@ -38,15 +38,18 @@ def Checks(voltagelim=12.,
 
     if initializing_option == 0: # matrix
         print('check the minimal control-angle under these condition:\n\
-            voltage_lim=12V, current_lim={}, time_period;0.10sec ~ 0.30sec(delta 0.02sec)\n\
+            voltage_lim=12V, current_lim={}A, time_period;0.10sec ~ 0.30sec(delta 0.02sec)\n\
             positon={}, start at {}\n'.format(currentlim, round(start_position,3), startStr))
 
+        cycle = 1
         curlim = currentlim
         for i in range(11):
             tperiod = 0.10 + 0.02*i
             for k in range(2):
+                print(f'num_cycle {cycle}')
+
                 turn_on(notmakesure=notmakesure)
-                writelog(logfile, 'ON', voltagelim=12., currentlim=curlim, timeperiod=tperiod, position=position, notmakesure=notmakesure)
+                writelog(logfile, 'ON', voltagelim=12., currentlim=curlim, timeperiod=tperiod, notmakesure=notmakesure)
                 time.sleep(tperiod)
                 turn_off(notmakesure=notmakesure)
                 writelog(logfile, 'OFF', voltagelim=12., currentlime=curlim, notmakesure=notmakesure)
@@ -55,6 +58,7 @@ def Checks(voltagelim=12.,
 
                 default_control(voltagelim, 3., 0.5)
                 time.sleep(3)
+                cycle += 1
                 pass
             default_control(voltagelim, 3., 1)
             time.sleep(3)
@@ -66,13 +70,16 @@ def Checks(voltagelim=12.,
             matrix Ampere;1.5A ~ 3.0A(delta 0.3A), time;0.4sec ~ 2.4sec(delta 0.4sec)\n\
             positon={}, start at {}\n'.format(round(start_position,3), startStr))
 
+        cycle = 1
         for i in range(6):
             curlim = 1.5 + 0.3*i
             for j in range(6):
                 tperiod = 0.4 + 0.4*j
                 for k in range(2):
+                    print(f'num_cycle {cycle}')
+
                     turn_on(notmakesure=notmakesure)
-                    writelog(logfile, 'ON', voltagelim=12., currentlim=curlim, timeperiod=tperiod, position=position, notmakesure=notmakesure)
+                    writelog(logfile, 'ON', voltagelim=12., currentlim=curlim, timeperiod=tperiod, notmakesure=notmakesure)
                     time.sleep(tperiod)
                     turn_off(notmakesure=notmakesure)
                     writelog(logfile, 'OFF', voltagelim=12., currentlim=curlim, notmakesure=notmakesure)
@@ -81,6 +88,7 @@ def Checks(voltagelim=12.,
 
                     default_control(voltagelim, 3., 0.5)
                     time.sleep(3)
+                    cycle += 1
                     pass
                 time.sleep(3)
                 pass
