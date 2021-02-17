@@ -107,8 +107,8 @@ def default_control(voltagelim, currentlim, timeperiod, position=0., notmakesure
 
 def check_control(voltagelim, currentlim, timeperiod, notmakesure=True):
     msg_curlim, curlim = set_current(currentlim)
-    print(msg_curlim)
-    print(f'Time set = {round(timeperiod,3)}')
+    print('    ' + msg_curlim)
+    print(f'    Time set = {round(timeperiod,3)}')
     turn_on(notmakesure=notmakesure)
     writelog(logfile, 'ON', voltagelim, currentlim, timeperiod=timeperiod, notmakesure=notmakesure)
     time.sleep(timeperiod)
