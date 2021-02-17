@@ -14,7 +14,7 @@ def parseCmdLine(args):
     parser.add_option('-s', '--stopped', dest='stopped_time', help='stopped time between the actions. defalut 30 sec', type=float, default=30.)
     parser.add_option('-d', '--discrete', action="store_true", dest='control_type', help='False:continuous rotation, True:discrete rotation, default is False', default=False)
     parser.add_option('-n', '--notmakesure', action="store_true", dest='notmakesure', help='Whether to check Voltage and Current. default is False', default=False)
-    parser.add_option('-init', '--initialize', dest='initializing_option', help='to initialize the calibrator. 0:check minimal control-angle(default), 1:matrix 1.5/1.8/2.1/2.4/2.7/3.0 A and 0.4/0.8/1.2/1.6/2.0/2.4 sec', type=int, default=0)
+    parser.add_option('-i', '--initialize', dest='initializing_option', help='to initialize the calibrator. 0:check minimal control-angle(default), 1:matrix 1.5/1.8/2.1/2.4/2.7/3.0 A and 0.4/0.8/1.2/1.6/2.0/2.4 sec', type=int, default=0)
     #parser.add_option('-v', '--verbose', dest='verbose', help='verbosity (0:Normal, -1:output all)', type = int, default=0)
     (config, args) = parser.parse_args(args)
     return config
