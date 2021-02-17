@@ -30,6 +30,8 @@ def Checks(voltagelim=12.,
         sys.exit(1)
         pass
 
+    print('working fine, stay a few second!')
+
     default_control(voltagelim, 3., 5.01)
     time.sleep(10)
     start_position = getPosition(file_path)*Deg
@@ -45,6 +47,7 @@ positon={}, start at {}\n'.format(currentlim, round(start_position,3), startStr)
         curlim = currentlim
         for i in range(11):
             tperiod = 0.10 + 0.02*i
+            print(f'time period set = {tperiod}')
             for k in range(2):
                 print(f'num_cycle {cycle}')
 
@@ -70,6 +73,7 @@ positon={}, start at {}\n'.format(round(start_position,3), startStr))
             curlim = 1.5 + 0.3*i
             for j in range(6):
                 tperiod = 0.4 + 0.4*j
+                print(f'time period set = {tperiod}')
                 for k in range(2):
                     print(f'num_cycle {cycle}')
 
