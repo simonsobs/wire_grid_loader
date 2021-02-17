@@ -143,5 +143,5 @@ if __name__ == '__main__':
     notmakesure = config.notmakesure
     init_op = config.initializing_option
 
-    Checks(voltagelim=12., currentlim=curlim, notmakesure=True, initializing_option=init_op)
+    Checks(voltagelim=12., currentlim, notmakesure=True, initializing_option=init_op)
     pass
