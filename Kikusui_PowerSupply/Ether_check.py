@@ -93,9 +93,7 @@ positon={}, start at {}\n'.format(round(start_position,3), startStr))
     pass
 
 def default_control(voltagelim, currentlim, timeperiod, position=0., notmakesure=False):
-    msg_vollim, vollim = set_voltage(voltagelim)
     msg_curlim, curlim = set_current(currentlim)
-    print(msg_vollim + '\n' + msg_curlim)
     msg_output = turn_on(notmakesure=notmakesure)
     print(msg_output)
     msg_vol, vol = check_voltage()
@@ -107,6 +105,8 @@ def default_control(voltagelim, currentlim, timeperiod, position=0., notmakesure
     pass
 
 def check_control(voltagelim, currentlim, timeperiod, notmakesure=True):
+    msg_curlim, curlim = set_current(currentlim)
+    print(msg_curlim)
     turn_on(notmakesure=notmakesure)
     writelog(logfile, 'ON', voltagelim, currentlim, timeperiod=timeperiod, notmakesure=notmakesure)
     time.sleep(timeperiod)
