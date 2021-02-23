@@ -38,7 +38,7 @@ def Checks(voltagelim=12.,
     start_time = time.time()
     startStr = datetime.datetime.fromtimestamp(start_time).strftime('%Y/%m/%d %H:%M:%S')
 
-    if initializing_option == 0: # matrix
+    if initializing_option == 0: # confirm the minimal control angle
         print('check the minimal control-angle under these condition:\n\
 voltage_lim=12V, current_lim={}A, time_period;0.10sec ~ 0.30sec(delta 0.02sec)\n\
 positon={}, start at {}\n'.format(currentlim, round(start_position,3), startStr))
@@ -62,7 +62,7 @@ positon={}, start at {}\n'.format(currentlim, round(start_position,3), startStr)
 
         pass
 
-    elif initializing_option == 1: # check the minimal control andgle
+    elif initializing_option == 1: # check the matrix
         print('check the minimal control-angle under these condition:\n\
 matrix Ampere;1.5A ~ 3.0A(delta 0.3A), time;0.4sec ~ 2.4sec(delta 0.4sec)\n\
 positon={}, start at {}\n'.format(round(start_position,3), startStr))
@@ -94,6 +94,7 @@ positon={}, start at {}\n'.format(round(start_position,3), startStr))
     pass
 
 def default_control(voltagelim, currentlim, timeperiod, position=0., notmakesure=False):
+    msg_vollim, vollim = set_voltage(voltagelim)
     msg_curlim, curlim = set_current(currentlim)
     msg_output = turn_on(notmakesure=notmakesure)
     #print(msg_output)
