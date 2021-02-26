@@ -129,15 +129,11 @@ def control_func(PMX, voltagelim, currentlim, timeperiod=0.1, position=0., notma
         time.sleep(timeperiod)
 
         msg_output = PMX.turn_off(notmakesure)
-        print(msg_output)
         vollim, curlim = PMX.check_voltage_current_limit()
         vol   , cur    = PMX.check_voltage_current()
         writelog(logfile, 'OFF', vollim, curlim, vol, cur)
         pass
     else:
-        print('    ' + msg_curlim)
-        print(f'    Time set = {round(timeperiod,3)}')
-
         PMX.turn_on(notmakesure)
         writelog(logfile, 'ON', voltagelim, currentlim, timeperiod=timeperiod, position=position, notmakesure=notmakesure)
 

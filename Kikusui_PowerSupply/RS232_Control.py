@@ -107,7 +107,6 @@ def control_func(PMX, voltagelim, currentlim, timeperiod=0.1, position=0., notma
         time.sleep(timeperiod)
 
         msg_output = PMX.turn_off(notmakesure)
-        print(msg_output)
         vollim, curlim = PMX.check_voltage_current_limit()
         vol   , cur    = PMX.check_voltage_current()
         writelog(logfile, 'OFF', vollim, curlim, vol, cur)
