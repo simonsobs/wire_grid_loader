@@ -149,7 +149,7 @@ def howlong(position_difference):
         operation_time = feedback_time[0]
         pass
     if feedback_cut[0] > position_difference:
-        operation_time = 0.04
+        operation_time = 0.001
         pass
     return operation_time
 
