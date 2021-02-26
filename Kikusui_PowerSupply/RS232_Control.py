@@ -148,7 +148,11 @@ def feedback_func(PMX, operation_current, operation_time, feedback_loop, notmake
         else:
             operation_time = howlong(goal_position - mid_position)
             pass
-        control_func(PMX, voltagelim, operation_current, operation_time, position=mid_position, notmakesure=notmakesure)
+        if operation_time > 0.1:
+            control_func(PMX, voltagelim, operation_current, operation_time, position=mid_position, notmakesure=notmakesure)
+            pass
+        else:
+            pass
         time.sleep(0.4)
         pass
 
@@ -182,7 +186,7 @@ def howlong(position_difference):
         operation_time = feedback_time[0]
         pass
     if feedback_cut[0] > position_difference:
-        operation_time = 0.001
+        operation_time = 0.04
         pass
     return operation_time
 
