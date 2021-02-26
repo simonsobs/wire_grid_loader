@@ -94,8 +94,8 @@ def connection_func(PMX=None):
 def control_func(PMX, voltagelim, currentlim, timeperiod=0.1, position=0., notmakesure=False):
 
     # Set voltage & current
-    msg_vollim = PMX.set_voltage(voltagelim)
-    msg_curlim = PMX.set_current(currentlim)
+    msg_vollim, vollim = PMX.set_voltage(voltagelim)
+    msg_curlim, curlim = PMX.set_current(currentlim)
 
     if notmakesure==False:
         print(msg_vollim + '\n' + msg_curlim)
@@ -121,7 +121,7 @@ def control_func(PMX, voltagelim, currentlim, timeperiod=0.1, position=0., notma
 
         time.sleep(timeperiod)
 
-        PMX.turn_off(otmakesure)
+        PMX.turn_off(notmakesure)
         writelog(logfile, 'OFF', voltagelim, currentlim, notmakesure=notmakesure)
         pass
     pass
