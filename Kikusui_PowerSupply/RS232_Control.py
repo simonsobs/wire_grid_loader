@@ -53,7 +53,7 @@ def RS232_ctrl(voltagelim=12.,
     startStr = datetime.datetime.fromtimestamp(start_time).strftime('%Y/%m/%d %H:%M:%S')
 
     if control_type == True: # discrete rotation
-        print('start discrete rotation under these condition:\n\
+        print('\nstart discrete rotation under these condition:\n\
 number of laps = {}, number of feedbacks = {}\n\
 positon={}, start at {}\n'.format(num_laps, num_feedback, round(start_position,3), startStr))
         cycle = 1
@@ -70,7 +70,7 @@ positon={}, start at {}\n'.format(num_laps, num_feedback, round(start_position,3
             sys.exit(1)
             pass
         else:
-            print('start continuous rotation under these condition:\n\
+            print('\nstart continuous rotation under these condition:\n\
 voltagelim={}, currentlim={}, timeperiod={}, makesure_voltage_and_current={}\n\
 positon={}, start_time={}\n'.format(voltagelim, currentlim, timeperiod, not notmakesure, round(start_position,3), startStr))
             default_control(PMX, voltagelim, currentlim, timeperiod, position=start_position, notmakesure=notmakesure)
