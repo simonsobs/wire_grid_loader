@@ -58,6 +58,7 @@ number of laps = {}, number of feedbacks = {}\n\
 positon={}, start at {}\n'.format(num_laps, num_feedback, round(start_position,3), startStr))
         cycle = 1
         for i in range(num_laps*int(360/wanted_angle)):
+            print(f'\nnum_cycle {cycle}')
             feedback_func(PMX, 3.0, 0.401, num_feedback, notmakesure=True)
             time.sleep(stopped_time)
             cycle += 1

@@ -56,7 +56,7 @@ positon={}, start at {}\n'.format(currentlim, round(start_position,3), startStr)
         for i in range(11):
             tperiod = 0.10 + 0.02*i
             for k in range(2):
-                print(f'num_cycle {cycle}')
+                print(f'\nnum_cycle {cycle}')
 
                 control_func(PMX, voltagelim, curlim, tperiod, notmakesure=True)
 
@@ -81,7 +81,7 @@ positon={}, start at {}\n'.format(round(start_position,3), startStr))
             for j in range(6):
                 tperiod = 0.4 + 0.4*j
                 for k in range(2):
-                    print(f'num_cycle {cycle}')
+                    print(f'\nnum_cycle {cycle}')
 
                     control_func(PMX, voltagelim, curlim, tperiod, notmakesure=True)
 

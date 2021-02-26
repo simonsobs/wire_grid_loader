@@ -176,7 +176,7 @@ class PMX:
             self.ser.write(str.encode("OUTP?\n\r"))
             self.wait()
             val = self.ser.readline()
-            msg = "\nOutput state = %s\n" % (val)
+            msg = "\nOutput state = %s" % (val)
             print(msg)
             return msg
             pass
@@ -196,7 +196,7 @@ class PMX:
             self.ser.write(str.encode("OUTP?\n\r"))
             self.wait()
             val = self.ser.readline()
-            msg = "\nOutput state = %s\n" % (val)
+            msg = "\nOutput state = %s" % (val)
             print(msg)
             return msg
 
