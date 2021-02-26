@@ -62,7 +62,7 @@ positon={}, start at {}\n'.format(currentlim, round(start_position,3), startStr)
 
                 time.sleep(2)
 
-                default_control(voltagelim, 3., 0.5)
+                control_func(PMX, voltagelim, 3., 0.5)
                 time.sleep(2)
                 cycle += 1
                 pass
@@ -120,11 +120,8 @@ def control_func(PMX, voltagelim, currentlim, timeperiod=0.1, position=0., notma
     msg_curlim = PMX.set_current(currentlim)
 
     if notmakesure==False:
-        print(msg_vollim + '\n' + msg_curlim)
-
         # Turn On
         msg_output = PMX.turn_on(notmakesure)
-        print(msg_output)
         msg_vol, vol = PMX.check_voltage()
         msg_cur, cur = PMX.check_current()
         writelog(logfile, 'ON', voltagelim, currentlim, vol, cur, timeperiod)
