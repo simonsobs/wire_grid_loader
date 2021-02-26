@@ -91,7 +91,7 @@ def connection_func(PMX=None):
     PMX.clean_serial()
     return PMX
 
-def control_func(PMX, voltagelim=12., currentlim, timeperiod=0.1, position=0., notmakesure=False):
+def control_func(PMX, voltagelim, currentlim, timeperiod=0.1, position=0., notmakesure=False):
 
     # Set voltage & current
     msg_vollim = PMX.set_voltage(voltagelim)
