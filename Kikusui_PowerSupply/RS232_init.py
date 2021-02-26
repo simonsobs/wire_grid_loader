@@ -38,9 +38,9 @@ def RS232_init(voltagelim=12.,
         pass
 
     PMX = connection_func()
-    print('working fine, stay a few second!')
-
     control_func(PMX, voltagelim, 3., 5.01)
+
+    print('working fine, stay a few second!')
     time.sleep(10)
     start_position = getPosition(file_path)*Deg
     start_time = time.time()
