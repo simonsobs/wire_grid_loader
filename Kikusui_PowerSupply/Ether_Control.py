@@ -16,6 +16,7 @@ if sys.version_info.major == 2:
     pass
 
 logfile = openlog('log_ether')
+itemfile = openlog('item', verbose=1)
 file_path = '/home/wire-grid-pc/nfs/scripts/wire_grid_loader/Encoder/Beaglebone/iamhere.txt'
 
 Deg = 360/52000
@@ -30,24 +31,25 @@ def Controls(voltagelim=12.,
             timeperiod=10.,
             num_laps=10,
             num_feedback=8,
-            stopped_time=30.,
+            stopped_time=10.,
             notmakesure=False):
     if voltagelim != 12.:
         print("the rated Voltage of this motor DMN37KA is 12V.\n")
         sys.exit(1)
         pass
-    default_control(12., 3., 5.01)
+    start_str, stop_str = default_control(12., 3., 5.01)
+    writeitem(itemfile, start_str, 'measurement', 'start')
     time.sleep(30)
     start_position = getPosition(file_path)*Deg
     start_time = time.time()
     startStr = datetime.datetime.fromtimestamp(start_time).strftime('%Y/%m/%d %H:%M:%S')
-    if control_type == True: # discrete rotation
-        print('start discrete rotation under these condition:\n\
+    if control_type == True: # stepwise rotation
+        print('start stepwise rotation under these condition:\n\
 number of laps = {}, number of feedbacks = {}\n\
 positon={}, start at {}\n'.format(num_laps, num_feedback, round(start_position,3), startStr))
         cycle = 1
         for i in range(num_laps*int(360/wanted_angle)):
-            feedbackfunction(3.0, 0.401, num_feedback, notmakesure=True)
+            stop_str = feedbackfunction(3.0, 0.401, num_feedback, notmakesure=True)
             time.sleep(stopped_time)
             cycle += 1
             pass
@@ -61,9 +63,11 @@ positon={}, start at {}\n'.format(num_laps, num_feedback, round(start_position,3
             print('start continuous rotation under these condition:\n\
 voltagelim={}, currentlim={}, timeperiod={}, makesure_voltage_and_current={}\n\
 positon={}, start_time={}\n'.format(voltagelim, currentlim, timeperiod, not notmakesure, round(start_position,3), startStr))
-            default_control(voltagelim, currentlim, timeperiod, position=start_position, notmakesure=notmakesure)
+            start_str, stop_str = default_control(voltagelim, currentlim, timeperiod, position=start_position, notmakesure=notmakesure)
+            writeitem(itemfile, start_str, item_value, 'start')
             pass
         pass
+    writeitem(itemfile, stop_str, item_value, 'stop')
     stop_time = time.time()
     print(f'measurement time is {stop_time - start_time} sec')
     pass
@@ -76,19 +80,20 @@ def default_control(voltagelim, currentlim, timeperiod, position=0., notmakesure
     print(msg_output)
     msg_vol, vol = check_voltage()
     msg_cur, cur = check_current()
-    writelog(logfile, 'ON', vollim, curlim, vol, cur, position=position, timeperiod=timeperiod)
+    date_str0 = writelog(logfile, 'ON', vollim, curlim, vol, cur, position=position, timeperiod=timeperiod)
     time.sleep(timeperiod)
     msg_output = turn_off(notmakesure=notmakesure)
+    date_str1 = writelog(logfile, 'OFF', voltagelim, currentlim)
     print(msg_output)
-    pass
+    return date_str0, date_str1
 
 def feedback_control(voltagelim, currentlim, timeperiod, position, notmakesure=True):
     turn_on(notmakesure=notmakesure)
     writelog(logfile, 'ON', voltagelim, currentlim, timeperiod=timeperiod, position=position, notmakesure=notmakesure)
     time.sleep(timeperiod)
     turn_off(notmakesure=notmakesure)
-    writelog(logfile, 'OFF', voltagelim, currentlim, notmakesure=notmakesure)
-    pass
+    date_str1 = writelog(logfile, 'OFF', voltagelim, currentlim, notmakesure=notmakesure)
+    return date_str1
 
 def feedbackfunction(operation_current, operation_time, feedback_loop, notmakesure):
     uncertaity_cancel = 3

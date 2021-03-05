@@ -16,6 +16,7 @@ if sys.version_info.major == 2:
     pass
 
 logfile = openlog('log_ether')
+itemfile = openlog('item', verbose=1)
 file_path = '/home/wire-grid-pc/nfs/scripts/wire_grid_loader/Encoder/Beaglebone/iamhere.txt'
 
 Deg = 360/52000
@@ -32,7 +33,14 @@ def Checks(voltagelim=12.,
 
     print('working fine, stay a few second!')
 
-    default_control(voltagelim, 3., 5.01)
+    if initializing_option == 0:
+        item_value = 'calibration'
+        pass
+    elif initializing_option == 1:
+        item_value = 'matrix'
+
+    start_str, stop_str = default_control(voltagelim, 3., 5.01)
+    writeitem(itemfile, start_str, item_value, 'start')
     time.sleep(10)
     start_position = getPosition(file_path)*Deg
     start_time = time.time()
@@ -54,7 +62,7 @@ positon={}, start at {}\n'.format(currentlim, round(start_position,3), startStr)
 
                 time.sleep(2)
 
-                default_control(voltagelim, 3., 0.5)
+                start_str, stop_str = default_control(voltagelim, 3., 0.5)
                 time.sleep(2)
                 cycle += 1
                 pass
@@ -85,10 +93,11 @@ positon={}, start at {}\n'.format(round(start_position,3), startStr))
                     pass
                 time.sleep(2)
                 pass
-            default_control(voltagelim, 3., 1)
+            start_str, stop_str = default_control(voltagelim, 3., 1)
             time.sleep(2)
         pass
 
+    writeitem(itemfile, stop_str, item_value, 'stop')
     stop_time = time.time()
     print(f'measurement time is {stop_time - start_time} sec')
     pass
@@ -100,11 +109,12 @@ def default_control(voltagelim, currentlim, timeperiod, position=0., notmakesure
     #print(msg_output)
     msg_vol, vol = check_voltage()
     msg_cur, cur = check_current()
-    writelog(logfile, 'ON', voltagelim, curlim, vol, cur, position=position, timeperiod=timeperiod)
+    date_str0 = writelog(logfile, 'ON', voltagelim, curlim, vol, cur, position=position, timeperiod=timeperiod)
     time.sleep(timeperiod)
     msg_output = turn_off(notmakesure=notmakesure)
+    date_str1 = writelog(logfile, 'OFF', voltagelim, currentlim)
     #print(msg_output)
-    pass
+    return date_str0, date_str1
 
 def check_control(voltagelim, currentlim, timeperiod, notmakesure=True):
     msg_curlim, curlim = set_current(currentlim)
