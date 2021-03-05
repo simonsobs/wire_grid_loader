@@ -39,7 +39,7 @@ def writelog(logfile, onoff, voltagelim, currentlim, vol=0., cur=0., timeperiod=
     return nowStr
 
 def writeitem(logfile, date_str, item, state):
-    log = ('{:25s} {:12s} {:5s}'.format(date_str, item, state))
+    log = ('{:25s} {:12s} {:5s}\n'.format(date_str, item, state))
     logfile.write(log)
     pass
 
