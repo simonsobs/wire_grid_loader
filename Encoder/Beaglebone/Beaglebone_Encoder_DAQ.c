@@ -248,7 +248,7 @@ int main(int argc, char **argv)
     time(&measurement_start); //test
     measurement_time = fopen("timer.txt","w");
     fprintf(measurement_time, "Start at %ld\n", measurement_start);
-    operation_time = argv[2];
+    operation_time = atoi(argv[2]);
   }
 
   timeout_packet->header = 0x1234;
