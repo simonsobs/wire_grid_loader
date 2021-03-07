@@ -120,9 +120,10 @@ def feedbackfunction(operation_current, operation_time, feedback_loop, notmakesu
         else:
             operation_time = howlong(goal_position - mid_position)
             pass
-        feedback_control(voltagelim, operation_current, operation_time, position=mid_position, notmakesure=notmakesure)
+        date_str1 = feedback_control(voltagelim, operation_current, operation_time, position=mid_position, notmakesure=notmakesure)
         time.sleep(0.4)
         pass
+    return date_str1
 
 def getPosition(filepath):
     for i in range(10):
