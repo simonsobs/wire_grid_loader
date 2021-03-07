@@ -12,7 +12,7 @@
 #include<arpa/inet.h>
 #include<netinet/in.h>
 
-#define OPERATION_TIME 60
+//#define OPERATION_TIME 60
 #define REFERENCE_COUNT_MAX 62000 // max num_counts of a grid cycle ignoring z-signal
 
 #define isTCP 0 // 0:UDP, 1:TCP
@@ -247,6 +247,7 @@ int main(int argc, char **argv)
     time(&measurement_start); //test
     measurement_time = fopen("timer.txt","w");
     fprintf(measurement_time, "Start at %ld\n", measurement_start);
+    operation_time = argv[2]
   }
 
   timeout_packet->header = 0x1234;
@@ -379,7 +380,7 @@ int main(int argc, char **argv)
       }
 
       time(&measurement_stop); //test
-      if(measurement_stop - measurement_start > OPERATION_TIME){
+      if(measurement_stop - measurement_start > operation_time){
         fprintf(measurement_time, "Stop at %ld\n", measurement_stop);
         exit(0);
       }
