@@ -17,7 +17,7 @@ def main(start_line=0, isUTC=False):
         item_filename = files.split(' ')[2]
         pass
 
-    data_filepath = './rawdata/' + data_filename
+    data_filepath = '../Encoder/Beaglebone/rawdata/' + data_filename
     log_filepath = './log_ether/' + log_filename
     item_filepath = './item/' + item_filename
 
