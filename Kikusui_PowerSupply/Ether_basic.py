@@ -11,8 +11,9 @@ if sys.version_info.major == 2:
     pass
 
 sock = socket(AF_INET, SOCK_STREAM)
-sock.connect(('169.254.35.156', 5025))
+#sock.connect(('169.254.35.156', 5025))
 #sock.connect(('192.168.0.10',5025))
+sock.connect(('3.3.3.3', 5025))
 
 wait_time = 0.05
 buffer_size = 128
