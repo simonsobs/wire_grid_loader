@@ -18,7 +18,7 @@ def main(start_line=0, isUTC=False):
         pass
 
     data_filepath = './rawdata/' + data_filename
-    log_filepath = './log/' + log_filename
+    log_filepath = './log_ether/' + log_filename
     item_filepath = './item/' + item_filename
 
     # define several parameters
