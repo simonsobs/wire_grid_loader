@@ -17,12 +17,12 @@ if sys.version_info.major == 2:
 
 logfile = openlog('log_ether')
 itemfile = openlog('item', verbose=1)
-file_path = '/home/wire-grid-pc/nfs/scripts/wire_grid_loader/Encoder/Beaglebone/iamhere.txt'
+position_file_path = '/home/wire-grid-pc/nfs/scripts/wire_grid_loader/Encoder/Beaglebone/iamhere.txt'
 
 Deg = 360/52000
 wanted_angle = 22.5
 feedback_time = [0.181, 0.221, 0.251, 0.281, 0.301]
-feedback_cut = [0.5, 2.5, 4.5, 6.0, 7.0]
+feedback_cut = [1.0, 3.0, 4.0, 5.0, 6.0]
 
 ### main function ###
 def Controls(voltagelim=12.,
@@ -40,7 +40,7 @@ def Controls(voltagelim=12.,
     start_str, stop_str = default_control(12., 3., 5.01)
     writeitem(itemfile, start_str, 'measurement', 'start')
     time.sleep(30)
-    start_position = getPosition(file_path)*Deg
+    start_position = getPosition(position_file_path)*Deg
     start_time = time.time()
     startStr = datetime.datetime.fromtimestamp(start_time).strftime('%Y/%m/%d %H:%M:%S')
     if control_type == True: # stepwise rotation
@@ -99,7 +99,7 @@ def feedbackfunction(operation_current, operation_time, feedback_loop, notmakesu
     uncertaity_cancel = 3
     absolute_position = np.arange(0,360,wanted_angle)
 
-    start_position = getPosition(file_path)*Deg
+    start_position = getPosition(position_file_path)*Deg
     if (360 < start_position + uncertaity_cancel):
         goal_position = wanted_angle
         pass
@@ -113,7 +113,7 @@ def feedbackfunction(operation_current, operation_time, feedback_loop, notmakesu
     feedback_control(voltagelim, operation_current, operation_time, position=start_position, notmakesure=notmakesure)
     time.sleep(0.4)
     for l in range(feedback_loop):
-        mid_position = getPosition(file_path)*Deg
+        mid_position = getPosition(position_file_path)*Deg
         if goal_position + wanted_angle < mid_position:
             operation_time = howlong(goal_position - (mid_position - 360))
             pass

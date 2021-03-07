@@ -55,7 +55,7 @@ def openlog(log_dir, verbose=0) :
         logfile = open(logfilename, 'a+')
       else :
         logfile = open(logfilename, 'w' )
-        log = '# Date Time-Timezone ON/OFF CheckValues[Y/N] VoltageLimit[V] CurrentLimit[A] Voltage[V] Current[A] powerOn-timeperiod[sec]\n'
+        log = '#Date Time-Timezone ON/OFF CheckValues[Y/N] VoltageLimit[V] CurrentLimit[A] Voltage[V] Current[A] powerOn-timeperiod[sec] position[deg]\n'
         logfile.write(log)
         pass
       pass
@@ -66,7 +66,7 @@ def openlog(log_dir, verbose=0) :
         logfile = open(logfilename, 'a+')
       else :
         logfile = open(logfilename, 'w' )
-        log = '# Date Time-Timezone Item Start/Stop\n'
+        log = '#Date Time-Timezone Item Start/Stop\n'
         logfile.write(log)
         pass
       pass
