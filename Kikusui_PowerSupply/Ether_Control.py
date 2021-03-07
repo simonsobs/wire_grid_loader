@@ -64,10 +64,10 @@ positon={}, start at {}\n'.format(num_laps, num_feedback, round(start_position,3
 voltagelim={}, currentlim={}, timeperiod={}, makesure_voltage_and_current={}\n\
 positon={}, start_time={}\n'.format(voltagelim, currentlim, timeperiod, not notmakesure, round(start_position,3), startStr))
             start_str, stop_str = default_control(voltagelim, currentlim, timeperiod, position=start_position, notmakesure=notmakesure)
-            writeitem(itemfile, start_str, item_value, 'start')
+            writeitem(itemfile, start_str, 'measurement', 'start')
             pass
         pass
-    writeitem(itemfile, stop_str, item_value, 'stop')
+    writeitem(itemfile, stop_str, 'measurement', 'stop')
     stop_time = time.time()
     print(f'measurement time is {stop_time - start_time} sec')
     pass
