@@ -25,7 +25,6 @@ with open('feedback_amount.txt','r') as f:
     feedback_amount = (f.readlines())[-1].replace('\n', '').split(' ')
     feedback_time = [float(feedback_amount[1]), float(feedback_amount[2]), float(feedback_amount[3]), float(feedback_amount[4]), float(feedback_amount[5])]
     pass
-print(feedback_time)
 feedback_cut = [1.0, 3.0, 4.0, 5.0, 6.0]
 
 ### main function ###
