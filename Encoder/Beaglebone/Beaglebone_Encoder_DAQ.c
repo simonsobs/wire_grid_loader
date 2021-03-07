@@ -117,7 +117,7 @@ int tos_write = 0b10100100;
 int tos_read;
 int tos_read_len = sizeof(tos_read);
 
-int operation_time=10;
+int operation_time;
 int irig_secs, irig_mins, irig_hours, irig_day, irig_year;
 unsigned long long int irig_pruclock;
 
