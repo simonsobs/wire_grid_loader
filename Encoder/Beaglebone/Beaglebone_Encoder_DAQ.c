@@ -249,7 +249,7 @@ int main(int argc, char **argv)
     measurement_time = fopen("timer.txt","w");
     fprintf(measurement_time, "Start at %ld\n", measurement_start);
     operation_time = atoi(argv[2]);
-    printf("measuement time was set to $d\nDo you want to start mwasureing as it is?\nPress Enter to Continue.", operation_time);
+    printf("measuement time was set to %d\nDo you want to start mwasureing as it is?\nPress Enter to Continue.", operation_time);
     while( getchar() != '\n' );
   }
 
@@ -263,7 +263,7 @@ int main(int argc, char **argv)
   double usec_t1, usec_t2 = usec_timestamp();
 
   printf("Initializing DAQ\n");
-  printf("Notice that the Encoder Count Max is set to %d!\n", REFERENCE_COUNT_MAX);
+  printf("Note that the Encoder Count Max is set to %d!\n", REFERENCE_COUNT_MAX);
   //printf("Ignoring IRIG timeout error\n");//please check comment out about irig below
 
   while( *on != 1 ){
