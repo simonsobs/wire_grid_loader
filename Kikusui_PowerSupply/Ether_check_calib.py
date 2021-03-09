@@ -1,5 +1,6 @@
 import os
 import sys
+import socket
 import numpy as np
 import pandas as pd
 from datetime import datetime, timezone, timedelta
@@ -7,19 +8,35 @@ from datetime import datetime, timezone, timedelta
 PRU_Clock_Counts = 200e6
 Deg = 360/52000
 
-def main(start_line=0, isUTC=False):
-    # start_line is the initial line number of the operating item you want to check in the item file
-    with open('filelists.txt', 'r') as f:
-        filelists = f.readlines()
-        files = filelists[-1].replace('\n', '')
-        data_filename = files.split(' ')[0]
-        log_filename = files.split(' ')[1]
-        item_filename = files.split(' ')[2]
-        pass
+UTC = timezone(timedelta(hours=+0), 'UTC')
+JST = timezone(timedelta(hours=+9), 'JST')
 
-    data_filepath = '../Encoder/Beaglebone/rawdata/' + data_filename
-    log_filepath = './log_ether/' + log_filename
-    item_filepath = './item/' + item_filename
+def main(data_filename, start_line=0, isUTC=False):
+    # start_line is the initial line number of the operating item you want to check in the item file
+
+    if isUTC == True:
+        now = datetime.now(UTC)
+        pass
+    else:
+        now = datetime.now(JST)
+        pass
+    log_filename = 'PMX_' + now.strftime('%Y-%m-%d') + '.dat'
+    item_filename = 'items_' + now.strftime('%Y-%m-%d') + '.dat'
+    filelists = openlog('filelists.txt', verbose=1)
+    filelists.write(f'{data_filename} {log_filename} {item_filename}')
+    filelists.close()
+
+    hostname = socket.gethostname();
+    print('hostname : {}'.format(hostname));
+    if hostname.endswith('wiregridpc-NUC7PJYH'):
+        data_filepath = '../Encoder/Beaglebone/' + data_filename
+        log_filepath = './log_ether/' + log_filename
+        item_filepath = './item/' + item_filename
+        pass
+    else:
+        data_filepath = './' + data_filename
+        log_filepath = './' + log_filename
+        item_filepath = './' + item_filename
 
     # define several parameters
     pack_size = 1
@@ -76,6 +93,11 @@ def define_data_region(item_filepath, log_filepath, start_line=0):
     item = 'calibration'
 
     item_df = pd.read_csv(item_filepath, delim_whitespace=True)
+    if start_line == 0:
+        start_line = np.where(item_df.iloc[:,2] == item)[0][-2]
+        pass
+    else:
+        pass
     start_at = item_df[item_df.iloc[:,2] == item].iloc[:,0].to_numpy()[start_line] + ' ' + item_df[item_df.iloc[:,2] == item].iloc[:,1].to_numpy()[start_line]
     stop_at = item_df[item_df.iloc[:,2] == item].iloc[:,0].to_numpy()[start_line + 1] + ' ' + item_df[item_df.iloc[:,2] == item].iloc[:,1].to_numpy()[start_line + 1]
 
@@ -317,27 +339,30 @@ def set_feedback_value(mean_deg_list, deg_range):
     return commanded_value
 
 def writelog(logfile, fb_amount, isUTC=False):
-    UTC = timezone(timedelta(hours=+0), 'UTC')
-    JST = timezone(timedelta(hours=+9), 'JST')
-
     if isUTC == True:
         now = datetime.now(UTC)
         pass
     else:
         now = datetime.now(JST)
+        pass
     nowStr  = now.strftime('%Y/%m/%d_%H:%M:%S-%Z')
     log = ('{} {} {} {} {} {}\n'.format(nowStr, fb_amount[0], fb_amount[1], fb_amount[2], fb_amount[3], fb_amount[4]))
     logfile.write(log)
     pass
 
-def openlog(logfilename):
+def openlog(logfilename, verbose=0):
     if os.path.exists(logfilename) :
-      logfile = open(logfilename, 'a+')
+        logfile = open(logfilename, 'a+')
     else :
-      logfile = open(logfilename, 'w' )
-      log = '#Date_Time-Timezone Feedback_amount\n'
-      logfile.write(log)
-      pass
+        logfile = open(logfilename, 'w' )
+        if verbose == 0:
+            log = '#Date_Time-Timezone Feedback_amount\n'
+            pass
+        else:
+            log = '#data_file log_file item_file'
+            pass
+        logfile.write(log)
+        pass
     return logfile
 
 def parseCmdLine(args):
@@ -345,6 +370,7 @@ def parseCmdLine(args):
     parser = OptionParser()
     parser.add_option('-s', '--start_line', dest='start_line', help='start_line is the initial line number of the operating item you want to check in the item file', type=int, default=0)
     parser.add_option('-i', '--isUTC', action="store_true", dest='is_UTC', help='TimeZone False: JST, True: UTC, default is False', default=False)
+    parser.add_option('--datafile',dest='data_file_name')
     (config, args) = parser.parse_args(args)
     return config
 
@@ -352,12 +378,14 @@ if __name__ == '__main__':
     config = parseCmdLine(sys.argv)
     start_line = config.start_line
     isUTC = config.is_UTC
+    data_filename = config.data_file_name
 
     if not sys.argv:
         start_line = 0
         isUTC = False
 
-    commanded_value = main(start_line, isUTC)
+    commanded_value = main(data_filename, start_line, isUTC)
     logfile = openlog('feedback_amount.txt')
     writelog(logfile, commanded_value, isUTC)
+    logfile.close()
     print('Completed!')
