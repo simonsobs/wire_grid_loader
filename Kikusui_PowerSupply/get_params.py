@@ -22,7 +22,7 @@ def main(data_filename, start_line=0, isUTC=False):
         pass
     log_filename = 'PMX_' + now.strftime('%Y-%m-%d') + '.dat'
     item_filename = 'items_' + now.strftime('%Y-%m-%d') + '.dat'
-    filelists = openlog('filelists.txt', verbose=1)
+    filelists = openlog('calibration_filelists.txt', verbose=1)
     filelists.write(f'{data_filename} {log_filename} {item_filename}')
     filelists.close()
 
