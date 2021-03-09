@@ -21,9 +21,14 @@ position_file_path = '/home/wire-grid-pc/nfs/scripts/wire_grid_loader/Encoder/Be
 
 Deg = 360/52000
 wanted_angle = 22.5
-with open('feedback_amount.txt','r') as f:
-    feedback_amount = (f.readlines())[-1].replace('\n', '').split(' ')
-    feedback_time = [float(feedback_amount[1]), float(feedback_amount[2]), float(feedback_amount[3]), float(feedback_amount[4]), float(feedback_amount[5])]
+feedback_time = [] # put the feedback parameter here
+if feedback_time:
+    pass
+else:
+    with open('feedback_amount.txt','r') as f:
+        feedback_amount = (f.readlines())[-1].replace('\n', '').split(' ')
+        feedback_time = [float(feedback_amount[1]), float(feedback_amount[2]), float(feedback_amount[3]), float(feedback_amount[4]), float(feedback_amount[5])]
+        pass
     pass
 feedback_cut = [1.0, 3.0, 4.0, 5.0, 6.0]
 
