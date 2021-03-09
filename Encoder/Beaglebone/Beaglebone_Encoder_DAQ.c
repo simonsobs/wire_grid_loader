@@ -249,7 +249,7 @@ int main(int argc, char **argv)
     measurement_time = fopen("timer.txt","w");
     fprintf(measurement_time, "Start at %ld\n", measurement_start);
     operation_time = atoi(argv[2]);
-    printf("measuement time was set to %d\nDo you want to start measuring as it is?\nPress Enter to Continue.", operation_time);
+    printf("measurment time was set to %d\nDo you want to start measuring as it is?\nPress Enter to Continue.", operation_time);
     while( getchar() != '\n' );
   }
 
