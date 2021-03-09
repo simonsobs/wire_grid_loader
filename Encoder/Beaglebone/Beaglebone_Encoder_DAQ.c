@@ -249,6 +249,8 @@ int main(int argc, char **argv)
     measurement_time = fopen("timer.txt","w");
     fprintf(measurement_time, "Start at %ld\n", measurement_start);
     operation_time = atoi(argv[2]);
+    printf("Press Enter to Continue. measurement time %d", operation_time);
+    while( getchar() != '\n' );
   }
 
   timeout_packet->header = 0x1234;
