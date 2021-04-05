@@ -12,6 +12,7 @@
 *.pyc
 __pycache__/
 */__pycache__/
+Encoder/src/rawdata
 aho*
 test*
 !*/test.py

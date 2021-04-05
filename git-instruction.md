@@ -124,6 +124,9 @@ The ``push`` command does the following 2 steps;
         git pull
     
 
+## Remove local files from git but don't remove the files in local
+
+	git rm -r --cached <file name>
 
 
 # Creating New Repository & Setting Git
