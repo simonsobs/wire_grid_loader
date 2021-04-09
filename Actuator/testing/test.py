@@ -156,7 +156,8 @@ time.sleep(2);
 getresponse(ser, '$21=0'); # hard limit switch
 getresponse(ser, '$X');
 
-sendCommand(ser,'G91 F10 Y-100') # forward
+print("sendCommand(ser,'G91 F10 Y-100') # forward");
+#sendCommand(ser,'G91 F10 Y-100') # forward
 #sendCommand(ser,'G91 F10 Y1') # backward
 waitIdle(ser);
 

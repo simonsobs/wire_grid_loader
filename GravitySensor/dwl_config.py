@@ -6,6 +6,7 @@ use_moxa = True
 
 # MOXA IP address
 tcp_port =  26 # CH2
+#tcp_port =  29 # CH3
 hostname = socket.gethostname();
 print('hostname : {}'.format(hostname));
 
