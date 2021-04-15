@@ -14,7 +14,7 @@ devlocation = '/dev/serial/by-id/usb-FTDI_FT232R_USB_UART_AB0L75U1-if00-port0'; 
 #isSingle = True;
 isSingle = False;
 
-stime = 0.5;
+stime = 0.1;
 #stime = 1;
 
 BAUDRATE = 115200; # for DWL5000XY
@@ -29,7 +29,6 @@ if len(sys.argv)>1 :
   pass;
 
 try :
-  print('try');
   ser = serial.Serial(devlocation, 
           baudrate =BAUDRATE, 
           timeout  =0, 
@@ -40,7 +39,6 @@ try :
           stopbits =serial.STOPBITS_ONE, 
           #xonxoff  =False
           );
-  print('aho');
   while ser.read():
     print('serial open');
     pass;
@@ -49,6 +47,7 @@ try :
 except serial.serialutil.SerialException:
     print('exception');
     sys.exit();
+#ser.rs485_mode = True;
 
 print(ser);
 
@@ -62,16 +61,16 @@ command=b"\x06\x24\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00";
 #command=b"\x06\x24\x00\x00\x00\x00\x00\x00";
 
 '''
-for i in range(10) :
+for i in xrange(10) :
   ser.write(command);
   sleep(stime);
   pass;
 #'''
 ser.write(command);
 sleep(stime);
-#while True :
-#  if ser.inWaiting > 0 : break;
-#  pass;
+while True :
+  if ser.inWaiting > 0 : break;
+  pass;
 
 
 
@@ -90,7 +89,7 @@ else :
   pass;
 
 """
-for i in range(10) :
+for i in xrange(10) :
 #while True :
   print('send command');
   ser.write(command);
@@ -101,20 +100,20 @@ ser.write(command);
 sleep(stime);
 
 print('Read');
-#while True :
-#  if ser.inWaiting > 0 : break;
-#  pass;
+while True :
+  if ser.inWaiting > 0 : break;
+  pass;
 read = [];
 #while True :
 for i in range(MAXLOOP) :
-  #sleep(stime);
+  sleep(stime);
   read0 = ser.readline();
   size0 = len(read0);
   print('read0 = {}'.format(read0));
   if size0>0 : 
-    #read0hex = ['0x{}'.format(binascii.hexlify(c)) for c in read0];
-    print( 'read0   ({}) = (unpack) {} / (hex) {} / (raw) {}'.format(size0, struct.unpack('{}c'.format(size0), read0), read0hex, read0 ) );
-    #add = read0hex ;
+    read0hex = ['0x{}'.format(binascii.hexlify(c)) for c in read0];
+    #print( 'read0   ({}) = (unpack) {} / (hex) {} / (raw) {}'.format(size0, struct.unpack('{}c'.format(size0), read0), read0hex, read0 ) );
+    add = read0hex ;
     read += add;
     #print('read = {}'.format(read));
     pass;
@@ -134,12 +133,9 @@ for i in range(MAXLOOP) :
   #"""
   if len(read) >= SIZE : break;
   pass;
-
 size = len(read);
-print('read all ({}) = {}'.format(size, read));
-
-readInt = [];
 if size>0 : 
+  readInt = [];
   for c in read : readInt.append( (int)(c,16) );
   print( 'read (hex)  ({}) = {}'.format(size, read) );
   print( 'read (int)  ({}) = {}'.format(size, readInt) );
