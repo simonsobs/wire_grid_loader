@@ -7,6 +7,10 @@ from time import sleep
 import struct
 import binascii
 
+# Kill by Ctrl+C
+import signal
+signal.signal(signal.SIGINT, signal.SIG_DFL)
+
 # Check the python version
 if sys.version_info.major == 2:
     print("\nGravity-sensor control only works with Python 3\n"
@@ -32,8 +36,10 @@ def test(DWL=None, isSingle=True) :
     ser.flushInput()
     print(msg);
 
-    #command=b"\x06\x24\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00";
-    #ser.write(command);
+    for i in range(100) :
+        command=b"\x06\x24\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00";
+        ser.write(command);
+        pass;
     sleep(1)
 
 
@@ -63,11 +69,11 @@ def test(DWL=None, isSingle=True) :
         print('Read');
         for m in range(MAXREADLOOP) :
             print('read');
-            #read0 = ser.readexactly(12);
-            read0 = ser.readline();
+            read0 = ser.readexactly(12);
+            #read0 = ser.readline();
             size0 = len(read0);
             #print( 'read ({}) = {}...'.format(len(read0) , struct.unpack('{}c'.format(len(read0)), read0) ) );
-            print( 'read ({}) = {}'.format(len(read0) , read0 ) );
+            print( 'read ({}) = "{}"'.format(len(read0) , read0 ) );
             if size0>0 : 
                 #add = struct.unpack('{}s'.format(size0), read0)[0] ;
                 #add = ['0x{}'.format(binascii.hexlify(c)) for c in read0];
@@ -109,9 +115,14 @@ def test(DWL=None, isSingle=True) :
       pass;
 
     if isSingle :
+        # ((((Byte [5]<< 24) + (Byte [4] << 16) + (Byte [3]<< 8) + Byte [2]) -1800000) / 10000
         nums = [ read[5], read[4], read[3], read[2] ];
         angleX = (nums[0]<<24) + (nums[1]<<16) + (nums[2]<<8) + (nums[3]) ;
         angleX = (angleX - 1800000) / 10000.;
+        #Angle value = (((Byte 6 << 16) + (Byte 5 << 8) + Byte 4) - 180000) / 1000
+        #nums = [ read[5], read[4], read[3] ];
+        #angleX = (nums[0]<<16) + (nums[1]<<8) + (nums[2]) ;
+        #angleX = (angleX - 180000) / 1000.;
         print( 'angle X = {}'.format(angleX) );
     else :
         read1 = read[2:5];
@@ -155,12 +166,14 @@ if __name__ == '__main__':
 
   config = parseCmdLine(sys.argv)
 
-  #test(isSingle=True)
-  test(isSingle=False)
-  #test(isSingle=True)
-  #test(isSingle=False)
-  #test(isSingle=True)
-  #test(isSingle=False)
+  for  i in range(1000 ) :
+      #test(isSingle=True)
+      #test(isSingle=True)
+      #test(isSingle=True)
+      test(isSingle=False)
+      #test(isSingle=False)
+      #test(isSingle=False)
+      pass;
 
   pass
   

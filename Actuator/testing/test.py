@@ -12,6 +12,7 @@ if hostname.endswith('hepnet.scphys.kyoto-u.ac.jp'): # @ Kyoto
     devlocation = '/dev/ttyUSB4'
 elif hostname == 'cmb-daq01' : # @ Tokyo
     devlocation = '/dev/serial/by-id/usb-FTDI_FT232R_USB_UART_AL01WX4M-if00-port0'
+    #devlocation = '/dev/ttyUSB0'
 else :
   print('WARNING!! There is no suitable hostname option in "testing.py" to switch device file for the Actuator.')
   print('--> Temporary set to /dev/ttyUSB0');
