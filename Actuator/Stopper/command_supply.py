@@ -30,11 +30,13 @@ while True:
     #val = input("Enter pinnames ('H' for help): ");
     #print("input = {:s}".format(val));
     if val=='H' :
-        print('Commands: ON(=True=1), OFF(=False=0)');
+        print('Commands: ON(=True=1), OFF(=False=0), Q(=quit=exit)');
     elif val in ['ON', True, '1']:
         stopper.set_allon();
     elif val in ['OFF', False, '0']:
         stopper.set_alloff();
+    elif val in ['Q', 'quit', 'exit']:
+        break;
     else :
         print('ERROR! Unknown command: {}'.format(val));
         pass;

@@ -39,7 +39,10 @@ else:
         if val=="H" :
             print('There are the following pin names. Please enter pin names to check. (e.g. "LSR1", "LSR1,LSR2")');
             print(LS.pinnames);
+            print('If you want to quit, please put Q(quit,exit).');
             continue;
+        elif val in ['Q', 'quit', 'exit']:
+            break;
         print(LS.get_onoff(val.split(',')));
         pass;
     pass;
