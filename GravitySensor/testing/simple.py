@@ -19,13 +19,17 @@ if sys.version_info.major == 2:
     pass
 
 # Import control modules
+pre_dir=os.path.join(os.path.dirname(__file__), '..');
+print(pre_dir);
+sys.path.append(pre_dir);
+
 import dwl_config as cg  # noqa: E402
 
 from src.common import * # writelog(), openlog()
 
 this_dir = os.path.dirname(__file__)
 sys.path.append(os.path.join(
-    this_dir,  "..", "MOXA"))
+    this_dir, "..", "..", "MOXA"))
 import moxaSerial as mx  # noqa: E402
 
 ### main function ###
