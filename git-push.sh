@@ -5,6 +5,6 @@ read Wait
 echo $Wait
 echo "Please write the comment of this push."
 read COMMENT
-git add .;
+git add *;
 git ci -m "${COMMENT}";
 git push
