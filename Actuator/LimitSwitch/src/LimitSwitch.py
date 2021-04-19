@@ -7,13 +7,12 @@ import os
 import binascii;
 import struct;
 
-from common import openlog, writelog;
+from common import *;
 
 class LimitSwitch:
     """
     The LimitSwitch object is for detecting the limit switch ONOFF via a beaglebone
     """
-    self.interval = 1.; # sec
 
     def __init__(self, pinInfo, logdir='./log', interval=1.):
         self.pinInfo    = pinInfo;
@@ -29,11 +28,11 @@ class LimitSwitch:
             GPIO.setup(pin['pin'],GPIO.IN,pull_up_down=GPIO.PUD_UP);
             pass;
         # open log file
-        self.logfile = openlog(self.logdir, self.lables);
+        self.log = Log(self.pinlabels, self.logdir);
         pass;
 
     def __del__(self):
-        self.logfile.close();
+        del self.log;
         return
 
     # pinname is a string of pin name or list of pin names
@@ -44,7 +43,7 @@ class LimitSwitch:
     def get_onoff(self, pinname=None):
         if pinname is None :
             ret =  [ 0 if GPIO.input(self.pinDict[pinname0]) else 1 for pinname0 in self.pinnames ];
-        if isinstance(pinname, list): 
+        elif isinstance(pinname, list): 
             if not all([(pinname0 in self.pinnames) for pinname0 in pinname ]) :
                 print('ERROR! There is no GPIO pin names.');
                 print('    Assigned pin names = {}'.format(self.pinnames));
@@ -71,9 +70,11 @@ class LimitSwitch:
             log_interval = interval;
             pass;
 
-        while stop==False :
-            onoffs = get_onoff();
-            writelog(self.logfile, onoffs);
+        print('Start logging about limit switch outputs. (interval={} sec)'.format(log_interval));
+        while stop is False :
+            #print('write log');
+            onoffs = self.get_onoff();
+            self.log.writelog(onoffs);
             time.sleep(log_interval);
             pass;
         return 0;
