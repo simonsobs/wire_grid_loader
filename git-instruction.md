@@ -68,7 +68,7 @@ Shortcut command:
 
     or
 
-        git pull <REMOTE NAME>/<REMOTE BRANCH NAME>
+        git pull <REMOTE NAME> <REMOTE BRANCH NAME>
 
     Usually,
      - ``<REMOTE NAME>`` is ``origin``, and 
