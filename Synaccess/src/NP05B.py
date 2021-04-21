@@ -1,20 +1,13 @@
 # Built-in python modules
-import time as tm
-import serial as sr
-import sys as sy
+import time
+import sys
 import os
 
-# CHWP control modules
-this_dir = os.path.dirname(__file__)
-sy.path.append(this_dir)
-sy.path.append(
+sys.path.append(
     os.path.join(this_dir, ".."))
-moxa_path = os.path.join(this_dir, "..", "..","..", "MOXA")
-if moxa_path not in sy.path:
-    sy.path.append(moxa_path)
-import config_NP05B as config  # noqa: E402
-import log_NP05B as log  # noqa: E402
-import moxaSerial as moxa  # noqa: E402
+import NP05B_config as config 
+
+import log_NP05B as log
 
 
 class NP05B:
@@ -129,7 +122,7 @@ class NP05B:
                 "Connecting to RTU serial port %s" % (rtu_port))
             config.use_tcp = False
             config.rtu_port = rtu_port
-        elif tcp_ip is not None and tcp_port is not None:
+        elif tcp_ip is not None:
             self._ser = moxa.Serial_TCPServer((tcp_ip, tcp_port))
             self.writelog(
                 "Connecting to TCP IP %s via port %d"
@@ -140,7 +133,7 @@ class NP05B:
 
     def _wait(self):
         """ Wait a specific timestep """
-        tm.sleep(self._tstep)
+        time.sleep(self._tstep)
         return True
 
     def _clean_serial(self):

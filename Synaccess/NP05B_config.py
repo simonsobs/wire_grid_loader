@@ -1,14 +1,10 @@
 # Import global configuration to define the experiment environment
-import sys as sy
-import os
+import socket
 
-# Boolean flag for Ethernet to IP
-use_moxa = True
+# Boolean flag for Ethernet or USB
+use_tcp = True
 
-# MOXA port
-tcp_port =  22;
-
-# MOXA IP address
+# IP address
 hostname = socket.gethostname();
 print('hostname : {}'.format(hostname));
 if hostname.endswith('hepnet.scphys.kyoto-u.ac.jp'):
@@ -22,7 +18,7 @@ else :
 print('tcp_ip = {}'.format(tcp_ip));
 
 # ttyUSB port
-if not use_moxa:
+if not use_tcp:
     rtu_port = '/dev/ttyUSB2'
     pass
 
