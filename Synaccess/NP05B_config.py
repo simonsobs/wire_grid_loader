@@ -4,6 +4,10 @@ import socket
 # Boolean flag for Ethernet or USB
 use_tcp = True
 
+# User / Password for NP05B
+user = 'admin';
+password = 'admin';
+
 # IP address
 hostname = socket.gethostname();
 print('hostname : {}'.format(hostname));

@@ -14,9 +14,14 @@ if sys.version_info.major == 2:
     sys.exit()
 
 # Import control modules
-from src import LimitSwitch;
-import limitswitch_config as config;
+from src import NP05B;
+import NP05B_config as config;
 
 
-LS = LimitSwitch.LimitSwitch(config.GPIOpinInfo, logdir='./log');
-LS.start_logging(interval=1.);
+if config.use_tcp:
+    np05b = NP05B.NP05B(tcp_ip=config.tcp_ip, user=config.user, password=config.password, logdir=config.logdir, portInfo=config.portInfo)
+else:
+    np05b = NP05B.NP05B(rtu_port=config.ttyUSBPort, logdir=config.logdir, portInfo=config.portInfo)
+    pass;
+ 
+np05b.start_logging(interval=1.);

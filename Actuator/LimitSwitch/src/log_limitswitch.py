@@ -1,7 +1,6 @@
 import os
 import datetime
-# NOTE: Please change if after python3 installation
-#from pytz import timezone
+from pytz import timezone
 
 ### Log class ###
 class Log :
@@ -28,13 +27,12 @@ class Log :
             self.logfile.close();
             pass;
         # Open log file
-        # NOTE: Please change if after python3 installation
-        #now = datetime.datetime.now(timezone('UTC'))
+        now = datetime.datetime.now(timezone('UTC'))
         now = datetime.datetime.now();
         self.opendatetime = now;
         nowStr  = now.strftime('%Y-%m-%d %H:%M:%S-%Z');
         dateStr = now.strftime('%Y-%m-%d');
-        logfilename = '{}/stopper_{}.log'.format(self.logdir, dateStr);
+        logfilename = '{}/limitswitch_{}.log'.format(self.logdir, dateStr);
         if not os.path.isdir(self.logdir) : os.mkdir(self.logdir);
         print('Open log file: {}.'.format(logfilename));
         if os.path.exists(logfilename) :
@@ -47,8 +45,7 @@ class Log :
         return 0;
     
     def writelog(self,onoffs) :
-        # NOTE: Please change if after python3 installation
-        #now = datetime.datetime.now(timezone('UTC'));
+        now = datetime.datetime.now(timezone('UTC'));
         now = datetime.datetime.now();
         if self.opendatetime.day != now.day : 
             self.openlog();

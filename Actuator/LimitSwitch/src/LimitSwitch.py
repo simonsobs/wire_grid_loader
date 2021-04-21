@@ -7,21 +7,20 @@ import os
 import binascii;
 import struct;
 
-from common import *;
+from log_limitswitch import Log;
 
 class LimitSwitch:
     """
     The LimitSwitch object is for detecting the limit switch ONOFF via a beaglebone
     """
 
-    def __init__(self, pinInfo, logdir='./log', interval=1.):
+    def __init__(self, pinInfo, logdir='./log'):
         self.pinInfo    = pinInfo;
         self.pinnames   = [pin['name'] for pin in pinInfo];
         self.pinlabels  = [pin['label'] for pin in pinInfo];
         self.pinIndex   = {pin['name']:index for index, pin in enumerate(pinInfo)};
         self.pinDict    = {pin['name']:pin['pin'] for pin in pinInfo};
         self.logdir     = logdir;
-        self.interval   = interval; # sec : interval when start logging
 
         # initialize GPIO pins
         for pin in self.pinInfo :
@@ -61,21 +60,15 @@ class LimitSwitch:
 
 
     # Keep logging until stop=True
-    # The defaut interval is 1sec (defined in self.interval).
-    def start_logging(self, stop=False, interval=None):
-        log_interval = 0;
-        if interval is None :
-            log_interval = self.interval;
-        else :
-            log_interval = interval;
-            pass;
-
-        print('Start logging about limit switch outputs. (interval={} sec)'.format(log_interval));
+    # interval : time interval to write log [sec]
+    # The defaut interval is 1sec
+    def start_logging(self, stop=False, interval=1.):
+        print('Start logging about limit switch outputs. (interval={} sec)'.format(interval));
         while stop is False :
             #print('write log');
             onoffs = self.get_onoff();
             self.log.writelog(onoffs);
-            time.sleep(log_interval);
+            time.sleep(interval);
             pass;
         return 0;
 

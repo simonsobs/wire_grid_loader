@@ -41,19 +41,19 @@ class Log :
             log = '# Date Time-Timezone {}\n'.format(' '.join(self.labels));
             self.logfile.write(log);
             pass
-        return 0;
+        return True;
     
     def writestatus(self,onoffs) :
         if isinstance(onoffs, list) : onoffsStr = ' '.join(['{:3s}'.format('1' if onoff==1 else '0') for onoff in onoffs]);
         else                        : onoffsStr = '{:3s}'.format('1' if onoffs==1 else '0');
         log = ('{:25s} {:s}\n'.format(nowStr, onoffsStr)); # ON/OFF csv-like data
         self.write(log);
-        return 0;
+        return True;
     
     def writelog(self, msg) :
         log = ('# {:25s} {:s}\n'.format(nowStr, msg)); # log 
         self.write(log);
-        return 0;
+        return True;
  
     def write(self,msg) :
         now = datetime.datetime.now(timezone('UTC'));
@@ -64,7 +64,7 @@ class Log :
         log = ('{:25s} {:s}\n'.format(nowStr, msg));
         self.logfile.write(log);
         self.logfile.flush();
-        return 0;
+        return True;
  
     pass;
     

@@ -2,117 +2,149 @@
 import time
 import sys
 import os
-
-sys.path.append(
-    os.path.join(this_dir, ".."))
-import NP05B_config as config 
+import requests # need for ethernet connection
 
 import log_NP05B as log
 
 
 class NP05B:
     """
-    The NP05B object for communicating with the Synaccess Cyberswitch
+    The NP05B object for communicating with the Synaccess power strip
 
     Args:
-    rtu_port (int): Modbus serial port (defualt None).
-    tcp_ip (str): TCP IP address (default None)
-    tcp_port (int): TCP IP port (default None)
+    rtu_port (int): Modbus serial port for USB connection (defualt None).
+    tcp_ip (str): IP address for ethernet connection (default None)
+    user : user name to connect via ethernet
+    password : password to connect via ethernet
 
-    Only either rtu_port or tcp_ip + tcp_port can be defined.
+    Only either rtu_port or tcp_ip can be defined.
     """
-    def __init__(self, rtu_port=None, tcp_ip=None, tcp_port=None, log_dir='./log', port_info=None):
-        # Synaccess port info
+    def __init__(self, rtu_port=None, tcp_ip=None, user='', password='', log_dir='./log', port_info=None):
+        # Synaccess info
         self.port_info = port_info;
+        self.user      = user;
+        self.password  = password;
 
         # Logging object
         self.log = log.Log([p['labels'] for p in self.port_info],logdir)
 
         # Connect to device
-        if rtu_port is None and tcp_ip is None and tcp_port is None:
-            if config.use_tcp:
-                self.__conn(tcp_ip=config.tcp_ip, tcp_port=config.tcp_port)
-            else:
-                self.__conn(rtu_port=config.rtu_port)
+        if rtu_port is None:
+            self._use_tcp = False;
+            self._request_header = '';
+            self.__conn(tcp_ip=config.tcp_ip)
         else:
-            self.__conn(rtu_port, tcp_ip, tcp_port)
+            self._use_tcp = True;
+            self.__conn(rtu_port=rtu_port)
+            pass;
 
         # Read parameters
         self._num_tries = 1
         self._bytes_to_read = 20
         self._tstep = 0.2
+        pass;
 
     def __del__(self):
-        if not config.use_tcp:
+        if not self._use_tcp:
             self.log.writelog(
                 "Closing RTU serial connection at port %s"
                 % (config.rtu_port))
             self._clean_serial()
             self._ser.close()
-            #print("Deconstructor called")
         else:
             self.log.writelog(
-                "Closing TCP connection at IP %s and port %s"
-                % (self._tcp_ip, self._tcp_port))
-            pass
+                "End of TCP connection to IP %s"
+                % (self._tcp_ip));
+            pass;
         return
 
-    def ON(self, port):
+    def on(self, port):
         """ Power on a specific port """
-        cmd = b'$A3 %d 1' % (port)
+        cmd = b'$A3 {} 1'.format(port);
         self._command(cmd)
+        self._wait();
+        self._writestatus();
         return True
 
-    def OFF(self, port):
+    def off(self, port):
         """ Power off a specific port """
         cmd = b'$A3 %d 0' % (port)
         self._command(cmd)
+        self._wait();
+        self._writestatus();
         return True
 
-    def ALL_ON(self):
+    def all_on(self):
         """ Power on all ports """
         cmd = b'$A7 1'
         self._command(cmd)
+        self._wait();
+        self._writestatus();
         return True
 
-    def ALL_OFF(self):
+    def all_off(self):
         """ Power off all ports """
         cmd = b'$A7 0'
         self._command(cmd)
+        self._wait();
+        self._writestatus();
         return True
 
-    def REBOOT(self, port):
+    def reboot(self, port):
         """ Reboot a specific port """
         cmd = b'$A4 %d' % (port)
         self._command(cmd)
+        self._wait();
+        self._writestatus();
         return True
 
-    def STATUS(self):
+    def getstatus(self):
         """ Print the power status for all ports """
         cmd = b'$A5'
         for n in range(self._num_tries):
-            self._write(cmd)
-            out = self._read()
+            out = self._write(cmd);
+            if not self._use_tcp : out = self._read();
             if len(out) == 0:
                 continue
             elif len(out) != 0:
-                stat = out[1].decode().replace("\x00", '').replace(",", '').replace("$A0", '').replace("\n", '').replace("\r", '').replace("$A5", '')
-                return list(stat)[::-1]
+                if not self._use_tcp :
+                    stat = out[1].decode().replace("\x00", '').replace(",", '').replace("$A0", '').replace("\n", '').replace("\r", '').replace("$A5", '')
+                    return list(stat)[::-1]
+                else :
+                    out = out.content;
+                    if len(out)!=9 or out[:3]=='$A0' :
+                        self.writelog('WARNING! Could not read a correct status from NP05B. output = {}'.format(out));
+                        self.writelog('         Expected output = $A0,?????');
+                        continue;
+                    stat = [(int)onoff for onoff in out[4:10]];
+                    return stat;
             else:
                 self.writelog(
                     "ERROR! Did not understand NP05B output %s" % (out))
                 continue
+            pass;
         return True
 
+    # Keep logging until stop=True
+    # interval : time interval to write log [sec]
+    # The defaut interval is 1sec
+    def start_logging(self, stop=False, interval=1.):
+        print('Start logging about synaccess NP05B status. (interval={} sec)'.format(interval));
+        while stop is False :
+            self._writestatus();
+            time.sleep(interval);
+            pass;
+        return 0;
+
+
     # ***** Helper methods *****
-    def __conn(self, rtu_port=None, tcp_ip=None, tcp_port=None):
+    def __conn(self, rtu_port=None, tcp_ip=None):
         """ Connect to device either via TCP or RTU """
-        if rtu_port is None and (tcp_ip is None or tcp_port is None):
-            raise Exception('NP05B Exception: no RTU or TCP port specified')
-        elif (rtu_port is not None and
-              (tcp_ip is not None or tcp_port is not None)):
+        if rtu_port is None and tcp_ip is None:
+            raise Exception('NP05B Exception: no RTU port or TCP IP specified')
+        elif (rtu_port is not None and tcp_ip is not None):
             raise Exception(
-                "NP05B Exception: RTU and TCP port specified. "
+                "NP05B Exception: RTU port and TCP IP specified. "
                 "Can only have one or the other.")
         elif rtu_port is not None:
             self._ser = sr.Serial(
@@ -123,13 +155,13 @@ class NP05B:
             config.use_tcp = False
             config.rtu_port = rtu_port
         elif tcp_ip is not None:
-            self._ser = moxa.Serial_TCPServer((tcp_ip, tcp_port))
+            self._request_header = "http://{}:{}@{}/cmd.cgi?".format(self.user,self.password,tcp_ip);
             self.writelog(
-                "Connecting to TCP IP %s via port %d"
-                % (tcp_ip, int(tcp_port)))
-            config.use_tcp = True
+                "Connecting to IP %s via HTTP requests"
+                % (tcp_ip))
             self._tcp_ip = tcp_ip
-            self._tcp_port = tcp_port
+            pass;
+        return 0;
 
     def _wait(self):
         """ Wait a specific timestep """
@@ -138,64 +170,43 @@ class NP05B:
 
     def _clean_serial(self):
         """ Flush the serial buffer """
-        if not config.use_tcp:
-            self._ser.reset_input_buffer()
-            self._ser.reset_output_buffer()
-            self._ser.flush()
-        else:
-            self._ser.flushInput()
-        return
+        if not self._use_tcp:
+            self._ser.reset_input_buffer();
+            self._ser.reset_output_buffer();
+            self._ser.flush();
+            pass;
+        return True
 
     def _write(self, cmd):
         """ Write to the serial port """
-        self._clean_serial()
-        self._ser.write((cmd+b'\r'))
+        ret = None;
+        if not self._use_tcp : 
+            self._clean_serial()
+            self._ser.write((cmd+b'\r'))
+            ret = 0;
+        else :
+            request = self._request_header + cmd ;
+            ret = requests.get(request);
+            pass;
         self._wait()
+        return ret;
 
     def _read(self):
         """ Read from the serial port """
         if not config.use_tcp:
             return self._ser.readlines()
-        else:
-            raw_out = self._ser.read(self._bytes_to_read)
-            out = raw_out.replace('\r', ' ').replace('\x00', '')
-            return out
-
-    def check_output(self, cmd):
-        """ Check the output """
-        out = self._read()
-        if len(out) == 0:
-            return False
-        elif cmd.decode() in out[0].decode() and '$A0' in out[1].decode():
-            return True
-        elif not len([s for s in out if b'Telnet active.' in s]) == 0:
-            self.log.writelog('Telnet active. Resetting... try command again.')
-            return self._deactivate_telnet()
-        else:
-            self.log.writelog(
-                    "WARNING! Did not understand NP05B output %s" % (out))
-            return False
+        return True;
 
     def _command(self, cmd):
         """ Send a command to the device """
         for n in range(self._num_tries):
             self._write(cmd)
-            #result = self.check_output(cmd)
-            #if result:
-                #return True
-            #else:
-                #continue
+            pass;
         return True
 
-    def _deactivate_telnet(self):
-        """ Attempt to deactivate Telnet session to the device """
-        self.log.writelog("Telnet session active! Trying to deactivate...")
-        cmd = '!'
-        self._write(cmd)
-        out = self._ser.readlines()[0]
-        if cmd in out:
-            return True
-        else:
-            self.log.writeerr(
-                    "ERROR! Did not understand NP05B output %s" % (out))
-            return False
+    def _writestatus(self):
+        stat = getstatus();
+        self.writestatus(stat);
+        return True;
+
+

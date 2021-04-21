@@ -7,7 +7,7 @@ import os
 import binascii;
 import struct;
 
-from common import *;
+from log_stopper import Log;
 
 class Stopper:
     """

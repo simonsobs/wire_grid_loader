@@ -42,11 +42,11 @@ class Command:
                 port = int(args[1])
                 if port <= 5 and port >= 1:
                     if cmdarg == 'ON':
-                        self._NP05B.ON(port)
+                        self._NP05B.on(port)
                     elif cmdarg == 'OFF':
-                        self._NP05B.OFF(port)
+                        self._NP05B.off(port)
                     elif cmdarg == 'REBOOT':
-                        self._NP05B.REBOOT(port)
+                        self._NP05B.reboot(port)
                     else:
                         self._log.writelog(
                             "ERROR! Parsing error for command %s" % (' '.join(args)))
@@ -62,15 +62,15 @@ class Command:
         # Turn on/off or reboot all ports
         elif cmdarg == 'ALL':
             if args[1].upper() == 'ON':
-                self._NP05B.ALL_ON()
+                self._NP05B.all_on()
             elif args[1].upper() == 'OFF':
-                self._NP05B.ALL_OFF()
+                self._NP05B.all_off()
             else:
                 self._log.writelog("ERROR! Could not understand command %s" % (cmd))
                 return False
         # Retrieve port status
         elif cmdarg == 'STATUS':
-            outputs = self._NP05B.STATUS()
+            outputs = self._NP05B.getstatus()
             self._log.writelog("\nPort power status:")
             if outputs == True:
                 self._log.writelog('WARNING! Jumbled...try again')

@@ -5,14 +5,11 @@ import sys
 import readline
 
 # Check the python version
-# NOTE: Please change if after python3 installation
-'''
 if sys.version_info.major == 2:
     print(
         "\ncommand_supply.py only works with Python 3\n"
         "Usage: python3 command_supply.py")
     sys.exit()
-'''
 
 # Import control modules
 from src import Stopper;
@@ -24,10 +21,10 @@ stopper = Stopper.Stopper(config.GPIOpinInfo, logdir='./log');
 # Interactive mode
 while True:
     # Python2
-    val = raw_input("Enter pinnames ('H' for help): ");
+    #val = raw_input("Enter pinnames ('H' for help): ");
     # Python3
-    # NOTE: Please change if after python3 installation
-    #val = input("Enter pinnames ('H' for help): ");
+    val = input("Enter pinnames ('H' for help): ");
+
     #print("input = {:s}".format(val));
     if val=='H' :
         print('Commands: ON(=True=1), OFF(=False=0), Q(=quit=exit)');
