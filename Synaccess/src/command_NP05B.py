@@ -19,14 +19,14 @@ class Command:
             "OFF [port]: turn off port [port], for which the options are 1-5\n"
             "ALL ON:  turn on all ports\n"
             "ALL OFF: turn off all ports\n"
-            "REBOOT [port]: reboot port [port], for which the options are 1-5"
-            "STATUS: print status of each port"
-            "HELP: display this help menu"
+            "REBOOT [port]: reboot port [port], for which the options are 1\n"
+            "STATUS: print status of each port\n"
+            "HELP: display this help menu\n"
             "EXIT: quit program\n")
         print(wrstr)
         wrstr = (
-                "Port info:\n"
-                "".join("    Port {}: {}\n".format(i+1, self._port_info[i]['label']) for i in len(self._port_info))
+                "Port info:\n"+
+                "".join(["    Port {}: {}\n".format(i+1, self._port_info[i]['label']) for i in range(len(self._port_info))])
                 );
         print(wrstr)
         return True
@@ -71,14 +71,17 @@ class Command:
         # Retrieve port status
         elif cmdarg == 'STATUS':
             outputs = self._NP05B.getstatus()
-            self._log.writelog("\nPort power status:")
+            msg = "Port power status:";
+            self._log.writelog(msg)
+            print(msg);
             if outputs == True:
                 self._log.writelog('WARNING! Jumbled...try again')
             elif len(outputs) == 5:
                 for i in range(len(outputs)):
-                    self._log.writelog(
-                        "Port %d = %s\n"
-                        % (i + 1, bool(int(outputs[i]))))
+                    msg = "Port %d = %s" % (i + 1, bool(int(outputs[i])))
+                    self._log.writelog(msg)
+                    print(msg)
+                    pass
                 return outputs
             else:
                 self._log.writelog('WARNING! Extra bytes, try again')

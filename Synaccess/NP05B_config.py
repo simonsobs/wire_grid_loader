@@ -27,7 +27,7 @@ if not use_tcp:
     pass
 
 # Label of each ports in Synaccess
-portInfo = [
+port_info = [
         {'name':'CH1:USB&LAN&Serial' , 'label':'USB Hub (Beaglebones), LAN Hub, Serial Converter'  }, # ch1
         {'name':'CH2:Encoder&Gravity', 'label':'Encoder, Gravity Sensor, Stopper switch'                  }, # ch2
         {'name':'CH3:Fan'            , 'label':'Electronics Box Fans'                      }, # ch3

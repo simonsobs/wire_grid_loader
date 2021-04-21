@@ -4,7 +4,11 @@ import sys
 import os
 import requests # need for ethernet connection
 
-import log_NP05B as log
+# Control modules
+this_dir = os.path.dirname(__file__)
+sys.path.append(os.path.join(
+    this_dir, ""))
+from log_NP05B import Log
 
 
 class NP05B:
@@ -26,15 +30,19 @@ class NP05B:
         self.password  = password;
 
         # Logging object
-        self.log = log.Log([p['labels'] for p in self.port_info],logdir)
+        self.log = Log([p['label'] for p in self.port_info],log_dir)
 
         # Connect to device
+        self._use_tcp = False;
+        self._tcp_port= None;
+        self._rtu_port= None;
+        self._ser     = None;
         if rtu_port is None:
-            self._use_tcp = False;
-            self._request_header = '';
-            self.__conn(tcp_ip=config.tcp_ip)
-        else:
             self._use_tcp = True;
+            self._request_header = '';
+            self.__conn(tcp_ip=tcp_ip)
+        else:
+            self._use_tcp = False;
             self.__conn(rtu_port=rtu_port)
             pass;
 
@@ -45,10 +53,10 @@ class NP05B:
         pass;
 
     def __del__(self):
-        if not self._use_tcp:
+        if (not self._use_tcp) and (not self._ser is None):
             self.log.writelog(
                 "Closing RTU serial connection at port %s"
-                % (config.rtu_port))
+                % (self._rtu_port))
             self._clean_serial()
             self._ser.close()
         else:
@@ -60,7 +68,7 @@ class NP05B:
 
     def on(self, port):
         """ Power on a specific port """
-        cmd = b'$A3 {} 1'.format(port);
+        cmd = b'$A3 %d 1' % (port);
         self._command(cmd)
         self._wait();
         self._writestatus();
@@ -111,15 +119,14 @@ class NP05B:
                     stat = out[1].decode().replace("\x00", '').replace(",", '').replace("$A0", '').replace("\n", '').replace("\r", '').replace("$A5", '')
                     return list(stat)[::-1]
                 else :
-                    out = out.content;
-                    if len(out)!=9 or out[:3]=='$A0' :
-                        self.writelog('WARNING! Could not read a correct status from NP05B. output = {}'.format(out));
-                        self.writelog('         Expected output = $A0,?????');
+                    if len(out)!=9 or out[:3]!='$A0' :
+                        self.log.writelog('WARNING! Could not read a correct status from NP05B. output = {}'.format(out));
+                        self.log.writelog('         Expected output = $A0,?????');
                         continue;
-                    stat = [(int)onoff for onoff in out[4:10]];
+                    stat = [(int)(onoff) for onoff in reversed(out[4:10])];
                     return stat;
             else:
-                self.writelog(
+                self.log.writelog(
                     "ERROR! Did not understand NP05B output %s" % (out))
                 continue
             pass;
@@ -152,11 +159,11 @@ class NP05B:
                 parity='N', stopbits=1, timeout=1)
             self.witelog(
                 "Connecting to RTU serial port %s" % (rtu_port))
-            config.use_tcp = False
-            config.rtu_port = rtu_port
+            self._use_tcp = False
+            self._rtu_port = rtu_port
         elif tcp_ip is not None:
             self._request_header = "http://{}:{}@{}/cmd.cgi?".format(self.user,self.password,tcp_ip);
-            self.writelog(
+            self.log.writelog(
                 "Connecting to IP %s via HTTP requests"
                 % (tcp_ip))
             self._tcp_ip = tcp_ip
@@ -170,7 +177,7 @@ class NP05B:
 
     def _clean_serial(self):
         """ Flush the serial buffer """
-        if not self._use_tcp:
+        if not self._use_tcp and not self._ser is None:
             self._ser.reset_input_buffer();
             self._ser.reset_output_buffer();
             self._ser.flush();
@@ -180,22 +187,23 @@ class NP05B:
     def _write(self, cmd):
         """ Write to the serial port """
         ret = None;
-        if not self._use_tcp : 
+        if (not self._use_tcp) and not (self._ser is None) : 
             self._clean_serial()
             self._ser.write((cmd+b'\r'))
             ret = 0;
         else :
-            request = self._request_header + cmd ;
-            ret = requests.get(request);
+            request = self._request_header + cmd.decode() ;
+            ret = requests.get(request).content;
+            ret = ret.decode(); # binary --> string
             pass;
         self._wait()
         return ret;
 
     def _read(self):
         """ Read from the serial port """
-        if not config.use_tcp:
+        if not self._use_tcp and not (self._ser is None):
             return self._ser.readlines()
-        return True;
+        return '';
 
     def _command(self, cmd):
         """ Send a command to the device """
@@ -205,8 +213,8 @@ class NP05B:
         return True
 
     def _writestatus(self):
-        stat = getstatus();
-        self.writestatus(stat);
+        stat = self.getstatus();
+        self.log.writestatus(stat);
         return True;
 
 

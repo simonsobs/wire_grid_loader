@@ -18,15 +18,15 @@ import NP05B_config as config
 if __name__ == "__main__":
 
     if config.use_tcp:
-        np05b = NP05B.NP05B(tcp_ip=config.tcp_ip, user=config.user, password=config.password, logdir=config.logdir, portInfo=config.portInfo)
+        np05b = NP05B.NP05B(tcp_ip=config.tcp_ip, user=config.user, password=config.password, log_dir=config.log_dir, port_info=config.port_info)
     else:
-        np05b = NP05B.NP05B(rtu_port=config.ttyUSBPort, logdir=config.logdir, portInfo=config.portInfo)
+        np05b = NP05B.NP05B(rtu_port=config.ttyUSBPort, log_dir=config.log_dir, port_info=config.port_info)
         pass;
     CMD = command_NP05B.Command(np05b)
 
     #If user supplies a command-line argument, interpret it as a command to the cyberswitch
-    if len(sy.argv[1:]) > 0:
-        args = sy.argv[1:]
+    if len(sys.argv[1:]) > 0:
+        args = sys.argv[1:]
         command = ' '.join(args)
         result = CMD.CMD(command)
     else:
