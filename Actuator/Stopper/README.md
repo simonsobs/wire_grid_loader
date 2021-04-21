@@ -1,12 +1,6 @@
 Stopper
 =======
 
-**Current scripts for python2 temporarily. Please change it.**
-- src/common.py
-- command\_supply.py
-- on.py
-- off.py
-
 ## Scripts to read limit switch
 - `command\_supply.py` : To set ON/OFF for all of the stoppers interactively. 
 - `on.py`  : Turn ON all of the stoppers.
@@ -17,3 +11,7 @@ Stopper
 
 ## Main class
 - `src/Stopper.py` : Main class to control the stoppers is Stopper.
+
+## Requirements
+- pip install pytz
+- pip install Adafruit\_BBIO

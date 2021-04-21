@@ -4,11 +4,7 @@ import sys
 import os
 import requests # need for ethernet connection
 
-# Control modules
-this_dir = os.path.dirname(__file__)
-sys.path.append(os.path.join(
-    this_dir, ""))
-from log_NP05B import Log
+from src.log_NP05B import Log
 
 
 class NP05B:
