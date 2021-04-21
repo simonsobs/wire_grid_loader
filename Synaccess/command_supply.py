@@ -18,9 +18,9 @@ import NP05B_config as config
 if __name__ == "__main__":
 
     if config.use_tcp:
-        np05b = NP05B.NP05B(tcp_ip=config.tcp_ip, user=config.user, password=config.password, log_dir=config.log_dir, port_info=config.port_info)
+        np05b = NP05B.NP05B(tcp_ip=config.tcp_ip, user=config.user, password=config.password, logdir=config.logdir, port_info=config.port_info)
     else:
-        np05b = NP05B.NP05B(rtu_port=config.ttyUSBPort, log_dir=config.log_dir, port_info=config.port_info)
+        np05b = NP05B.NP05B(rtu_port=config.ttyUSBPort, logdir=config.logdir, port_info=config.port_info)
         pass;
     CMD = command_NP05B.Command(np05b)
 

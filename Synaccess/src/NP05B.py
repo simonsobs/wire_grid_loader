@@ -19,14 +19,14 @@ class NP05B:
 
     Only either rtu_port or tcp_ip can be defined.
     """
-    def __init__(self, rtu_port=None, tcp_ip=None, user='', password='', log_dir='./log', port_info=None):
+    def __init__(self, rtu_port=None, tcp_ip=None, user='', password='', logdir='./log', port_info=None):
         # Synaccess info
         self.port_info = port_info;
         self.user      = user;
         self.password  = password;
 
         # Logging object
-        self.log = Log([p['label'] for p in self.port_info],log_dir)
+        self.log = Log([p['label'] for p in self.port_info],logdir)
 
         # Connect to device
         self._use_tcp = False;

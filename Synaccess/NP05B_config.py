@@ -36,4 +36,4 @@ port_info = [
         ];
 
 # Logger directory
-log_dir = 'log';
+logdir = 'log';

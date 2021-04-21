@@ -18,9 +18,9 @@ import NP05B_config as config;
 def powerOn(np05b=None,ports=None) :
     if np05b is None :
         if config.use_tcp:
-            np05b = NP05B.NP05B(tcp_ip=config.tcp_ip, user=config.user, password=config.password, log_dir=config.log_dir, port_info=config.port_info)
+            np05b = NP05B.NP05B(tcp_ip=config.tcp_ip, user=config.user, password=config.password, logdir=config.logdir, port_info=config.port_info)
         else:
-            np05b = NP05B.NP05B(rtu_port=config.ttyUSBPort, log_dir=config.log_dir, port_info=config.port_info)
+            np05b = NP05B.NP05B(rtu_port=config.ttyUSBPort, logdir=config.logdir, port_info=config.port_info)
         pass;
  
     if ports is None :
