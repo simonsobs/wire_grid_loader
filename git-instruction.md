@@ -68,7 +68,7 @@ Shortcut command:
 
     or
 
-        git pull <REMOTE NAME>/<REMOTE BRANCH NAME>
+        git pull <REMOTE NAME> <REMOTE BRANCH NAME>
 
     Usually,
      - ``<REMOTE NAME>`` is ``origin``, and 
@@ -108,6 +108,16 @@ The ``push`` command does the following 2 steps;
         git branch -a
 
   * This command shows the information of the remote branches fetched into your PC.
+
+### Retrieve remote branch  at local and make a new branch at local tracking the remote branch
+- retrieve remote branch <REMOTE BRANCH NAME>
+
+        git checkout -b <NEW BRANCH NAME> -t <REMOTE NAME>/<REMOTE BRANCH NAME>
+
+  * Usually, we use the same branch name between <NEW BRANCH NAME>(at local) and <REMOTE BRANCH NAME>(at remote).
+  * The <REMOTE NAME> is usually ``origin``
+
+- After retrieving the remote branch, you are at the new branch at local
 
 
 ## Check the log
@@ -181,6 +191,11 @@ The ``push`` command does the following 2 steps;
 
   --hard means the local files(**A**) also will be changed.
   Without --hard, the change is occurred only in the local repository(**B**).
+
+## Remove local files from git but do not remove the files in local
+
+	     git rm -r --cached <file name>
+
 
 # Creating New Repository & Setting Git
 ## Creating new repository

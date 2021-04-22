@@ -25,14 +25,26 @@ Scripts to control KIKUSUI power supply (PMX)
 Requirements: MOXA 
 Communication: RS422 serial communication via the serial converter
 
-## Actuator (Blackbox)
-Scripts to control a linear actuator
+- testing : This directory is for test.
 
-Requirements: "pyserial" library in python
+## Actuator (Blackbox)
+Scripts to control a linear actuator including stopper and limit switch
+
+Requirements: "pyserial", "pytz", "Adafruid\_BBIO" library in python
 
 Communication: USB (Blackbox has a RS232 serial converter inside itself.)
 
+- Stopper : Scripts to control stopper
+- LimitSwitch : Scripts to read limit switches
 - testing : This directory is for test.
+
+## Synaccess (Power Strip)
+Scripts to control a power strip (Synaccess NP05B)
+
+Requirements: "requests", "pytz" library in python
+
+Communication: LAN (Synacess NP05B should be directly connected to PC via LAN.)
+
 
 
 # Tags

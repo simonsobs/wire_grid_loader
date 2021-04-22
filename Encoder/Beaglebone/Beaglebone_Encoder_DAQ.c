@@ -15,7 +15,7 @@
 #define OPERATION_TIME 10 // OPERATION_TIME<0 : No limit
 //#define OPERATION_TIME -1 // OPERATION_TIME<0 : No limit
 
-#define REFERENCE_COUNT_MAX 54000 // max num_counts of a grid cycle
+#define REFERENCE_COUNT_MAX 62000 // max num_counts of a grid cycle ignoring z-signal
 
 //#define IP_ADDRESS "202.13.215.85" // tandem PC
 //#define IP_ADDRESS "202.13.215.223" // wire grid PC at Kyoto
@@ -55,6 +55,13 @@
 #define ENCODER_TIMEOUT_FLAG 1
 #define IRIG_TIMEOUT_FLAG 2
 
+//#define IP_ADDRESS "202.13.215.117" // beaglebone
+//#define IP_ADDRESS "192.168.7.2" //beaglebone
+//#define IP_ADDRESS "202.13.215.85" //tandem PC
+//#define IP_ADDRESS "192.168.7.1" //tandem PC
+#define IP_ADDRESS "133.11.6.73" //wiregridPC @ Kusaka Lab.
+
+>>>>>>> master
 volatile int32_t* init_prumem()
 {
   volatile int32_t *p;
@@ -105,6 +112,8 @@ volatile struct IrigInfo irig_to_send[IRIG_PACKETS_TO_SEND];
 volatile struct ErrorInfo error_to_send[ERROR_PACKETS_TO_SEND];
 volatile struct TimeoutInfo timeout_packet[TIMEOUT_PACKETS_TO_SEND];
 
+#define PRU_CLOCKSPEED 200000000
+
 unsigned long int offset;
 unsigned long int encd_ind, irig_ind, err_ind;
 clock_t curr_time, encd_time, irig_time, tmp1_time, tmp2_time;
@@ -114,6 +123,7 @@ int tos_write = 0b10100100;
 int tos_read;
 int tos_read_len = sizeof(tos_read);
 
+int operation_time;
 int irig_secs, irig_mins, irig_hours, irig_day, irig_year;
 unsigned long long irig_pruclock;
 

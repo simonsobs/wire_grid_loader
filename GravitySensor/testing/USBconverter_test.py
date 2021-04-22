@@ -8,10 +8,11 @@ import struct;
 #devlocation = '/dev/tty.usbserial-AC01O8QI'; # mac
 #devlocation = '/dev/ttyUSB0'; # mylinux
 #devlocation = '/dev/serial/by-id/usb-FTDI_FT232R_USB_UART_AC01O8QI-if00-port0'; # tandem
-devlocation = '/dev/serial/by-id/usb-FTDI_USB_to_RS-232_422_485_Adapter_DM2CHF1B-if00-port0'; # EasySync ES-U-3001-M at tandem
+#devlocation = '/dev/serial/by-id/usb-FTDI_USB_to_RS-232_422_485_Adapter_DM2CHF1B-if00-port0'; # EasySync ES-U-3001-M at tandem
 #devlocation = '/dev/serial/by-id/usb-FTDI_FT232R_USB_UART_AG0JLDID-if00-port0'; # DTECH USB 2.0 TO RS422/RS485 USB converter for DWL-5000XY S/N 13B50141
-isSingle = True;
-#isSingle = False;
+devlocation = '/dev/serial/by-id/usb-FTDI_FT232R_USB_UART_AB0L75U1-if00-port0'; # DTECH USB 2.0 TO RS422/RS485 USB converter @ Hongo
+#isSingle = True;
+isSingle = False;
 
 stime = 0.1;
 #stime = 1;
@@ -20,7 +21,7 @@ BAUDRATE = 115200; # for DWL5000XY
 SIZE = 12;
 #SIZE = 1600000;
 
-MAXLOOP = 100000;
+MAXLOOP = 10000000;
 
 if len(sys.argv)>1 :
   isSingle = (int)(sys.argv[1]);
@@ -105,10 +106,10 @@ while True :
 read = [];
 #while True :
 for i in range(MAXLOOP) :
-  #sleep(stime);
+  sleep(stime);
   read0 = ser.readline();
   size0 = len(read0);
-  #print('read0 = {}'.format(read0));
+  print('read0 = {}'.format(read0));
   if size0>0 : 
     read0hex = ['0x{}'.format(binascii.hexlify(c)) for c in read0];
     #print( 'read0   ({}) = (unpack) {} / (hex) {} / (raw) {}'.format(size0, struct.unpack('{}c'.format(size0), read0), read0hex, read0 ) );

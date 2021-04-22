@@ -6,6 +6,7 @@ use_moxa = True
 
 # MOXA IP address
 tcp_port =  26 # CH2
+#tcp_port =  29 # CH3
 hostname = socket.gethostname();
 print('hostname : {}'.format(hostname));
 
@@ -15,7 +16,7 @@ if hostname.endswith('hepnet.scphys.kyoto-u.ac.jp'):
 elif hostname == 'cmb-daq01' :
   tcp_ip = '192.168.0.7' # USC540 serial converter
 else :
-  print('WARNING!! There is no suitable hostname option in "pmx_config.py" to switch IP address for the KIKUSUI power supply.')
+  print('WARNING!! There is no suitable hostname option in "dwl_config.py" to switch IP address for the gravity sensor.')
   tcp_ip = '10.10.10.0.1'
   pass
 print('tcp_ip = {}'.format(tcp_ip));

@@ -79,7 +79,6 @@ def powerOn(voltagelim=0., currentlim=0., timeperiod=0., position=0., notmakesur
             writelog(logfile, 'OFF', voltagelim, currentlim, notmakesure=notmakesure)
             pass
         pass
-
     return PMX
 
 

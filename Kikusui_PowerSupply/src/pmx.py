@@ -141,7 +141,7 @@ class PMX:
         self.ser.write(str.encode("VOLT?\n\r"))
         self.wait()
         val = self.ser.readline()
-        msg = "Voltage set = %.3f V\n" % (float(val))
+        msg = "Voltage set = %.3f V" % (float(val))
         if (silent != True):
             print(msg)
 
@@ -155,7 +155,7 @@ class PMX:
         self.ser.write(str.encode("CURR?\n\r"))
         self.wait()
         val = self.ser.readline()
-        msg = "Current set = %.3f A\n" % (float(val))
+        msg = "Current set = %.3f A" % (float(val))
         if (silent != True):
             print(msg)
 
@@ -166,7 +166,7 @@ class PMX:
         if notmakesure == True:
             self.clean_serial()
             self.ser.write(str.encode("OUTP ON\n\r"))
-            msg = "PMX turned ON perhaps\n"
+            msg = "PMX turned ON perhaps"
             print(msg)
             pass
         else:
@@ -176,7 +176,7 @@ class PMX:
             self.ser.write(str.encode("OUTP?\n\r"))
             self.wait()
             val = self.ser.readline()
-            msg = "Output state = %s" % (val)
+            msg = "\nOutput state = %s" % (val)
             print(msg)
             return msg
             pass
@@ -186,7 +186,7 @@ class PMX:
         if notmakesure == True:
             self.clean_serial()
             self.ser.write(str.encode("OUTP OFF\n\r"))
-            msg = "PMX turned OFF perhaps\n"
+            msg = "PMX turned OFF perhaps"
             print(msg)
             pass
         else:
@@ -196,7 +196,7 @@ class PMX:
             self.ser.write(str.encode("OUTP?\n\r"))
             self.wait()
             val = self.ser.readline()
-            msg = "Output state = %s" % (val)
+            msg = "\nOutput state = %s" % (val)
             print(msg)
             return msg
 

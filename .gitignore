@@ -1,7 +1,5 @@
 # exclude files
 .*
-!.gitignore
-!.git
 *~
 *.obj
 */*.obj
@@ -12,9 +10,18 @@
 *.pyc
 __pycache__/
 */__pycache__/
+Encoder/src/rawdata
 aho*
 test*
-!*/test.py
-!test.py
 log/*
 */log/*
+
+!.gitignore
+!.git
+!*/test.py
+!test.py
+!*/testing/
+!*.py
+!*/*.py
+!*/*/*.py
+

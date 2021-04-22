@@ -19,37 +19,36 @@ file_path = '/home/kyoto/nfs/scripts/wire_grid_loader/Encoder/Beaglebone/iamhere
 
 Deg = 360/52000
 feedback_time = [0.181, 0.221, 0.251, 0.281, 0.301]
-feedback_cut = [0.5, 2.5, 3.5, 4.5, 6.0]
+feedback_cut = [0.5, 2.5, 4.5, 6.0, 7.0]
 
 ### main function ###
 def Controls(voltagelim=12.,
             currentlim=3.,
             control_type=False,
-            timeperiod=10,
+            timeperiod=10.,
             num_laps=10,
-            num_feedback=5,
-            stopped_time=10.,
+            num_feedback=8,
+            stopped_time=30.,
             notmakesure=False):
     if voltagelim != 12.:
         print("the rated Voltage of this motor DMN37KA is 12V.\n")
         sys.exit(1)
         pass
+    powerOn(12., 3., 5.01, notmakesure=True)
+    time.sleep(3)
+    start_position = getPosition(file_path)*Deg
+    start_time = time.time()
+    startStr = datetime.fromtimestamp(start_time).strftime('%Y/%m/%d %H:%M:%S')
     if control_type == True: # discrete rotation
-        powerOn(12., 3., 5.01, notmakesure=True)
-        start_position = getPosition(file_path)*Deg
-        start_time = time.time()
-        startStr = datetime.fromtimestamp(start_time).strftime('%Y/%m/%d %H:%M:%S')
         print('start discrete rotation under these condition:\n\
-                number of laps = {}, number of feedbacks = {}\n\
-                positon={}, start at {}\n'.format(num_laps, num_feedback, round(start_position,3), startStr))
+number of laps = {}, number of feedbacks = {}\n\
+positon={}, start at {}\n'.format(num_laps, num_feedback, round(start_position,3), startStr))
         cycle = 1
         for i in range(num_laps):
-            feedbackfunction(3.0, 0.4, num_feedback, notmakesure=True)
+            feedbackfunction(3.0, 0.401, num_feedback, notmakesure=True)
             time.sleep(stopped_time)
             cycle += 1
             pass
-        stop_time = time.time()
-        print(f'measurement time is {stop_time - start_time} sec')
         pass
     else: # continuous rotation
         if(currentlim > 3.):
@@ -57,29 +56,27 @@ def Controls(voltagelim=12.,
             sys.exit(1)
             pass
         else:
-            powerOn(12., 3., 5.01, notmakesure=True)
-            start_position = getPosition(file_path)*Deg
-            start_time = time.time()
-            startStr = datetime.fromtimestamp(start_time).strftime('%Y/%m/%d %H:%M:%S')
             print('start continuous rotation under these condition:\n\
-                    voltagelim={}, currentlim={}, timeperiod={}, makesure_voltage_and_current={}\n\
-                    positon={}, start_time={}\n'.format(voltagelim, currentlim, timeperiod, not notmakesure, round(start_position,3), startStr))
-            powerOn(voltagelim, currentlim, timeperiod, position=start_position)
-            stop_time = time.time()
-            print(f'measurement time is {stop_time - start_time} sec')
+voltagelim={}, currentlim={}, timeperiod={}, makesure_voltage_and_current={}\n\
+positon={}, start_time={}\n'.format(voltagelim, currentlim, timeperiod, not notmakesure, round(start_position,3), startStr))
+            powerOn(voltagelim, currentlim, timeperiod, position=start_position, notmakesure=notmakesure)
             pass
         pass
+    stop_time = time.time()
+    print(f'measurement time is {stop_time - start_time} sec')
     pass
 
 
 def feedbackfunction(operation_current, operation_time, feedback_loop, notmakesure):
     wanted_angle = 22.5
-
     uncertaity_cancel = 3
     absolute_position = np.arange(0,360,wanted_angle)
 
     start_position = getPosition(file_path)*Deg
-    if absolute_position[-1] < start_position + uncertaity_cancel:
+    if (360 < start_position + uncertaity_cancel):
+        goal_position = wanted_angle
+        pass
+    elif absolute_position[-1] < start_position + uncertaity_cancel:
         goal_position = 0
         pass
     else:
@@ -139,6 +136,7 @@ def howlong(position_difference):
 if __name__ == '__main__':
 
     config = parseCmdLine(sys.argv)
+    
     voltagelim = config.voltagelim
     currentlim = config.currentlim
     control_type = config.control_type
@@ -147,6 +145,10 @@ if __name__ == '__main__':
     num_feedback = config.num_feedback
     stopped_time = config.stopped_time
     notmakesure = config.notmakesure
+
+    if timeperiod <= 0.:
+        timeperiod = 10.
+        pass
 
     Controls(voltagelim, currentlim, control_type, timeperiod, num_laps, num_feedback, stopped_time, notmakesure)
     pass
