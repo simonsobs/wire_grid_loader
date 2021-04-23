@@ -157,7 +157,7 @@ time.sleep(2);
 getresponse(ser, '$21=0'); # hard limit switch
 getresponse(ser, '$X');
 
-print("sendCommand(ser,'G91 F10 Y-100') # forward");
+print("sendCommand(ser,'G91 F10 Y100') # forward (motor->motor opposite) @ Hongo");
 #sendCommand(ser,'G91 F10 Y-100') # forward
 #sendCommand(ser,'G91 F10 Y1') # backward
 waitIdle(ser);
