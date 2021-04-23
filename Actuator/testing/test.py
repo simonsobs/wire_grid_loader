@@ -4,8 +4,21 @@ import socket
 import sys
 import time
 
-#devlocation = '/dev/serial/by-id/usb-FTDI_FT232R_USB_UART_AL01WX4M-if00-port0'
-devlocation = '/dev/ttyUSB4'
+devlocation = '/dev/ttyUSB0'
+
+hostname = socket.gethostname();
+print('hostname : {}'.format(hostname));
+if hostname.endswith('hepnet.scphys.kyoto-u.ac.jp'): # @ Kyoto
+    devlocation = '/dev/ttyUSB4'
+elif hostname == 'cmb-daq01' : # @ Tokyo
+    devlocation = '/dev/serial/by-id/usb-FTDI_FT232R_USB_UART_AL01WX4M-if00-port0'
+    #devlocation = '/dev/ttyUSB0'
+else :
+  print('WARNING!! There is no suitable hostname option in "testing.py" to switch device file for the Actuator.')
+  print('--> Temporary set to /dev/ttyUSB0');
+  pass
+print('devlocation = {}'.format(devlocation));
+
 
 # This should be used in each step of sending command & geting response
 def mysleep(sleeptime=0.1):
@@ -144,8 +157,9 @@ time.sleep(2);
 getresponse(ser, '$21=0'); # hard limit switch
 getresponse(ser, '$X');
 
-#sendCommand(ser,'G91 G0 F100000 X300Y-300') # forward
-sendCommand(ser,'G91 G0 F100000 X-300Y300') # backward
+print("sendCommand(ser,'G91 F10 Y-100') # backward @ Hongo");
+#sendCommand(ser,'G91 F10 Y-100') # forward
+#sendCommand(ser,'G91 F10 Y1') # backward
 waitIdle(ser);
 
 
@@ -158,7 +172,7 @@ getresponse(ser, '$G');
 getresponse(ser, '$I');
 getresponse(ser, '$N');
 getresponse(ser, '$C');
-'''
+#'''
 
 # Close the serial communication
-ser.close()
+#ser.close()

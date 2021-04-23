@@ -16,7 +16,7 @@
 #define REFERENCE_COUNT_MAX 62000 // max num_counts of a grid cycle ignoring z-signal
 
 #define isTCP 0 // 0:UDP, 1:TCP
-#define SAVETOBB 1 // 1:True(save file), 0:False(send data to PC)
+#define SAVETOBB 0 // 1:True(save file), 0:False(send data to PC)
 #define SAVETYPE 0 // 0:save all data, 1:save first signal in the encoder pasket, 2:save the first packet of the bufferd packet
 #define SAVEVERBOSE 0
 #define PORT 50007
@@ -52,8 +52,9 @@
 
 //#define IP_ADDRESS "202.13.215.117" // beaglebone
 //#define IP_ADDRESS "192.168.7.2" //beaglebone
-#define IP_ADDRESS "202.13.215.85" //tandem PC
+//#define IP_ADDRESS "202.13.215.85" //tandem PC
 //#define IP_ADDRESS "192.168.7.1" //tandem PC
+#define IP_ADDRESS "133.11.6.73" //wiregridPC @ Kusaka Lab.
 
 volatile int32_t* init_prumem()
 {

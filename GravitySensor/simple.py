@@ -32,16 +32,19 @@ def test(DWL=None, isSingle=True) :
     ser.flushInput()
     print(msg);
 
-    command=b"\x06\x24\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00";
-    ser.write(command);
+    #command=b"\x06\x24\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00";
+    #ser.write(command);
     sleep(1)
 
 
     if isSingle :
       command=b"\x06\x01\x01\xAA\x00\x00\x00\x00\x00\x00\x00\x00"; # for single axis
+      #print('set ',command);
     else :
       command=b"\x06\x01\x02\xAA\x00\x00\x00\x00\x00\x00\x00\x00"; # for dual axis
+      #command=b"\x06\x01\x02\x00\x00\x00\x00\x00"; # for dual axis
       pass;
+    print(command);
 
     WRITELOOP    = 100 ; # loop of writing command
     MAXLOOP      = 10 ; # max. loop of series of write(read command) -> read()
@@ -54,14 +57,14 @@ def test(DWL=None, isSingle=True) :
             ser.write(command);
             pass;
       
-        #print('Waiting to read');
-        #sleep(0.1);
+        print('Waiting to read');
+        sleep(0.1);
       
         print('Read');
         for m in range(MAXREADLOOP) :
             print('read');
-            read0 = ser.readexactly(12);
-            #read0 = ser.readline();
+            #read0 = ser.readexactly(12);
+            read0 = ser.readline();
             size0 = len(read0);
             #print( 'read ({}) = {}...'.format(len(read0) , struct.unpack('{}c'.format(len(read0)), read0) ) );
             print( 'read ({}) = {}'.format(len(read0) , read0 ) );
