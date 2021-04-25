@@ -19,7 +19,8 @@
 
 //#define IP_ADDRESS "202.13.215.85" // tandem PC
 //#define IP_ADDRESS "202.13.215.223" // wire grid PC at Kyoto
-#define IP_ADDRESS "192.168.0.2"// wire grid PC at Tokyo via local etha
+//#define IP_ADDRESS "192.168.0.2"// wire grid PC at Tokyo via local ethernet
+#define IP_ADDRESS "133.11.6.73" // wiregridPC in Kusaka Lab. network
 
 #define SAVETOBB 0 // 1:True(save file), 0:False(send data to PC)
 #define isTCP 0 // 0:UDP, 1:TCP (Only when SAVETOBB is 0.)
@@ -55,13 +56,7 @@
 #define ENCODER_TIMEOUT_FLAG 1
 #define IRIG_TIMEOUT_FLAG 2
 
-//#define IP_ADDRESS "202.13.215.117" // beaglebone
-//#define IP_ADDRESS "192.168.7.2" //beaglebone
-//#define IP_ADDRESS "202.13.215.85" //tandem PC
-//#define IP_ADDRESS "192.168.7.1" //tandem PC
-#define IP_ADDRESS "133.11.6.73" //wiregridPC @ Kusaka Lab.
 
->>>>>>> master
 volatile int32_t* init_prumem()
 {
   volatile int32_t *p;
