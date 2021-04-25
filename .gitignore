@@ -21,6 +21,7 @@ log/*
 !*/test.py
 !test.py
 !*/testing/
+!*/*/testing/
 !*.py
 !*/*.py
 !*/*/*.py
