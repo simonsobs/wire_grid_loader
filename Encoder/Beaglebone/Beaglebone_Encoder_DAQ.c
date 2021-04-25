@@ -61,7 +61,6 @@
 //#define IP_ADDRESS "192.168.7.1" //tandem PC
 #define IP_ADDRESS "133.11.6.73" //wiregridPC @ Kusaka Lab.
 
->>>>>>> master
 volatile int32_t* init_prumem()
 {
   volatile int32_t *p;
