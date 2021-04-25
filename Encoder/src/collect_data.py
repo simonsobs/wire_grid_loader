@@ -159,7 +159,7 @@ def collect_data(outfilename, measurement_time=default_time) :
 
     stop_time = time.time()
     if(stop_time - start_time >= measurement_time):
-      print(f'{measurement_time} have passed and stopped UDP')
+      print(f'{measurement_time} sec have passed and stopped UDP')
       break
 
     pass; # end of ``while True :``
@@ -176,16 +176,14 @@ def collect_data(outfilename, measurement_time=default_time) :
 def parseCmdLine(args):
     from optparse import OptionParser
     parser = OptionParser()
+    default_output = 'aho';
     parser.add_option('-t', '--time'   , dest='timeperiod', help='measurement time with UDP', type = float, default=default_time)
+    parser.add_option('-o', '--output' , dest='outname', help='Output file prefix. The output files are <outname>_encoder/irig/error/timeout.dat (default:{})'.format(default_output), type = str, default=default_output)
     (config, args) = parser.parse_args(args)
     return config
 
 if __name__ == '__main__' :
 
   config = parseCmdLine(sys.argv)
-  measurement_time = config.timeperiod
-
-  outfilename = 'aho';
-  if len(sys.argv) > 1 : outfilename = sys.argv[1];
-  collect_data(outfilename,measurement_time);
+  collect_data(config.outname,config.timeperiod);
   pass;
