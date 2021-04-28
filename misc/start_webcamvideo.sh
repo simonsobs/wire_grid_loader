@@ -104,9 +104,6 @@ vlc v4l:// :v4l-vdev="/dev/video0"  \
 	--v4l2-sharpness $SHARPNESS \
 	--rotate-angle $ROTATE \
 
-	# Alternative option for rotation
-	#--rotate-angle $ROTATE \
-	#--v4l2-rotate $ROTATE \
-
+    # Alternative option for rotation
 	#--no-autoscale \
-	#--aspect-ratio 16:9
+	#--aspect-ratio 16:9 \
