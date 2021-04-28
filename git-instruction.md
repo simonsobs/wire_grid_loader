@@ -244,6 +244,37 @@ Here, the situation is that you want to create a new git repository and uploaded
   \* This will not require access authorization or user account. But, if you use the *git@github.com:simonsobs/wire_grid_loader.git*, 
   you need to do account setting on your machine.
 
+
+## Tags
+You can make tags on a specific commitment.
+
+### Create tag
+At a state in which you want to tag,
+
+        git tag <TAG_NAME> -m "<COMMENT>"
+
+In this library, please use a tag name of "vX.Y". (X, Y: numbers)
+
+Please don't forget push your tags to remote repository(below).
+
+### Push tags to remote repository
+
+    git push --tags
+
+### List up tag
+
+    git tag -l
+
+### Check a specific tag
+
+    git tag -v <TAG_NAME>
+
+### Remove a tag
+
+    git tag -d <TAG_NAME>
+
+
+
 ## Customization
 ### ssh setting
 Ref. : https://docs.github.com/en/github/authenticating-to-github/connecting-to-github-with-ssh
