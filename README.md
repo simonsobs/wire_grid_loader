@@ -1,6 +1,6 @@
 # wire\_grid\_loader
 This scripts are for controlling the wire grid loader.
-** Please don't push output datafiles to the git repositry!! **
+**Please don't push output datafiles to the git repositry!!**
 
 ## Encoder
 Scripts to read the encoder data (position of the wire)
