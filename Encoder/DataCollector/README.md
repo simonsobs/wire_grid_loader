@@ -2,7 +2,7 @@
 ## collect\_data.py
 This script is to record data from Beaglebone via ethernet (UDP or TCP).
 
-Usage: python collect\_data.py -t  \<TIME\_PERIOD\> -o \<OUTPUT\_FILENAME\_PREFIX\>
+Usage: `python collect\_data.py -t  \<TIME\_PERIOD\> -o \<OUTPUT\_FILENAME\_PREFIX\>`
 
 ### Preparation
 - Open the port of 50007 to read coming data in your server machine who record the data
