@@ -6,6 +6,8 @@
 *.dat
 */*.dat
 */*.out
+*/*.o
+*/*/*.o
 */*.pyc
 *.pyc
 __pycache__/

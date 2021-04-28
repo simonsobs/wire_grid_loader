@@ -46,6 +46,15 @@ Requirements: "requests", "pytz" library in python
 Communication: LAN (Synacess NP05B should be directly connected to PC via LAN.)
 
 
+## misc
+
+For setup @ Kusaka Lab.
+- start\_webcamvideo.sh : To start web camera @ Kusaka Lab.
+- iwt120ctl : Controller of the alarm for remote control
+    - If you want rotate the wire grid, please run alarm.sh: `./alarm.sh`, which makes 3 second alarm.
+
+
+
 
 # Tags
 ### v1.0
