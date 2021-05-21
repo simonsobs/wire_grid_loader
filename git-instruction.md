@@ -1,10 +1,13 @@
-# Git Instruction
+Git Instruction
+===============
 
 Github help web page: https://docs.github.com/en/github
 
 Git help web page: https://git-scm.com/book/en/v2
 
-## Overview of git
+Overview of git
+---------------
+
 There are three stages to keep youre codes.
 - **A**: Local codes (in your PC)
 - **B**: Local branch in the local repository (in your PC)
@@ -21,7 +24,9 @@ you need to do 3 steps.
 You can create multiple branches in **B** and **C**.  
 However, usually you just need to use ``master`` branch.
 
-## Common git commands
+Common git commands
+-------------------
+
 Ref.: https://docs.github.com/en/github/using-git/using-common-git-commands
 
 ### Upload your local change in **A** to the remote branch(**C**)
@@ -120,14 +125,20 @@ The ``push`` command does the following 2 steps;
 - After retrieving the remote branch, you are at the new branch at local
 
 
-## Check the log
+Check the log
+---------------
+
 - ``git log``
 - ``git status``
 - ``git reflog``
 
 
 
-## How ot use branch
+How ot use branch
+-------------------
+
+### General commands to control branch
+
 - Create branch ``<BRANCH NAME>``
 
         git branch <BRANCH NAME>
@@ -166,7 +177,11 @@ The ``push`` command does the following 2 steps;
         git push -u origin <REMOTE BRANCH>
 
 
-## Ignore changes in the working directories & pull remote repository
+
+Ignore or reset changes
+-----------------------
+
+### Ignore changes in the working directories & pull remote repository
 - Get update in the remote repository
 
         git fetch --all
@@ -179,7 +194,7 @@ The ``push`` command does the following 2 steps;
 
         git pull
     
-## Ignore action at the local repository
+### Ignore action at the local repository
 - check the all the actions at the local
 
         git reflog
@@ -192,13 +207,19 @@ The ``push`` command does the following 2 steps;
   --hard means the local files(**A**) also will be changed.
   Without --hard, the change is occurred only in the local repository(**B**).
 
-## Remove local files from git but do not remove the files in local
+### Remove local files from git but do not remove the files in local
 
 	     git rm -r --cached <file name>
 
+### Reset *git add* command
+	
+		git restore --staged <file name>
 
-# Creating New Repository & Setting Git
-## Creating new repository
+
+Creating New Repository & Setting Git
+---------------------------------------
+
+### Creating new repository
 Here, the situation is that you want to create a new git repository and uploaded exsisting codes in your PC to the new repository.    
 
 1. Create a new repository in the simons observatory git hub account in git hub web site: https://github.com/simonsobs
@@ -227,7 +248,7 @@ Here, the situation is that you want to create a new git repository and uploaded
 
     ``<GIT REPOSITORY ADDRESS>`` is git@github.com:simonsobs/wire_grid_loader.git for the wire_grid_loader repository.
 
-## Clone this *wire_grid_loader* repository into your local machine
+### Clone this *wire_grid_loader* repository into your local machine
 1. If your machine does not have git nor ssh, please install them. In a linux machine, 
     
         sudo apt install git ssh
@@ -245,7 +266,9 @@ Here, the situation is that you want to create a new git repository and uploaded
   you need to do account setting on your machine.
 
 
-## Tags
+Tags
+-----
+
 You can make tags on a specific commitment.
 
 ### Create tag
@@ -275,7 +298,9 @@ Please don't forget push your tags to remote repository(below).
 
 
 
-## Customization
+Customization
+----------------
+
 ### ssh setting
 Ref. : https://docs.github.com/en/github/authenticating-to-github/connecting-to-github-with-ssh
         

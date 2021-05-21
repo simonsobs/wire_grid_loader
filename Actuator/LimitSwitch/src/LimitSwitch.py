@@ -7,7 +7,7 @@ import os
 import binascii;
 import struct;
 
-from src.log_limitswitch import Log;
+from .log_limitswitch import Log;
 
 class LimitSwitch:
     """

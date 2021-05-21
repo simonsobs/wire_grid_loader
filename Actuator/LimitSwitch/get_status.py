@@ -32,13 +32,14 @@ def getStatus(LS=None, pin=None) :
                 pass;
         else:
             print('WARNING! Extra output, try again. Output = {}'.format(outputs))
+            return LS, outputs;
             pass;
     else :
         msg = "%s = %d" % (pin, outputs);
         print(msg);
         pass;
 
-    return LS;
+    return LS, outputs;
 
 ### parseCmdLine() ###
 def parseCmdLine(args):
@@ -59,7 +60,7 @@ if __name__ == '__main__':
 
     parseconfig = parseCmdLine(sys.argv);
     if parseconfig :
-        LS = getStatus(pin=parseconfig.pin);
-        del LS;
+        LS, ret = getStatus(pin=parseconfig.pin);
+        del LS, ret;
         pass;
     pass;

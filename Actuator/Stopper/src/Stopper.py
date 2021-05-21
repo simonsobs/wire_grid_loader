@@ -7,7 +7,7 @@ import os
 import binascii;
 import struct;
 
-from src.log_stopper import Log;
+from .log_stopper import Log;
 
 class Stopper:
     """
@@ -43,20 +43,20 @@ class Stopper:
     # If pinname = None, return the on/off for all the pins
     def get_onoff(self, pinname=None):
         if pinname is None :
-            ret =  [ 0 if GPIO.input(self.pinDict[pinname0]) else 1 for pinname0 in self.pinnames ];
+            ret =  [ GPIO.input(self.pinDict[pinname0]) for pinname0 in self.pinnames ];
         elif isinstance(pinname, list): 
             if not all([(pinname0 in self.pinnames) for pinname0 in pinname ]) :
                 print('ERROR! There is no GPIO pin names.');
                 print('    Assigned pin names = {}'.format(self.pinnames));
                 print('    Asked pin names    = {}'.format(pinname));
                 return -1;
-            ret =  [ 0 if GPIO.input(self.pinDict[pinname0]) else 1 for pinname0 in pinname ];
+            ret =  [ GPIO.input(self.pinDict[pinname0]) for pinname0 in pinname ];
         else :
             if not (pinname in self.pinnames) :
                 print('ERROR! There is no GPIO pin name of {}.'.format(pinname));
                 print('    Assigned pin names = {}'.format(self.pinnames));
                 return -1;
-            ret =  0 if GPIO.input(self.pinDict[pinname]) else 1;
+            ret =  GPIO.input(self.pinDict[pinname]);
             pass;
         return ret;
 
@@ -95,13 +95,11 @@ class Stopper:
 
     def set_allon(self) :
         print('Set ON for all of the stoppers.');
-        self.set_onoff(1,None);
-        return 0;
+        return self.set_onoff(1,None);
 
     def set_alloff(self) :
         print('Set OFF for all of the stoppers.');
-        self.set_onoff(0,None);
-        return 0;
+        return self.set_onoff(0,None);
 
     # Keep logging until stop=True
     def start_logging(self, stop=False):

@@ -4,6 +4,7 @@ import socket
 import os, sys
 import time
 
+'''
 # Limit switch/Stopper modules
 this_dir = os.path.dirname(__file__)
 sys.path.append(os.path.join(
@@ -15,6 +16,7 @@ from Stopper import stopper_config as st_config
 
 limitswitch =  LimitSwitch.LimitSwitch(ls_config.GPIOpinInfo, logdir='./log');
 stopper = Stopper.Stopper(st_config.GPIOpinInfo, logdir='./log');
+'''
 
 devlocation = '/dev/ttyUSB0'
 
@@ -157,6 +159,7 @@ def move(serial, distance, speedrate=0.1) :
     serial.write(('$J=G91 F{:d} Y{:d}'.format(speed,distance)+'\n').encode());
     mysleep();
     return 0;
+'''
 # Simple forward moving (to opposite side of motor)
 def forward(serial, distance, speedrate=0.1, verbose=1) :
     if distance < 0 : distance = abs(distance);
@@ -189,46 +192,8 @@ def backward(serial, distance, speedrate=0.1, verbose=1) :
     hold(serial);
     release(serial);
     return 0;
+'''
 
-# forward to the opposite edge
-def forwardEdge(serial, verbose=1) :
-    # release stopper
-    if stopper.set_allon() < 0 : 
-        print('ERROR!: Stopper set_allon() --> STOP');
-        return  -1;
-    if stopper.set_allon() < 0 : 
-        print('ERROR!: Stopper set_allon() --> STOP');
-        return  -1;
-
-    # forward a bit
-    forward(serial, 10, speedrate=0.1, verbose=verbose);
-
-    # check limitswitch
-    LSL1,LSR1 = limitswitch.get_onoff(pinname=['LSL1','LSR1']);
-    if LSL1==1 or LSR1==1 :
-        print('ERROR!: The limitswitch on motor side is NOT OFF after moving forward without stopper. --> STOP');
-        return -1;
-    # power off stopper
-    if stopper.set_alloff() < 0 : 
-        print('ERROR!: Stopper set_alloff() --> STOP');
-        return  -1;
-    if stopper.set_alloff() < 0 : 
-        print('ERROR!: Stopper set_alloff() --> STOP');
-        return  -1;
-
-    # main forward
-    forward(serial, 400, speedrate=1, verbose=verbose);
-
-    # last forward
-    forward(serial, 100, speedrate=0.1, verbose=verbose);
-
-    # check limitswitch
-    LSL2,LSR2 = limitswitch.get_onoff(pinname=['LSL2','LSR2']);
-    if LSL2==0 and LSR2==0 :
-        print('ERROR!: The limitswitch on opposite side is NOT ON after forwardEdge. --> STOP');
-        return -1;
-
-    return 0;
 
 # Hold with decelerating
 def hold(serial) :

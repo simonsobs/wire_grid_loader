@@ -30,7 +30,7 @@ Communication: RS422 serial communication via the serial converter
 ## Actuator (Blackbox)
 Scripts to control a linear actuator including stopper and limit switch
 
-Requirements: "pyserial", "pytz", "Adafruid\_BBIO" library in python
+Requirements: "pyserial", "pytz", "Adafruit\_BBIO" library in python
 
 Communication: USB (Blackbox has a RS232 serial converter inside itself.)
 
