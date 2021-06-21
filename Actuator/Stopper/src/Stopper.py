@@ -7,7 +7,7 @@ import os
 import binascii;
 import struct;
 
-from src.log_stopper import Log;
+from .log_stopper import Log;
 
 class Stopper:
     """
@@ -43,22 +43,62 @@ class Stopper:
     # If pinname = None, return the on/off for all the pins
     def get_onoff(self, pinname=None):
         if pinname is None :
-            ret =  [ 0 if GPIO.input(self.pinDict[pinname0]) else 1 for pinname0 in self.pinnames ];
+            ret =  [ GPIO.input(self.pinDict[pinname0]) for pinname0 in self.pinnames ];
         elif isinstance(pinname, list): 
             if not all([(pinname0 in self.pinnames) for pinname0 in pinname ]) :
-                print('ERROR! There is no GPIO pin names.');
-                print('    Assigned pin names = {}'.format(self.pinnames));
-                print('    Asked pin names    = {}'.format(pinname));
+                print('Stopper:get_onoff(): ERROR! There is no GPIO pin names.');
+                print('Stopper:get_onoff():     Assigned pin names = {}'.format(self.pinnames));
+                print('Stopper:get_onoff():     Asked pin names    = {}'.format(pinname));
                 return -1;
-            ret =  [ 0 if GPIO.input(self.pinDict[pinname0]) else 1 for pinname0 in pinname ];
+            ret =  [ GPIO.input(self.pinDict[pinname0]) for pinname0 in pinname ];
         else :
             if not (pinname in self.pinnames) :
-                print('ERROR! There is no GPIO pin name of {}.'.format(pinname));
-                print('    Assigned pin names = {}'.format(self.pinnames));
+                print('Stopper:get_onoff(): ERROR! There is no GPIO pin name of {}.'.format(pinname));
+                print('Stopper:get_onoff():     Assigned pin names = {}'.format(self.pinnames));
                 return -1;
-            ret =  0 if GPIO.input(self.pinDict[pinname]) else 1;
+            ret =  GPIO.input(self.pinDict[pinname]);
             pass;
         return ret;
+
+    def get_pinname(self, pinname) :
+        pinnames = [];
+        if pinname is None : 
+            pinnames = self.pinnames;
+        elif isinstance(pinname, list):
+            if not all([(pinname0 in self.pinnames) for pinname0 in pinname ]) :
+                print('Stopper:get_pinname(): ERROR! There is pin names.');
+                print('Stopper:get_pinname():     Assigned pin names = {}'.format(self.pinnames));
+                print('Stopper:get_pinname():     Asked pin names    = {}'.format(pinname));
+                return -1;
+            pinnames = pinname;
+        else :
+            if not (pinname in self.pinnames) :
+                print('Stopper:get_pinname(): ERROR! There is no pin name \"{}\".'.format(pinname));
+                print('Stopper:get_pinname():     Assigned pin names = {}'.format(self.pinnames));
+                return -1;
+        return pinnames;
+
+    def get_label(self, pinname) :
+        indices = [];
+        if pinname is None :
+            return self.pinlabels;
+        elif isinstance(pinname, list):
+            if not all([(pinname0 in self.pinnames) for pinname0 in pinname ]) :
+                print('Stopper:get_label(): ERROR! There is pin names.');
+                print('Stopper:get_label():     Assigned pin names = {}'.format(self.pinnames));
+                print('Stopper:get_label():     Asked pin names    = {}'.format(pinname));
+                return -1;
+            indices = [ self.pinIndex[pinname0] for pinname0 in pinname ];
+        else :
+            if not (pinname in self.pinnames) :
+                print('Stopper:get_label(): ERROR! There is no pin name \"{}\".'.format(pinname));
+                print('Stopper:get_label():     Assigned pin names = {}'.format(self.pinnames));
+                return -1;
+            indices = [self.pinIndex[pinname]];
+            pass;
+        print('Stopper:get_label(): pin indices = {}'.format(indices));
+        return [ self.pinlabels[index] for index in indices ];
+
 
     # Set ON/OFF of the pinname
     # pinname is a string of pin name or list of pin names
@@ -71,19 +111,19 @@ class Stopper:
             setpinnames = self.pinnames;
         elif isinstance(pinname, list): 
             if not all([(pinname0 in self.pinnames) for pinname0 in pinname ]) :
-                print('ERROR! There is no GPIO pin names.');
-                print('    Assigned pin names = {}'.format(self.pinnames));
-                print('    Asked pin names    = {}'.format(pinname));
+                print('Stopper:set_onoff(): ERROR! There is no GPIO pin names.');
+                print('Stopper:set_onoff():     Assigned pin names = {}'.format(self.pinnames));
+                print('Stopper:set_onoff():     Asked pin names    = {}'.format(pinname));
                 return -1;
             setpinnames = self.pinname;
         else :
             if not (pinname in self.pinnames) :
-                print('ERROR! There is no GPIO pin name of {}.'.format(pinname));
-                print('    Assigned pin names = {}'.format(self.pinnames));
+                print('Stopper:set_onoff(): ERROR! There is no GPIO pin name of {}.'.format(pinname));
+                print('Stopper:set_onoff():     Assigned pin names = {}'.format(self.pinnames));
                 return -1;
             setpinnames = [pinname];
             pass;
-        print('Set {} for the pins: {}'.format('ON' if onoff else 'OFF', setpinnames));
+        print('Stopper:set_onoff(): Set {} for the pins: {}'.format('ON' if onoff else 'OFF', setpinnames));
         for name in setpinnames : 
             onoff_bool = True if onoff else False;
             GPIO.output(self.pinDict[name],onoff_bool);
@@ -94,18 +134,16 @@ class Stopper:
         return 0;
 
     def set_allon(self) :
-        print('Set ON for all of the stoppers.');
-        self.set_onoff(1,None);
-        return 0;
+        print('Stopper:set_allon(): Set ON for all of the stoppers.');
+        return self.set_onoff(1,None);
 
     def set_alloff(self) :
-        print('Set OFF for all of the stoppers.');
-        self.set_onoff(0,None);
-        return 0;
+        print('Stopper:set_alloff(): Set OFF for all of the stoppers.');
+        return self.set_onoff(0,None);
 
     # Keep logging until stop=True
     def start_logging(self, stop=False):
-        print('Start logging about stopper outputs.');
+        print('Stopper:start_logging(): Start logging about stopper outputs.');
         while stop is False :
             #print('write log');
             onoffs = self.get_onoff();

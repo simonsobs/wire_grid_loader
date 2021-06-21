@@ -14,13 +14,14 @@ if sys.version_info.major == 2:
 from src import Stopper as Stopper;
 import stopper_config as config;
 
-def on(stopper=None) :
+def get_onoff(stopper=None) :
     # Initialize Stopper reader
     if stopper is None : stopper = Stopper.Stopper(config.GPIOpinInfo, logdir='./log');
-    stopper.set_allon();
+    ret = stopper.get_onoff();
+    print(ret);
     return stopper;
 
 if __name__=='__main__' :
-    stopper = on();
+    stopper = get_onoff();
     del stopper;
     pass;
