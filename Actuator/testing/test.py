@@ -16,13 +16,16 @@ from Stopper import stopper_config as st_config
 limitswitch =  LimitSwitch.LimitSwitch(ls_config.GPIOpinInfo, logdir='./log');
 stopper = Stopper.Stopper(st_config.GPIOpinInfo, logdir='./log');
 
-devlocation = '/dev/ttyUSB0'
+#devlocation = '/dev/ttyUSB0'
+#devlocation = '/dev/ttyUSB1'
+devlocation = '/dev/serial/by-id/usb-FTDI_FT232R_USB_UART_AL01WX4M-if00-port0'
+#devlocation = '/dev/ttyBlackbox'
 
 hostname = socket.gethostname();
 print('hostname : {}'.format(hostname));
 if hostname.endswith('hepnet.scphys.kyoto-u.ac.jp'): # @ Kyoto
     devlocation = '/dev/ttyUSB4'
-elif hostname == 'cmb-daq01' : # @ Tokyo
+elif hostname == 'cmb-daq01' or hostname == 'beaglebone' : # @ Tokyo
     devlocation = '/dev/serial/by-id/usb-FTDI_FT232R_USB_UART_AL01WX4M-if00-port0'
     #devlocation = '/dev/ttyUSB0'
 else :
@@ -217,10 +220,10 @@ def forwardEdge(serial, verbose=1) :
         return  -1;
 
     # main forward
-    forward(serial, 400, speedrate=1, verbose=verbose);
+    forward(serial, 700, speedrate=1, verbose=verbose);
 
     # last forward
-    forward(serial, 100, speedrate=0.1, verbose=verbose);
+    forward(serial, 300, speedrate=0.1, verbose=verbose);
 
     # check limitswitch
     LSL2,LSR2 = limitswitch.get_onoff(pinname=['LSL2','LSR2']);
