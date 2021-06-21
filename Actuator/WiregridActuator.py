@@ -374,7 +374,7 @@ def make_parser(parser = None):
     if parser is None:
         parser = argparse.ArgumentParser()
 
-    pgroup = parser.add_argument_group('Agent Options')
+    pgroup = parser.add_argument_group('WiregridActuator Options')
     pgroup.add_argument('--interval-time', dest='interval_time', type=float, default=1,
                         help='')
     pgroup.add_argument('--actuator-dev', dest='actuator_dev', type=str, default='/dev/ttyUSB0',
