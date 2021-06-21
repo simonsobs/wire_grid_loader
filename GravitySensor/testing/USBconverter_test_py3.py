@@ -1,8 +1,7 @@
-#!/bin/env python
+#!/bin/env python3
 import sys;
 import serial;
 from time import sleep;
-import binascii;
 import struct;
        
 #devlocation = '/dev/tty.usbserial-AC01O8QI'; # mac
@@ -22,6 +21,8 @@ SIZE = 12;
 #SIZE = 1600000;
 
 MAXLOOP = 10000000;
+
+
 
 if len(sys.argv)>1 :
   isSingle = (int)(sys.argv[1]);
@@ -61,7 +62,7 @@ command=b"\x06\x24\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00";
 #command=b"\x06\x24\x00\x00\x00\x00\x00\x00";
 
 '''
-for i in xrange(10) :
+for i in range(10) :
   ser.write(command);
   sleep(stime);
   pass;
@@ -69,7 +70,7 @@ for i in xrange(10) :
 ser.write(command);
 sleep(stime);
 while True :
-  if ser.inWaiting > 0 : break;
+  if ser.inWaiting() > 0 : break;
   pass;
 
 
@@ -89,7 +90,7 @@ else :
   pass;
 
 """
-for i in xrange(10) :
+for i in range(10) :
 #while True :
   print('send command');
   ser.write(command);
@@ -101,7 +102,7 @@ sleep(stime);
 
 print('Read');
 while True :
-  if ser.inWaiting > 0 : break;
+  if ser.inWaiting() > 0 : break;
   pass;
 read = [];
 #while True :
@@ -111,7 +112,7 @@ for i in range(MAXLOOP) :
   size0 = len(read0);
   print('read0 = {}'.format(read0));
   if size0>0 : 
-    read0hex = ['0x{}'.format(binascii.hexlify(c)) for c in read0];
+    read0hex = ['{}'.format(hex(c)) for c in read0];
     #print( 'read0   ({}) = (unpack) {} / (hex) {} / (raw) {}'.format(size0, struct.unpack('{}c'.format(size0), read0), read0hex, read0 ) );
     add = read0hex ;
     read += add;
@@ -179,4 +180,3 @@ else :
  
 print('close');
 ser.close();
-

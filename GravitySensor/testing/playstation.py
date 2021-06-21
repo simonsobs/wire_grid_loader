@@ -1,6 +1,7 @@
-import sys
+import GravitySensorDetection as gsd
 
-print(len(sys.argv));
-print(sys.argv);
-#isSingle = (int)(sys.argv[1]);
-#print(isSingle);
+[a, b] = gsd.twoaxdtc()
+c = gsd.oneaxdtc()
+print("angle X =",a)
+print("angle Y =",b)
+print("1ax mode angle=", c)
