@@ -5,8 +5,8 @@ from src.Actuator    import Actuator
 from src.log_actuator    import log as log_actuator
 from LimitSwitch.src.LimitSwitch import LimitSwitch
 from Stopper.src.Stopper     import Stopper
-from LimitSwitch import limitswitch_config.GPIOpinInfo as ls_config
-from Stopper import stopper_config.GPIOpinInfo as st_config
+from LimitSwitch import limitswitch_config
+from Stopper import stopper_config
 
 class WiregridActuator:
     def __init__(self, actuator_dev='/dev/ttyUSB0', sleep=0.10, verbose=0):
