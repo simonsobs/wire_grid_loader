@@ -22,7 +22,11 @@
 //#define IP_ADDRESS "192.168.0.2"// wire grid PC at Tokyo via local ethernet
 #define IP_ADDRESS "133.11.6.73" // wiregridPC in Kusaka Lab. network
 
+<<<<<<< HEAD
 #define SAVETOBB 0 // 1:True(save file), 0:False(send data to PC)
+=======
+#define SAVETOBB 1 // 1:True(save file), 0:False(send data to PC)
+>>>>>>> 50c329bac35f20a92b4787dcf119f424aeb2a2be
 #define isTCP 0 // 0:UDP, 1:TCP (Only when SAVETOBB is 0.)
 #define SAVEVERBOSE 0
 #define PORT 50007
@@ -55,7 +59,11 @@
 #define IRIG_TIMEOUT 10
 #define ENCODER_TIMEOUT_FLAG 1
 #define IRIG_TIMEOUT_FLAG 2
+<<<<<<< HEAD
 
+=======
+#define PRU_CLOCKSPEED 200000000
+>>>>>>> 50c329bac35f20a92b4787dcf119f424aeb2a2be
 
 volatile int32_t* init_prumem()
 {
@@ -107,8 +115,6 @@ volatile struct IrigInfo irig_to_send[IRIG_PACKETS_TO_SEND];
 volatile struct ErrorInfo error_to_send[ERROR_PACKETS_TO_SEND];
 volatile struct TimeoutInfo timeout_packet[TIMEOUT_PACKETS_TO_SEND];
 
-#define PRU_CLOCKSPEED 200000000
-
 unsigned long int offset;
 unsigned long int encd_ind, irig_ind, err_ind;
 clock_t curr_time, encd_time, irig_time, tmp1_time, tmp2_time;
@@ -121,8 +127,11 @@ int tos_read_len = sizeof(tos_read);
 int operation_time;
 int irig_secs, irig_mins, irig_hours, irig_day, irig_year;
 unsigned long long irig_pruclock;
+<<<<<<< HEAD
 
 #define PRU_CLOCKSPEED 200000000
+=======
+>>>>>>> 50c329bac35f20a92b4787dcf119f424aeb2a2be
 
 char ifilename0[] = "Encoder1.bin";
 char ifilename1[] = "Encoder2.bin";
@@ -223,7 +232,11 @@ int main(int argc, char **argv)
   FILE *encoder_position;
   FILE *measurement_time; //test
   time_t measurement_start, measurement_stop;
+<<<<<<< HEAD
   unsigned long int position;
+=======
+  unsigned long position;
+>>>>>>> 50c329bac35f20a92b4787dcf119f424aeb2a2be
   if(!SAVETOBB){
 
     if(isTCP){
@@ -274,7 +287,6 @@ int main(int argc, char **argv)
   curr_time = clock();
   int i, j = 0;
   unsigned long long int timer_count;
-  unsigned long registered_position = 0;
   double usec_t1, usec_t2 = usec_timestamp();
 
   printf("Initializing DAQ\n");

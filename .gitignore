@@ -1,19 +1,21 @@
 # exclude files
 .*
-!.gitignore
-!.git
 *~
 *.obj
 */*.obj
 *.dat
 */*.dat
 */*.out
+*/*.o
+*/*/*.o
 */*.pyc
 *.pyc
 __pycache__/
 */__pycache__/
+Encoder/src/rawdata
 aho*
 test*
+<<<<<<< HEAD
 !*/*/*/testing/
 !*/*/testing/
 !*/testing/
@@ -22,5 +24,18 @@ test*
 !*/testing/*.py
 !*/test.py
 !test.py
+=======
+>>>>>>> 50c329bac35f20a92b4787dcf119f424aeb2a2be
 log/*
 */log/*
+
+!.gitignore
+!.git
+!*/test.py
+!test.py
+!*/testing/
+!*/*/testing/
+!*.py
+!*/*.py
+!*/*/*.py
+
