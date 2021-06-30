@@ -13,6 +13,8 @@
 __pycache__/
 */__pycache__/
 Encoder/src/rawdata
+Encoder/Beaglebone/*.bin
+Encoder/Beaglebone/Beaglebone_Encoder_DAQ
 aho*
 test*
 !*/*/*/testing/
