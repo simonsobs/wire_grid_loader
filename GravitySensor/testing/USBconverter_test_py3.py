@@ -10,8 +10,8 @@ import struct;
 #devlocation = '/dev/serial/by-id/usb-FTDI_USB_to_RS-232_422_485_Adapter_DM2CHF1B-if00-port0'; # EasySync ES-U-3001-M at tandem
 #devlocation = '/dev/serial/by-id/usb-FTDI_FT232R_USB_UART_AG0JLDID-if00-port0'; # DTECH USB 2.0 TO RS422/RS485 USB converter for DWL-5000XY S/N 13B50141
 devlocation = '/dev/serial/by-id/usb-FTDI_FT232R_USB_UART_AB0L75U1-if00-port0'; # DTECH USB 2.0 TO RS422/RS485 USB converter @ Hongo
-#isSingle = True;
-isSingle = False;
+isSingle = True;
+#isSingle = False;
 
 stime = 0.1;
 #stime = 1;
@@ -58,7 +58,7 @@ ser.reset_output_buffer();
 # read input device information (for LakeShore Model 218 temperature monitor)
 print('Initialization');
 
-command=b"\x06\x24\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00";
+command=b"\x06\x24\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00"; #initialization command
 #command=b"\x06\x24\x00\x00\x00\x00\x00\x00";
 
 '''
@@ -124,7 +124,7 @@ for i in range(MAXLOOP) :
       print('read = {}'.format(read));
       if read[0:2] == ['0x61','0x11'] : break;
       else                            : read = read[1:];
-      break;
+      break; #I think this "break" should be replaced by "pass" but it doesn't work
     else :
       print('read = {}'.format(read));
       if read[0:2] == ['0x61','0x22'] : break;
@@ -149,12 +149,13 @@ if isSingle :
   #print( (nums[1]<<16)/1e+4 , (nums[2]<<8)/1e+4 , (nums[3])/1e+4 );
   #angleX = (nums[0]<<16) + (nums[1]<<8) + (nums[2]) ;
   angleX = (nums[0]<<24) + (nums[1]<<16) + (nums[2]<<8) + (nums[3]) ;
-  angleX = (angleX - 1800000) / 10000.;
+  angleX = (angleX - 1800000) / 10000;
   print( 'angle X = {}'.format(angleX) );
   #temp = (nums[3]<<8) + (nums[4]) ;
   #temp = (temp - 3000.) / 100.;
   #print( 'temperature = {}'.format(temp) );
   #print( 'single axis position = {}'.format(nums[4]) );
+
 else :
   readInt1 = readInt[5:8];
   readInt2 = readInt[2:5];

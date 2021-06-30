@@ -96,8 +96,11 @@ def oneaxdtc():
          #"""
         while len(read) > 0 :
             #print('read = {}'.format(read));
-            if read[0:2] == ['0x61','0x11'] : break;
-            else                            : read = read[1:];
+            if read[0:2] == ['0x61','0x11'] :
+                #print('read = {}'.format(read));
+                break;
+            else:
+                read = read[1:];
             break;
             pass;
             #"""
