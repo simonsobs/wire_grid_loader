@@ -15,7 +15,6 @@ __pycache__/
 Encoder/src/rawdata
 aho*
 test*
-<<<<<<< HEAD
 !*/*/*/testing/
 !*/*/testing/
 !*/testing/
@@ -24,10 +23,9 @@ test*
 !*/testing/*.py
 !*/test.py
 !test.py
-=======
->>>>>>> 50c329bac35f20a92b4787dcf119f424aeb2a2be
 log/*
 */log/*
+*/*/log/*
 
 !.gitignore
 !.git
