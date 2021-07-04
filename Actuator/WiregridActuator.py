@@ -75,8 +75,8 @@ class WiregridActuator:
         LSL2,LSR2 = self.limitswitch.get_onoff(pinname=['LSL2','LSR2'])
         if LSL2==0 and LSR2==0 : 
             if self.verbose>0 : self.log.writelog('__forward() : Moving (distance={}, speedrate={})'.format(distance,speedrate));
-            status, msg = self.actuator.move(distance, speedrate)
-            if status<0 : return False, msg
+            ret, msg = self.actuator.move(distance, speedrate)
+            if not ret : return False, msg
         else :
             self.log.writelog('__forward() : WARNING! One of limit switches on opposite side (inside) is ON (LSL2={}, LSR2={})!'.format(LSL2, LSR2));
             self.log.writelog('__forward() :   --> Did not move.');
@@ -84,7 +84,7 @@ class WiregridActuator:
         isrun = True
         while LSL2==0 and LSR2==0 and isrun :
             LSL2,LSR2 = self.limitswitch.get_onoff(pinname=['LSL2','LSR2'])
-            isrun = self.actuator.isRun()
+            isrun, msg = self.actuator.isRun()
             pass
         self.actuator.hold()
         if LSL2 or LSR2 :
@@ -102,8 +102,8 @@ class WiregridActuator:
         LSL1,LSR1 = self.limitswitch.get_onoff(pinname=['LSL1','LSR1'])
         if LSL1==0 and LSR1==0 : 
             if self.verbose>0 : self.log.writelog('__backward() : Moving (distance={}, speedrate={})'.format(distance,speedrate));
-            status, msg = self.actuator.move(-1*distance, speedrate)
-            if status<0 : return False, msg
+            ret, msg = self.actuator.move(-1*distance, speedrate)
+            if not ret : return False, msg
         else :
             self.log.writelog('__backward() : WARNING! One of limit switches on motor side (outside) is ON (LSL1={}, LSR1={})!'.format(LSL1, LSR1));
             self.log.writelog('__backward() :   --> Did not move.');
@@ -111,7 +111,7 @@ class WiregridActuator:
         isrun = True
         while LSL1==0 and LSR1==0 and isrun :
             LSL1, LSR1 = self.limitswitch.get_onoff(pinname=['LSL1','LSR1'])
-            isrun = self.actuator.isRun()
+            isrun, msg = self.actuator.isRun()
             if self.verbose>0 : self.log.writelog('__backward() : LSL1={}, LSR1={}, run={}'.format(LSL1,LSR1,isrun))
             pass
         self.actuator.hold()
@@ -162,8 +162,8 @@ class WiregridActuator:
             return False
         # forward a bit
         if self.verbose>0 : self.log.writelog('__insert() : First forwarding')
-        status, msg  = self.__forward(20, speedrate=0.1)
-        if not status : 
+        ret, msg  = self.__forward(20, speedrate=0.1)
+        if not ret : 
             self.log.writelog('__insert() : ERROR!:(in first forwarding) {}'.format(msg))
             return False
         # check limitswitch
@@ -188,14 +188,14 @@ class WiregridActuator:
         time.sleep(1)
         # main forward
         if self.verbose>0 : self.log.writelog('__insert() : Main forwarding')
-        status, msg = self.__forward(main_distance, speedrate=main_speedrate)
-        if not status : 
+        ret, msg = self.__forward(main_distance, speedrate=main_speedrate)
+        if not ret : 
             self.log.writelog('__insert() : ERROR!:(in main forwarding) {}'.format(msg))
             return False
         # last forward
         if self.verbose>0 : self.log.writelog('__insert() : Last forwarding')
-        status, msg = self.__forward(200, speedrate=0.1)
-        if not status : 
+        ret, msg = self.__forward(200, speedrate=0.1)
+        if not ret : 
             self.log.writelog('__insert() : ERROR!:(in last forwarding) {}'.format(msg))
             return False
         # check limitswitch
@@ -230,8 +230,8 @@ class WiregridActuator:
             return False
         # backward a bit
         if self.verbose>0 : self.log.writelog('__eject() : First backwarding')
-        status, msg = self.__backward(20, speedrate=0.1)
-        if not status : 
+        ret, msg = self.__backward(20, speedrate=0.1)
+        if not ret : 
             self.log.writelog('__eject() : ERROR!:(in first backwarding) {}'.format(msg))
             return False
         # check limitswitch
@@ -243,14 +243,14 @@ class WiregridActuator:
         time.sleep(1)
         # main backward
         if self.verbose>0 : self.log.writelog('__eject() : Main backwarding')
-        status, msg = self.__backward(main_distance, speedrate=main_speedrate)
-        if not status : 
+        ret, msg = self.__backward(main_distance, speedrate=main_speedrate)
+        if not ret : 
             self.log.writelog('__eject() : ERROR!:(in main backwarding) {}'.format(msg))
             return False
         # last backward
         if self.verbose>0 : self.log.writelog('__eject() : Last backwarding')
-        status, msg = self.__backward(200, speedrate=0.1)
-        if not status : 
+        ret, msg = self.__backward(200, speedrate=0.1)
+        if not ret : 
             self.log.writelog('__eject() : ERROR!:(in last backwarding) {}'.format(msg))
             return False
         # check limitswitch
@@ -344,8 +344,9 @@ class WiregridActuator:
         # This will disable move() command in Actuator class until release() is called.
         self.actuator.STOP = True 
         # Hold the actuator
-        ret = self.actuator.hold()
-        return True, 'Finish stop()'
+        ret, msg = self.actuator.hold()
+        if ret : return True, 'Finish stop()'
+        else   : return False, msg
 
 
     def release(self):
@@ -353,8 +354,9 @@ class WiregridActuator:
         # This will enable move() command in Actuator class.
         self.actuator.STOP = False
         # Relase the actuator
-        ret = self.actuator.release()
-        return True, 'Finish release()'
+        ret, msg = self.actuator.release()
+        if ret : return True , 'Finish release()'
+        else   : return False, msg
 
 
     def reconnect(self, devfile=None):
