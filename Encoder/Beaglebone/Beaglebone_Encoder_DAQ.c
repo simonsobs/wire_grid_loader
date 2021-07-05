@@ -117,7 +117,6 @@ int tos_write = 0b10100100;
 int tos_read;
 int tos_read_len = sizeof(tos_read);
 
-int operation_time;
 int irig_secs, irig_mins, irig_hours, irig_day, irig_year;
 unsigned long long irig_pruclock;
 
@@ -258,6 +257,8 @@ int main(int argc, char **argv)
     irigout = fopen("irig_output_tmp.dat", "w");
     fprintf(irigout, "#sec min hour day year\n");
   }
+  const int operation_time = argc>2 ? atoi(argv[2]) : (int)(OPERATION_TIME) ;
+  printf("operation_time = %d\n", operation_time);
   // Measurement time file
   time(&measurement_start); //test
   measurement_time = fopen("timer.txt","w");
@@ -319,7 +320,7 @@ int main(int argc, char **argv)
 
         // check measurement_stop
         time(&measurement_stop); //test
-        if(measurement_stop - measurement_start > OPERATION_TIME && OPERATION_TIME>0 ){
+        if(measurement_stop - measurement_start > operation_time && operation_time>0 ){
           fprintf(measurement_time, "Stop at %ld\n", measurement_stop);
           exit(0);
         }
@@ -379,7 +380,7 @@ int main(int argc, char **argv)
         write_iamhere(encoder_position, &usec_t1, &usec_t2, position);
         // check measurement_stop
         time(&measurement_stop); //test
-        if(measurement_stop - measurement_start > OPERATION_TIME && OPERATION_TIME>0 ){
+        if(measurement_stop - measurement_start > operation_time && operation_time>0 ){
           fprintf(measurement_time, "Stop at %ld\n", measurement_stop);
           exit(0);
         }
