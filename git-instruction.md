@@ -265,6 +265,11 @@ Here, the situation is that you want to create a new git repository and uploaded
   \* This will not require access authorization or user account. But, if you use the *git@github.com:simonsobs/wire_grid_loader.git*, 
   you need to do account setting on your machine.
 
+If you want to clone a specific branch \<BRANCH NAME\>, plase do
+
+        git clone -b <BRANCH NAME> https://github.com/simonsobs/wire_grid_loader.git
+	
+
 
 Tags
 -----
