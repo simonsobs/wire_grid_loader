@@ -12,6 +12,7 @@ clock_freq = 200e+6;
 
 def main (inputfilename, outputfilename) :
 
+    print('open '+inputfilename);
     infile = open(inputfilename, 'r');
     reader = csv.reader(infile, delimiter=' ', );
     header = next(reader);
