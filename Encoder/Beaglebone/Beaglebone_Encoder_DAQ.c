@@ -320,7 +320,7 @@ int main(int argc, char **argv)
 
         // check measurement_stop
         time(&measurement_stop); //test
-        if(measurement_stop - measurement_start > operation_time && operation_time>0 ){
+        if(measurement_stop - measurement_start > OPERATION_TIME && OPERATION_TIME>0 ){
           fprintf(measurement_time, "Stop at %ld\n", measurement_stop);
           exit(0);
         }
@@ -380,7 +380,7 @@ int main(int argc, char **argv)
         write_iamhere(encoder_position, &usec_t1, &usec_t2, position);
         // check measurement_stop
         time(&measurement_stop); //test
-        if(measurement_stop - measurement_start > operation_time && operation_time>0 ){
+        if(measurement_stop - measurement_start > OPERATION_TIME && OPERATION_TIME>0 ){
           fprintf(measurement_time, "Stop at %ld\n", measurement_stop);
           exit(0);
         }
