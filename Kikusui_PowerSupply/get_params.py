@@ -63,7 +63,7 @@ def main(data_filename, start_line=0, isUTC=False):
         reference[i] = reference0[i]-62000
 
     # devide into block
-    swt, inits, end = packet_capture(df, list_amp, list_intv, time_category0, isUTC, iteration, pack_size, capture_slice, capture_offset)
+    swt, inits, end = packet_capture(df, list_amp, list_intv, time_category0, iteration, pack_size, capture_slice, capture_offset)
 
     time_block, reference_block, lincount_block, block_initials, onecycle_time, proceeded_degrees = devide_by_operation(timercount0, reference, swt, inits, end, matrix_size, iteration, capture_slice, capture_offset)
 
@@ -108,7 +108,7 @@ def define_data_region(item_filepath, log_filepath, start_line=0):
     df = df0[start_slice:stop_slice]
     return df
 
-def packet_capture(dataframe, list_ampere, list_interval, UnixTime_Data, isUTC, iteration=100, pack_size=1, capture_slice=500, capture_offset=4):
+def packet_capture(dataframe, list_ampere, list_interval, UnixTime_Data, iteration=100, pack_size=1, capture_slice=500, capture_offset=4):
     UTC = timezone(timedelta(hours=+0), 'UTC')
     JST = timezone(timedelta(hours=+9), 'JST')
     initial_UnixTime = []
@@ -123,12 +123,7 @@ def packet_capture(dataframe, list_ampere, list_interval, UnixTime_Data, isUTC, 
             list_datetime = ((dataframe[dataframe.iloc[:,5] == i])[(dataframe[dataframe.iloc[:,5] == i]).iloc[:,8] == j]).iloc[:,0:2].to_numpy()
             for k in range(len(list_datetime)):
                 if k%pack_size == 0:
-                    if isUTC == True:
-                        start_UnixTime[int(k/pack_size)] = (((datetime.strptime(list_datetime[k][0]+' '+list_datetime[k][1],"%Y-%m-%d %H:%M:%S-%Z")).replace(tzinfo=timezone.utc)).astimezone(UTC)).timestamp()
-                        pass
-                    else:
-                        start_UnixTime[int(k/pack_size)] = (((datetime.strptime(list_datetime[k][0]+' '+list_datetime[k][1],"%Y-%m-%d %H:%M:%S-%Z")).replace(tzinfo=timezone.utc)).astimezone(JST)).timestamp()
-                        pass
+                    start_UnixTime[int(k/pack_size)] = ((datetime.strptime(list_datetime[k][0]+' '+list_datetime[k][1],"%Y-%m-%d %H:%M:%S-%Z")).replace(tzinfo=timezone.utc)).timestamp()
                     initial_UnixTime = np.append(initial_UnixTime, start_UnixTime[int(k/pack_size)])
                     pass
                 pass
@@ -137,12 +132,7 @@ def packet_capture(dataframe, list_ampere, list_interval, UnixTime_Data, isUTC, 
         pass
 
     stop_UnixTime = dataframe[dataframe.iloc[:,2] == 'OFF'].iloc[-1,:]
-    if isUTC == True:
-        end_UnixTime = (((datetime.strptime(stop_UnixTime[0]+' '+stop_UnixTime[1],"%Y-%m-%d %H:%M:%S-%Z")).replace(tzinfo=timezone.utc)).astimezone(UTC)).timestamp()
-        pass
-    else:
-        end_UnixTime = (((datetime.strptime(stop_UnixTime[0]+' '+stop_UnixTime[1],"%Y-%m-%d %H:%M:%S-%Z")).replace(tzinfo=timezone.utc)).astimezone(JST)).timestamp()
-        pass
+    end_UnixTime = ((datetime.strptime(stop_UnixTime[0]+' '+stop_UnixTime[1],"%Y-%m-%d %H:%M:%S-%Z")).replace(tzinfo=timezone.utc)).timestamp()
 
     captured_initials = []
     captured_switching = []
@@ -238,7 +228,7 @@ def error_subtraction(matrix_size, iteration, time_block, block_initials, cut_th
                 place = min(np.where(tmp_timeblock >= cut_threshold)[0])
                 except_ref = np.where(np.diff((lincount_block[i][block_initials[i][j]:block_initials[i][j] + place])[::plot_slice]) > ref_threshold)[0]
                 pass
-            if except_ref:
+            if len(except_ref) != 0:
                 except_sum.append(j)
             pass
         if len(except_sum) < 2:
