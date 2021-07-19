@@ -404,6 +404,8 @@ int main(int argc, char **argv)
           irig_pruclock = (unsigned long long int)irig_to_send[i].clock + ( (unsigned long long int\
 )(irig_to_send[i].clock_overflow) << (4*8) );
           fprintf(irigout, "%llu %d %d %d %d %d\n", irig_pruclock, irig_secs, irig_mins, irig_hours, irig_day, irig_year);
+          #printf("%llu %d %d %d %d %d\n", irig_pruclock, irig_secs, irig_mins, irig_hours, irig_day, irig_year);
+          fflush(irigout); // write to the output file
         };
         // reset irig_ind
         irig_ind = 0;
