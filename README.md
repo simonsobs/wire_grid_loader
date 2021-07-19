@@ -16,13 +16,15 @@ from devices via USC540 serial converter.
 ## Kikusui\_PowerSupply (rotation motor)
 Scripts to control KIKUSUI power supply (PMX)
 
-Requirements: MOXA 
+Requirements: MOXA (Ready for ethernet version)
+
 Communication: RS232 serial communication via the serial converter
 
 ## GravitySensor
 Scripts to control KIKUSUI power supply (PMX)
 
-Requirements: MOXA 
+Requirements: MOXA
+
 Communication: RS422 serial communication via the serial converter
 
 - testing : This directory is for test.
@@ -58,4 +60,3 @@ For setup @ Kusaka Lab.
 
 # Tags
 ### v1.0
-

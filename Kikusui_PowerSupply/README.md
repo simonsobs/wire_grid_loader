@@ -2,7 +2,7 @@
  ====================
 
 ## Main scripts
-- ``command\_supply.py`` 
+- ``command_supply.py`` 
   - To control KIKUSUI by typing commands interactively
 - ``powerOff.py``
   - To power off KIKUSUI
@@ -17,7 +17,7 @@
   - ex) ``python3 powerOn.py -v 12 -c 3 -t 10``
     - set voltage=12V & current=3A and keep on for 10 seconds.
 - ``AutoControl.py``
-  - To rotate wire grid ring discretely or continuously(default: continuous)
+  - To rotate wire grid ring discretely or continuously(default: continuous) w/ RS232. This is depends on ``powerOn.py``
   - command options(continuous rotation):
     - -t <time [sec]>         :time to keep powering on
     - -n <notmakesure [additional]>        :not to check the actually current and voltage, for correct time operation
@@ -27,9 +27,15 @@
     - -s <stopped time [sec]> :time holding or staying after one action
   - eg) ``python3 AutoControl.py -d -l 10 -f 8 -s 10``
     - 10 laps discrete rotaion with 8 feedbacks and holding 10 sec
+- ``Ether_basic.py``
+    - Basic control command w/ ethernet. Often imported and used.
+- ``Ether_check.py``
+    - To get feedback parameters. This script repeats a short-time control and rotates the ring a little.
+- ``Ether_control.py``
+    - To rotate the ring step by step. This depends on ``Ether_basic.py``
 
 ## Configuration
-- ``pmx\_config.py``
+- ``pmx_config.py``
   - configuration of the USC540 serial converter (This transfers the commands from PC to KIKUSUI via RS-232.)
   - important items:
     - tcp\_ip   : IP address of the USC540 serial converter
