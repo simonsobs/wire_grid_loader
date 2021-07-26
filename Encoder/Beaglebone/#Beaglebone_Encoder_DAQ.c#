@@ -81,7 +81,7 @@ struct IrigInfo {
   unsigned long int info[10];
   unsigned long int synch[10];
   unsigned long int synch_overflow[10];
-};
+  };
 
 struct ErrorInfo {
   unsigned long int header;
