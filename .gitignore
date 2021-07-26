@@ -17,6 +17,7 @@ Encoder/Beaglebone/*.bin
 Encoder/Beaglebone/*.elf
 Encoder/Beaglebone/*.map
 Encoder/Beaglebone/Beaglebone_Encoder_DAQ
+misc/usbrh/usbrh
 aho*
 test*
 !*/*/*/testing/

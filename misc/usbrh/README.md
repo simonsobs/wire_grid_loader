@@ -1,4 +1,9 @@
-sudo ./usbrh [-vthm1fl]
+# Installation
+$ sudo apt install libusb-deb
+$ make
+
+# Usage
+$ sudo ./usbrh [-vthm1fl]
 
 * (No option) output: temperature[Celsius degrees] humidity[%]
 * --help : help
