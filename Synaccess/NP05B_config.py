@@ -15,6 +15,8 @@ if hostname.endswith('hepnet.scphys.kyoto-u.ac.jp'):
   tcp_ip = '192.168.1.70' # Synaccess at Kyoto
 elif hostname == 'cmb-daq01' :
   tcp_ip = '192.168.0.100' # Synaccess at Tokyo
+elif hostname == 'cmb-ocs' :
+  tcp_ip = '192.168.1.100' # Synaccess at Kyoto with cmb-ocs
 else :
   print('WARNING!! There is no suitable hostname option in "NP05B_config.py" to switch IP address for the Synaccess power strip.')
   tcp_ip = '10.10.10.0.1'
