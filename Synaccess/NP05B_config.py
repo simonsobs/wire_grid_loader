@@ -29,6 +29,7 @@ if not use_tcp:
     pass
 
 # Label of each ports in Synaccess
+'''
 port_info = [
         {'name':'CH1:USB&LAN&Serial' , 'label':'USB Hub (Beaglebones), LAN Hub, Serial Converter'  }, # ch1
         {'name':'CH2:Encoder&Gravity', 'label':'Encoder, Gravity Sensor, Stopper switch'                  }, # ch2
@@ -36,6 +37,15 @@ port_info = [
         {'name':'CH4:DC24V'          , 'label':'DC 24V Power Supply for Actuator&Stopper'          }, # ch4
         {'name':'CH5:Motor'          , 'label':'KIKUSUI Power Supply for Motor'            }, # ch5
         ];
+'''
+port_info = [
+        {'name':'CH1:', 'label':'CH1'  }, # ch1
+        {'name':'CH2:', 'label':'CH2'  }, # ch2
+        {'name':'CH3:', 'label':'CH3'  }, # ch3
+        {'name':'CH4:', 'label':'CH4'  }, # ch4
+        {'name':'CH5:', 'label':'CH5'  }, # ch5
+        ];
+
 
 # Logger directory
 logdir = 'log';
