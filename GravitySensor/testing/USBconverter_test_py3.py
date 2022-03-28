@@ -9,9 +9,12 @@ import struct;
 #devlocation = '/dev/serial/by-id/usb-FTDI_FT232R_USB_UART_AC01O8QI-if00-port0'; # tandem
 #devlocation = '/dev/serial/by-id/usb-FTDI_USB_to_RS-232_422_485_Adapter_DM2CHF1B-if00-port0'; # EasySync ES-U-3001-M at tandem
 #devlocation = '/dev/serial/by-id/usb-FTDI_FT232R_USB_UART_AG0JLDID-if00-port0'; # DTECH USB 2.0 TO RS422/RS485 USB converter for DWL-5000XY S/N 13B50141
-devlocation = '/dev/serial/by-id/usb-FTDI_FT232R_USB_UART_AB0L75U1-if00-port0'; # DTECH USB 2.0 TO RS422/RS485 USB converter @ Hongo
-isSingle = True;
-#isSingle = False;
+#devlocation = '/dev/serial/by-id/usb-FTDI_FT232R_USB_UART_A10KEZ5G-if00-port0'; # DTECH USB 2.0 TO RS422/RS485 USB converter @ tandem
+#devlocation = '/dev/serial/by-id/usb-FTDI_FT232R_USB_UART_AB0L75U1-if00-port0'; # DTECH USB 2.0 TO RS422/RS485 USB converter @ Hongo
+devlocation = '/dev/serial/by-id/usb-FTDI_FT232R_USB_UART_AB0L75U1-if00-port0'; # DTECH USB 2.0 TO RS422/RS485 USB converter @ tandem
+#devlocation = '/dev/serial/by-id/usb-FTDI_FT232R_USB_UART_AB0L75U1-if00-port0'; # DTECH USB 2.0 TO RS422/RS485 USB converter @ Hongo
+#isSingle = True;
+isSingle = False;
 
 stime = 0.1;
 #stime = 1;
