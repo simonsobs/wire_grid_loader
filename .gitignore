@@ -5,7 +5,11 @@
 */*.obj
 *.dat
 */*.dat
+*/*/*.dat
+*/*.dat
 */*.out
+*.txt
+*/*.txt
 */*/*.txt
 */*.o
 */*/*.o

@@ -6,9 +6,6 @@ import time
 from USBconverter_test_py3 import *
 
 
-
-
-
 if __name__ == '__main__':
     dt_now = str(datetime.now())
     dt_now = dt_now.split(" ")[0].replace("-","")
