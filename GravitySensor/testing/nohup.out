@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "readout.py", line 20, in <module>
+    with open(filename, 'w') as f:
+  File "/home/wiregrid/software/wire_grid_loader/GravitySensor/testing/GravitySensorDetection.py", line 198, in twoaxdtc
+    if ser.inWaiting() > 0 : break;
+  File "/home/wiregrid/.local/lib/python3.8/site-packages/serial/serialutil.py", line 594, in inWaiting
+    return self.in_waiting
+  File "/home/wiregrid/.local/lib/python3.8/site-packages/serial/serialposix.py", line 549, in in_waiting
+    s = fcntl.ioctl(self.fd, TIOCINQ, TIOCM_zero_str)
+OSError: [Errno 5] Input/output error
