@@ -360,7 +360,7 @@ def parseCmdLine(args):
     parser = OptionParser()
     parser.add_option('-s', '--start_line', dest='start_line', help='start_line is the initial line number of the operating item you want to check in the item file', type=int, default=0)
     parser.add_option('-i', '--isUTC', action="store_true", dest='is_UTC', help='TimeZone False: JST, True: UTC, default is False', default=False)
-    parser.add_option('--datafile',dest='data_file_name')
+    parser.add_option('--datafile',dest='data_file_name', default='aho')
     (config, args) = parser.parse_args(args)
     return config
 

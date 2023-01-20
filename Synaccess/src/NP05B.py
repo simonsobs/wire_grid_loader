@@ -190,6 +190,12 @@ class NP05B:
         else :
             request = self._request_header + cmd.decode() ;
             ret = requests.get(request).content;
+            print(str(ret))
+            for i in range(len(str(ret))):
+                print(i, str(ret)[i])
+                pass
+            print(str(ret)[6:11])
+            print(str(ret)[6:11][::-1])
             ret = ret.decode(); # binary --> string
             pass;
         self._wait()

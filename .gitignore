@@ -18,6 +18,7 @@ Encoder/Beaglebone/*.bin
 Encoder/Beaglebone/*.elf
 Encoder/Beaglebone/*.map
 Encoder/Beaglebone/Beaglebone_Encoder_DAQ
+GravitySensor/testing/datastrage
 misc/usbrh/usbrh
 aho*
 test*
