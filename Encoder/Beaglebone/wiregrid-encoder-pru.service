@@ -1,0 +1,17 @@
+# This files is for automatically running wiregrid encoder service
+# Please move this file to /etc/systemd/system/ and 
+# register this service by `sudo systemctl` commands.
+[Unit]
+Description=wiregrid encoder pru process
+
+[Service]
+WorkingDirectory=/home/debian/scripts/wire_grid_loader/Encoder/Beaglebone/
+User=debian
+Environment="PRU_C_DIR=/usr/share/ti/cgt-pru/include;/usr/share/ti/cgt-pru/lib;LD_LIBRARY_PATH=/usr/lib:/usr/local/lib:/home/debian/software/PRU/am335x_pru_package/pru_sw/app_loader/lib/"
+ExecStart=/bin/bash -c "./run.sh"
+Restart=always
+RestartSec=10s
+
+[Install]
+WantedBy=multi-user.target
+
