@@ -357,12 +357,12 @@ int main(int argc, char **argv)
 	      }
 	      encd_time = curr_time; // Reset the last time the encoder was monitored
               printf("%lu: End encocder reading!\n", curr_time);
-	      exit(1);
+              exit(1);
       }
 
       // Sending IRIG timeout packet
       if(((double)(curr_time - irig_time))/CLOCKS_PER_SEC > IRIG_TIMEOUT){
-	      printf("%lu: sending IRIG timeout packet\n", curr_time);
+              printf("%lu: sending IRIG timeout packet\n", curr_time);
               timeout_packet->type = IRIG_TIMEOUT_FLAG;
 	      if( sendto(sockfd, (struct TimeoutInfo *) &timeout_packet, sizeof(*timeout_packet), MSG_CONFIRM, (const struct sockaddr *) &servaddr, sizeof(servaddr)) < 0 ){
 	        fprintf(stderr, "Error sending IRIG timeout packet\n");
