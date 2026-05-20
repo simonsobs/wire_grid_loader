@@ -36,9 +36,9 @@ Encoder_code.bin Encoder_data.bin: Encoder.cmd Encoder.elf
 	$(pru_hex_converter) Encoder.cmd ./Encoder.elf --quiet
 
 clean:
-	rm IRIG.obj
-	rm IRIG.elf
-	rm IRIG.map
-	rm Encoder.obj
-	rm Encoder.elf
-	rm Encoder.map
+	rm -f IRIG.obj
+	rm -f IRIG.elf
+	rm -f IRIG.map
+	rm -f Encoder.obj
+	rm -f Encoder.elf
+	rm -f Encoder.map
