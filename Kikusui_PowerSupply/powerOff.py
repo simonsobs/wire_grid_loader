@@ -31,6 +31,7 @@ def powerOff(PMX=None) :
             pass
         pass
     PMX.clean_serial()
+    print(PMX)
 
     # Open log file
     logfile = openlog(cg.log_dir)
