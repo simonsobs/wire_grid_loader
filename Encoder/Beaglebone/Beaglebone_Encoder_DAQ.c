@@ -356,8 +356,8 @@ int main(int argc, char **argv)
 	        fprintf(stderr, "Error sending encoder timeout packet\n");
 	      }
 	      encd_time = curr_time; // Reset the last time the encoder was monitored
-              printf("%lu: End encocder reading!\n", curr_time);
-              exit(1);
+	      printf("%lu: End encocder reading!\n", curr_time);
+	      exit(1);
       }
 
       // Sending IRIG timeout packet
