@@ -22,9 +22,14 @@
 //#define IP_ADDRESS "192.168.0.2"// wire grid PC at Tokyo via local ethernet
 //#define IP_ADDRESS "133.11.6.73" // wiregridPC in Kusaka Lab. network
 //#define IP_ADDRESS "10.10.10.50" //manny at UCSD
-#define IP_ADDRESS "192.168.0.221" // daq-satp1 of SATP1 @ site
+//#define IP_ADDRESS "192.168.0.221" // daq-satp1 of SATP1 @ site
 //#define IP_ADDRESS "192.168.0.222" // daq-satp2 of SATP2 @ site
 //#define IP_ADDRESS "192.168.0.223" // daq-satp3 of SATP3 @ site
+
+// Recommended IP addresses at the site
+#define IP_ADDRESS "192.168.11.254" // daq-satp1-direct of SATP1 @ site
+//#define IP_ADDRESS "192.168.12.254" // daq-satp2-direct of SATP2 @ site
+//#define IP_ADDRESS "192.168.13.254" // daq-satp3-direct of SATP3 @ site
 
 #define SAVETOBB 0 // 1:True(save file), 0:False(send data to PC)
 #define isTCP 0 // 0:UDP, 1:TCP (Only when SAVETOBB is 0.)
